@@ -78,14 +78,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfoEntity
         userInfoEntity.setRegistTime(new Date());
         userInfoEntity.setUserNo(NoUtils.genOrderNo());
 
-        /*构建账户信息*/
-        AccountEntity accountEntity = new AccountEntity();
-        accountEntity.setAccountId(UUIDUtils.getUUID());
-        accountEntity.setUserId(userId);
-        accountEntity.setUpdateTime(new Date());
 
         insert(userInfoEntity);
-        accountService.insert(accountEntity);
         return R.ok();
     }
 
