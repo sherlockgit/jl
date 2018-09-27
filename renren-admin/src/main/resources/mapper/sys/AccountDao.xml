@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.AccountDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.vo.AccountVO" id="accountMap">
+        <result property="accountId" column="ACCOUNT_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="totalIn" column="TOTAL_IN"/>
+        <result property="totalOut" column="TOTAL_OUT"/>
+        <result property="balance" column="BALANCE"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="phone" column="PHONE"/>
+        <result property="userType" column="USER_TYPE"/>
+        <result property="userSex" column="USER_SEX"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="wxUname" column="WX_UNAME"/>
+    </resultMap>
+
+
+
+    <sql id="accountVo">
+        a.ACCOUNT_ID,a.USER_ID,a.TOTAL_IN,a.TOTAL_OUT,a.BALANCE,a.UPDATE_TIME,u.USER_NAME,u.PHONE
+    </sql>
+
+    <select id="getAccountInfoList" resultMap="accountMap" parameterType="map">
+        SELECT
+        <include refid="accountVo"/>
+        FROM
+        account a
+        LEFT JOIN
+        user_info u
+        ON a.USER_ID = u.USER_ID
+        <where>
+            <if test="userName != null and userName != ''">
+                AND u.USER_NAME LIKE CONCAT('%', #{userName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND u.PHONE LIKE CONCAT('%', #{phone,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                AND a.UPDATE_TIME &lt;  #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="balance != null and balance != ''">
+                AND a.BALANCE &gt;  #{balance,jdbcType=DECIMAL}
+            </if>
+        </where>
+        ORDER BY a.UPDATE_TIME DESC
+        limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="map">
+        SELECT
+        COUNT(1)
+        FROM
+        account a
+        LEFT JOIN
+        user_info u
+        ON a.USER_ID = u.USER_ID
+        <where>
+            <if test="userName != null and userName != ''">
+                AND u.USER_NAME LIKE CONCAT('%', #{userName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND u.PHONE LIKE CONCAT('%', #{phone,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                AND a.UPDATE_TIME &lt;  #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="balance != null and balance != ''">
+                AND a.BALANCE &gt;  #{balance,jdbcType=DECIMAL}
+            </if>
+        </where>
+        ORDER BY a.UPDATE_TIME DESC
+    </select>
+
+    <sql id="accountDetail">
+        a.ACCOUNT_ID,a.USER_ID,a.TOTAL_IN,u.USER_NAME,u.PHONE,u.USER_TYPE,u.USER_SEX,u.ADDRESS,u.WX_UNAME
+    </sql>
+
+    <select id="getAccountDetail" parameterType="java.lang.String" resultMap="accountMap">
+        SELECT
+        <include refid="accountDetail"/>
+        FROM
+        account a
+        LEFT JOIN
+        user_info u
+        ON a.USER_ID = u.USER_ID
+        WHERE a.ACCOUNT_ID = #{accountId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getBalanceByUserId" parameterType="java.lang.String" resultMap="accountMap">
+        SELECT
+        BALANCE
+        FROM
+        account
+        WHERE USER_ID = #{userId,jdbcType=VARCHAR}
+    </select>
+</mapper>

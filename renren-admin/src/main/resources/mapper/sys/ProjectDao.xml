@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.ProjectDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.ProjectEntity" id="projectMap">
+        <result property="proId" column="PRO_ID"/>
+        <result property="proName" column="PRO_NAME"/>
+        <result property="proBrief" column="PRO_BRIEF"/>
+        <result property="proStatus" column="PRO_STATUS"/>
+        <result property="proType" column="PRO_TYPE"/>
+        <result property="proAmt" column="PRO_AMT"/>
+        <result property="proLong" column="PRO_LONG"/>
+        <result property="proContent" column="PRO_CONTENT"/>
+        <result property="maxPeople" column="MAX_PEOPLE"/>
+        <result property="coverPic" column="COVER_PIC"/>
+        <result property="cyclePic" column="CYCLE_PIC"/>
+        <result property="beginTime" column="BEGIN_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="memo" column="MEMO"/>
+    </resultMap>
+
+    <select id="getProjectByType" resultMap="projectMap" parameterType="map">
+        SELECT
+        PRO_NAME,PRO_AMT,PRO_ID,PRO_BRIEF,COVER_PIC,BEGIN_TIME,END_TIME,PRO_LONG,CYCLE_PIC
+        FROM
+        project
+        <where>
+            <if test="proType != null and proType != ''">
+                AND PRO_TYPE = #{proType,jdbcType=VARCHAR}
+            </if>
+            AND PRO_STATUS = 1
+        </where>
+        ORDER BY CREATE_TIME DESC limit #{page,jdbcType=INTEGER},10
+    </select>
+
+    <select id="getProjectByDetail" resultMap="projectMap" parameterType="map">
+        SELECT
+        CYCLE_PIC,PRO_CONTENT,PRO_AMT
+        FROM
+        project
+        WHERE PRO_ID = #{proId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getProjectNameList" resultType="java.lang.String" >
+        SELECT
+        PRO_NAME,PRO_BRIEF,COVER_PIC
+        FROM
+        project
+        WHERE PRO_STATUS = 1
+    </select>
+
+    <select id="getProjectByNameList" resultMap="projectMap" >
+        SELECT
+        PRO_ID,PRO_NAME,BEGIN_TIME,END_TIME,PRO_TYPE,PRO_AMT
+        FROM
+        project
+        WHERE PRO_STATUS = 1
+    </select>
+
+    <select id="getDestineByUser" resultMap="projectMap" parameterType="map">
+        SELECT
+        p.PRO_NAME,p.PRO_AMT,p.PRO_BRIEF,p.COVER_PIC
+        FROM
+        destine d
+        LEFT JOIN
+        project p
+        ON d.PRO_ID=p.PRO_ID
+        <where>
+            <if test="destineStatus != null and destineStatus != ''">
+                AND d.DISTINE_STATUS=#{destineStatus,jdbcType=VARCHAR}
+            </if>
+            AND d.USER_ID=#{userId,jdbcType=VARCHAR}
+        </where>
+    </select>
+</mapper>

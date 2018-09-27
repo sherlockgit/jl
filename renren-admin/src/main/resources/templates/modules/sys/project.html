@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>项目信息表</title>
+		<#include "/header.html">
+            <link rel="stylesheet" href="${request.contextPath}/statics/plugins/layui2_3_0/css/layui.css" media="all">
+            <script src="${request.contextPath}/statics/plugins/layui2_3_0/layui.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-inline">
+                <label class="form-inline">项目名称：<input type="text" v-model="q.proName" @keyup.enter="query" class="form-control" placeholder="项目名称"></label>
+                <label class="form-inline">项目类型：
+                    <div class="form-group">
+                        <select  class="form-control" v-model="q.proType" @keyup.enter="query" >
+                            <option value="" >全部</option>
+                            <option value="0" >足疗</option>
+                            <option value="1" >保健</option>
+                            <option value="2" >纤体</option>
+                            <option value="3" >养生</option>
+                        </select>
+                    </div>
+                </label>
+                <label class="form-inline">项目状态：
+                    <div class="form-group">
+                        <select  class="form-control" v-model="q.proStatus" @keyup.enter="query">
+                            <option value="">全部</option>
+                            <option value="0" >新建</option>
+                            <option value="1" >已上线</option>
+                            <option value="2" >已下线</option>
+                        </select>
+                    </div>
+                </label>
+                <label class="form-inline">项目时长：<input type="text" v-model="q.proLong" @keyup.enter="query" class="form-control" placeholder="项目时长"></label>
+                <a class="btn btn-default" @click="query">查询</a>
+                <#if shiro.hasPermission("sys:project:save")>
+                    <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                </#if>
+                <#if shiro.hasPermission("sys:project:update")>
+                    <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                </#if>
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+
+    <div v-show="showEdit" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目类型</div>
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <select class="form-control"  v-model="project.proType">
+                            <option value="0" >足疗</option>
+                            <option value="1" >保健</option>
+                            <option value="2" >纤体</option>
+                            <option value="3" >养生</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" lay-verify="required" v-model="project.proName" placeholder="项目名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目定价</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" lay-verify="number" v-model="project.proAmt" placeholder="项目定价(元)"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目时长</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" lay-verify="number" v-model="project.proLong" placeholder="服务时长/分钟"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">每日限制人数</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" lay-verify="number" v-model="project.maxPeople" placeholder="每日限制人数"/>
+                </div>
+            </div>
+            <div class="form-group  ">
+                <div class="col-sm-2 control-label ">服务开始时间</div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" lay-verify="number" id="datetimeStart" v-model="project.datetimeStart" placeholder="时"/>
+                </div>
+                <div class="col-sm-1 control-label">
+                    <span>:</span>
+                </div>
+                <div class="col-sm-2 ">
+                    <input type="text" class="form-control" lay-verify="number" id="dateMinStart" v-model="project.dateMinStart" placeholder="分"/>
+                </div>
+            </div>
+            <div class="form-group  ">
+                <div class="col-sm-2 control-label ">服务结束时间</div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" lay-verify="number" id="datetimeEnd" v-model="project.datetimeEnd" placeholder="时"/>
+                </div>
+                <div class="col-sm-1 control-label">
+                    <span>:</span>
+                </div>
+                <div class="col-sm-2 ">
+                    <input type="text" class="form-control" lay-verify="number" id="dateMinEnd" v-model="project.dateMinEnd" placeholder="分"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目状态</div>
+                <label class="radio-inline">
+                    <input type="radio" name="proStatus" value="0" v-model="project.proStatus" /> 新建
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="proStatus" value="1" v-model="project.proStatus"/> 已上线
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="proStatus" value="2" v-model="project.proStatus"/> 已下线
+                </label>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">推荐语</div>
+                <div class="col-sm-10">
+                    <textarea class="form-control" lay-verify="number" rows="2" v-model="project.proBrief" name="proBrief"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">封面图</div>
+                <div class="layui-inline">
+                    <div class="layui-upload-list layui-input-inline">
+                        <img class="layui-upload-img" id="img" width="100px" height="100px" >
+                        <p id="demoText"></p>
+                    </div>
+                    <button type="button" class="layui-btn" id="file">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目轮播图</div>
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test2">上传</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                        <div class="layui-upload-list" id="demo2"></div>
+                    </blockquote>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目介绍</div>
+                <div class="col-sm-10">
+                    <textarea class="layui-textarea" id="LAY_demo1" v-model="project.proContent" style="display: none">
+                        sadasdsad
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary site-demo-layedit" data-type="content"  value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="flush" value="返回"/>
+            </div>
+        </form>
+    </div>
+
+
+    <div v-show="showDetail" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目类型</div>
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <select class="form-control" disabled v-model="project.proType">
+                            <option value="0" >足疗</option>
+                            <option value="1" >保健</option>
+                            <option value="2" >纤体</option>
+                            <option value="3" >养生</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目名称</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" lay-verify="required" v-model="project.proName" placeholder="项目名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目定价</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" lay-verify="number" v-model="project.proAmt" placeholder="项目定价(元)"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目时长</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" lay-verify="number" v-model="project.proLong" placeholder="服务时长/分钟"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">每日限制人数</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" lay-verify="number" v-model="project.maxPeople" placeholder="每日限制人数"/>
+                </div>
+            </div>
+            <div class="form-group  ">
+                <div class="col-sm-2 control-label ">服务开始时间</div>
+                <div class="col-sm-2">
+                    <input type="text" disabled class="form-control" lay-verify="number"  v-model="project.datetimeStart" placeholder="时"/>
+                </div>
+                <div class="col-sm-1 control-label">
+                    <span>:</span>
+                </div>
+                <div class="col-sm-2 ">
+                    <input type="text" disabled class="form-control" lay-verify="number"  v-model="project.dateMinStart" placeholder="分"/>
+                </div>
+            </div>
+            <div class="form-group  ">
+                <div class="col-sm-2 control-label ">服务结束时间</div>
+                <div class="col-sm-2">
+                    <input type="text" disabled class="form-control" lay-verify="number"  v-model="project.datetimeEnd" placeholder="时"/>
+                </div>
+                <div class="col-sm-1 control-label">
+                    <span>:</span>
+                </div>
+                <div class="col-sm-2 ">
+                    <input type="text" disabled class="form-control" lay-verify="number"  v-model="project.dateMinEnd" placeholder="分"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目状态</div>
+                <label class="radio-inline">
+                    <input type="radio" disabled name="proStatus" value="0" v-model="project.proStatus" /> 新建
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" disabled name="proStatus" value="1" v-model="project.proStatus"/> 已上线
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" disabled name="proStatus" value="2" v-model="project.proStatus"/> 已下线
+                </label>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">推荐语</div>
+                <div class="col-sm-10">
+                    <textarea class="form-control" disabled lay-verify="number" rows="2" v-model="project.proBrief" name="proBrief"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">封面图</div>
+                <div class="layui-inline">
+                    <div class="layui-upload-list layui-input-inline">
+                        <img class="layui-upload-img" id="imgd" width="100px" height="100px" >
+                        <p id="demoTextd"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目轮播图</div>
+                <div class="layui-upload">
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                        <div class="layui-upload-list" id="demo2d"></div>
+                    </blockquote>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目介绍</div>
+                <div class="col-sm-10">
+                    <textarea class="layui-textarea" disabled id="LAY_demo1d" v-model="project.proContent" style="display: none"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="flush" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/project.js?_${.now?long}"></script>
+</body>
+</html>

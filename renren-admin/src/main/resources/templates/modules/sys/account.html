@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>会员账户表</title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList" >
+        <div class="grid-btn">
+            <div class="form-inline">
+                <label class="form-inline">会员姓名：<input type="text" v-model="q.userName" @keyup.enter="query" class="form-control" placeholder="会员姓名"></label>
+                <label class="form-inline">手机号码：<input type="text" v-model="q.phone" @keyup.enter="query" class="form-control" placeholder="手机号码"></label>
+                <label class="form-inline">账户余额 ><input type="text" v-model="q.balance" @keyup.enter="query" class="form-control" placeholder="账户余额"></label>
+                <a class="btn btn-default" @click="query">查询</a>
+                <#if shiro.hasPermission("sys:userinfo:update")>
+                    <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;充值</a>
+                </#if>
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="showDetail"  class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+														                    <div class="form-group">
+                        <div class="col-sm-2 control-label">会员姓名</div>
+                        <div class="col-sm-10">
+                            <input type="text" disabled class="form-control" v-model="account.userName" />
+                        </div>
+                    </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">会员类型</div>
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <select class="form-control" disabled v-model="account.userType">
+                            <option value="1" >VIP用户</option>
+                            <option value="2" >普通用户</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">手机号码</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="account.phone" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">微信号</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="account.wxUname" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">现居住址</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="account.address" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">性别</div>
+                <label class="radio-inline">
+                    <input type="radio" disabled name="userSex" value="0" v-model="account.userSex" /> 男
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" disabled name="userSex" value="1" v-model="account.userSex"/> 女
+                </label>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">充值金额</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="account.totalInNow" placeholder="充值金额（元）"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">备注说明</div>
+                <div class="col-sm-10">
+                    <textarea class="form-control" rows="8" v-model="account.memo" name="memo"></textarea>
+                </div>
+            </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+
+    <div class="grid-btn"  v-show="showCountList">
+        <div class="form-inline">
+            <label class="form-inline">交易状态：
+                <div class="form-group">
+                    <select  class="form-control" v-model="q.tranStatus" @keyup.enter="query">
+                        <option></option>
+                        <option value="0" >失败</option>
+                        <option value="1" >成功</option>
+                    </select>
+                </div>
+            </label>
+            <a class="btn btn-default" @click="queryCount">查询</a>
+            <input type="button" class="btn btn-warning" @click="flush" value="返回"/>
+        </div>
+        <table id="jqGridCount"></table>
+        <div  id="jqGridCountPager"></div>
+    </div>
+
+
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/account.js?_${.now?long}"></script>
+</body>
+</html>

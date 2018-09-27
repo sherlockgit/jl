@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.AccountItemDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.AccountItemEntity" id="accountItemMap">
+        <result property="itemId" column="ITEM_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="amtIn" column="AMT_IN"/>
+        <result property="amtOut" column="AMT_OUT"/>
+        <result property="balance" column="BALANCE"/>
+        <result property="tranStatus" column="TRAN_STATUS"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="memo" column="MEMO"/>
+    </resultMap>
+
+    <resultMap type="io.renren.modules.sys.vo.AccountItemVO" id="accountItemVOMap">
+        <result property="itemId" column="ITEM_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="amtIn" column="AMT_IN"/>
+        <result property="amtOut" column="AMT_OUT"/>
+        <result property="balance" column="BALANCE"/>
+        <result property="tranStatus" column="TRAN_STATUS"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="memo" column="MEMO"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="phone" column="PHONE"/>
+    </resultMap>
+
+    <select id="getAccountByMonth" parameterType="map" resultMap="accountItemMap">
+        SELECT
+        AMT_IN,AMT_OUT,MEMO,CREATE_TIME
+        FROM
+        account_item
+        WHERE USER_ID = #{userId,jdbcType=VARCHAR}
+        AND
+        CREATE_TIME &gt; #{timeStart,jdbcType=TIMESTAMP}
+        AND
+        CREATE_TIME &lt; #{timeEnd,jdbcType=TIMESTAMP}
+        AND
+        TRAN_STATUS =1
+    </select>
+
+    <select id="getAccountItemByUserId" resultMap="accountItemMap" parameterType="java.lang.String">
+        SELECT
+        AMT_IN,AMT_OUT,BALANCE,TRAN_STATUS,CREATE_TIME,MEMO
+        FROM
+        account_item
+        WHERE USER_ID = #{userID,jdbcType=VARCHAR}
+    </select>
+    <sql id="AccountItemAll">
+        a.AMT_IN,a.AMT_OUT,a.BALANCE,a.TRAN_STATUS,a.CREATE_TIME,a.MEMO,u.USER_NAME,u.PHONE
+    </sql>
+
+    <select id="getAccountItemAll" resultMap="accountItemVOMap" parameterType="map">
+        SELECT
+        <include refid="AccountItemAll"/>
+        FROM
+        account_item a
+        LEFT JOIN
+        user_info u
+        ON a.USER_ID = u.USER_ID
+        <where>
+            <if test="userName != null and userName != ''">
+                AND u.USER_NAME LIKE CONCAT('%', #{userName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND u.PHONE LIKE CONCAT('%', #{phone,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="tranStatus != null and tranStatus != ''">
+                AND a.TRAN_STATUS = #{tranStatus,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        ORDER BY a.CREATE_TIME DESC
+        limit #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectCountItemAll" resultType="java.lang.Integer" parameterType="map">
+        SELECT
+        COUNT(1)
+        FROM
+        account_item a
+        LEFT JOIN
+        user_info u
+        ON a.USER_ID = u.USER_ID
+        <where>
+            <if test="userName != null and userName != ''">
+                AND u.USER_NAME LIKE CONCAT('%', #{userName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND u.PHONE LIKE CONCAT('%', #{phone,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="tranStatus != null and tranStatus != ''">
+                AND a.TRAN_STATUS = #{tranStatus,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        ORDER BY a.CREATE_TIME DESC
+    </select>
+
+
+</mapper>

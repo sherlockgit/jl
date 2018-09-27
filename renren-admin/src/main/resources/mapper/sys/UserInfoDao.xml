@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.UserInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.UserInfoEntity" id="userInfoMap">
+        <result property="userId" column="USER_ID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userType" column="USER_TYPE"/>
+        <result property="userSex" column="USER_SEX"/>
+        <result property="phone" column="PHONE"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="wxUname" column="WX_UNAME"/>
+        <result property="wxOpenid" column="WX_OPENID"/>
+        <result property="wxHeadpic" column="WX_HEADPIC"/>
+        <result property="memo" column="MEMO"/>
+        <result property="userNo" column="USER_NO"/>
+        <result property="registTime" column="REGIST_TIME"/>
+    </resultMap>
+
+    <select id="getOpenId" resultMap="userInfoMap">
+        SELECT
+        WX_OPENID,USER_ID,USER_NAME,PHONE,WX_UNAME,WX_OPENID,WX_HEADPIC,USER_NO,REGIST_TIME,USER_TYPE
+        FROM
+        user_info
+        WHERE WX_OPENID = #{wxOpenid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByPhone" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        PHONE
+        FROM
+        user_info
+        WHERE PHONE = #{phone,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByWXName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        PHONE
+        FROM
+        user_info
+        WHERE WX_UNAME = #{wxUname,jdbcType=VARCHAR}
+    </select>
+
+
+
+</mapper>

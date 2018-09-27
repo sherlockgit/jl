@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>账户明细</title>
+    <#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showCountList">
+        <div class="grid-btn">
+            <div class="form-inline">
+                <label class="form-inline">交易状态：
+                    <div class="form-group">
+                        <select  class="form-control" v-model="q.userType" @keyup.enter="query">
+                            <option></option>
+                            <option value="0" >失败</option>
+                            <option value="1" >成功</option>
+                        </select>
+                    </div>
+                </label>
+                <a class="btn btn-default" @click="countList">查询</a>
+            </div>
+        </div>
+        <table id="jqGridCount"></table>
+        <div id="jqGridCountPager"></div>
+    </div>
+</div>
+<script src="${request.contextPath}/statics/js/modules/sys/account.js?_${.now?long}"></script>
+</body>
+</html>

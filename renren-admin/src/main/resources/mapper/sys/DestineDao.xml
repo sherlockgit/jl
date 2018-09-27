@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.DestineDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.DestineEntity" id="destineMap">
+        <result property="destineId" column="DESTINE_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="uname" column="UNAME"/>
+        <result property="phone" column="PHONE"/>
+        <result property="proId" column="PRO_ID"/>
+        <result property="proType" column="PRO_TYPE"/>
+        <result property="proName" column="PRO_NAME"/>
+        <result property="proAmt" column="PRO_AMT"/>
+        <result property="distineStatus" column="DISTINE_STATUS"/>
+        <result property="destineTime" column="DESTINE_TIME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="memo" column="MEMO"/>
+    </resultMap>
+
+
+
+</mapper>

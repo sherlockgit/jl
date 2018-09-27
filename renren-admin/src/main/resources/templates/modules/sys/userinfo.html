@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>会员信息表</title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-inline">
+                <label class="form-inline">会员姓名：<input type="text" v-model="q.userName" @keyup.enter="query" class="form-control" placeholder="会员姓名"></label>
+                <label class="form-inline">手机号码：<input type="text" v-model="q.phone" @keyup.enter="query" class="form-control" placeholder="手机号码"></label>
+                <label class="form-inline">微信号：<input type="text" v-model="q.wxUname" @keyup.enter="query" class="form-control" placeholder="微信号"></label>
+                <label class="form-inline">会员类型：
+                    <div class="form-group">
+                        <select  class="form-control" v-model="q.userType" @keyup.enter="query">
+                            <option value="">全部</option>
+                            <option value="1" >VIP用户</option>
+                            <option value="2" >普通用户</option>
+                        </select>
+                    </div>
+                </label>
+                <a class="btn btn-default" @click="query">查询</a>
+                <#if shiro.hasPermission("sys:userinfo:save")>
+                    <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                </#if>
+                <#if shiro.hasPermission("sys:userinfo:update")>
+                    <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                </#if>
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="showSaveOrUpdate" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+														                    <div class="form-group">
+                        <div class="col-sm-2 control-label">会员姓名</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="userInfo.userName" placeholder="用户姓名"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">会员类型</div>
+                        <div class="col-sm-10">
+                            <div class="form-group">
+                                <select class="form-control" v-model="userInfo.userType">
+                                    <option value="1" >VIP用户</option>
+                                    <option value="2" >普通用户</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">手机号码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="userInfo.phone" placeholder="手机号码"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">微信号</div>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" v-model="userInfo.wxUname" placeholder="微信名称"/>
+                             </div>
+                        </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">现居住址</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="userInfo.address" placeholder="住址"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">性别</div>
+                        <label class="radio-inline">
+                            <input type="radio" name="userSex" value="0" v-model="userInfo.userSex" /> 男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="userSex" value="1" v-model="userInfo.userSex"/> 女
+                        </label>
+                     </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">备注说明</div>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="8" v-model="userInfo.memo" name="memo"></textarea>
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+
+    <div v-show="showDetail" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">会员姓名</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="userInfo.userName" placeholder="用户姓名"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">会员类型</div>
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <select class="form-control" disabled v-model="userInfo.userType">
+                            <option value="1" >VIP用户</option>
+                            <option value="2" >普通用户</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">手机号码</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="userInfo.phone" placeholder="手机号码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">微信号</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="userInfo.wxUname" placeholder="微信名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">现居住址</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="userInfo.address" placeholder="住址"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">性别</div>
+                <label class="radio-inline">
+                    <input type="radio" disabled name="userSex" value="0" v-model="userInfo.userSex" /> 男
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" disabled name="userSex" value="1" v-model="userInfo.userSex"/> 女
+                </label>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">备注说明</div>
+                <div class="col-sm-10">
+                    <textarea class="form-control" disabled rows="8" v-model="userInfo.memo" name="memo"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/userinfo.js?_${.now?long}"></script>
+</body>
+</html>
