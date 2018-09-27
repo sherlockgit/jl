@@ -16,8 +16,10 @@
                     <div class="form-group">
                         <select  class="form-control" v-model="q.userType" @keyup.enter="query">
                             <option value="">全部</option>
-                            <option value="1" >VIP用户</option>
-                            <option value="2" >普通用户</option>
+                            <option value="1" >金牌会员</option>
+                            <option value="2" >银牌会员</option>
+                            <option value="3" >铜牌会员</option>
+                            <option value="4" >普通会员</option>
                         </select>
                     </div>
                 </label>
@@ -48,8 +50,10 @@
                         <div class="col-sm-10">
                             <div class="form-group">
                                 <select class="form-control" v-model="userInfo.userType">
-                                    <option value="1" >VIP用户</option>
-                                    <option value="2" >普通用户</option>
+                                    <option value="1" >金牌会员</option>
+                                    <option value="2" >银牌会员</option>
+                                    <option value="3" >铜牌会员</option>
+                                    <option value="4" >普通会员</option>
                                 </select>
                             </div>
                         </div>
@@ -72,14 +76,23 @@
                             <input type="text" class="form-control" v-model="userInfo.address" placeholder="住址"/>
                         </div>
                     </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">OPENID</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="userInfo.wxOpenid" placeholder="OPENID"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">机构名称</div>
+                <div class="col-sm-10">
+                    <input class="form-control" rows="8" v-model="userInfo.organization" name="organization"/>
+                </div>
+            </div>
                     <div class="form-group">
-                        <div class="col-sm-2 control-label">性别</div>
-                        <label class="radio-inline">
-                            <input type="radio" name="userSex" value="0" v-model="userInfo.userSex" /> 男
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="userSex" value="1" v-model="userInfo.userSex"/> 女
-                        </label>
+                        <div class="col-sm-2 control-label">身份证号码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="userInfo.userIdCard" placeholder="身份证号码"/>
+                        </div>
                      </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">备注说明</div>
@@ -87,6 +100,7 @@
                             <textarea class="form-control" rows="8" v-model="userInfo.memo" name="memo"></textarea>
                         </div>
                     </div>
+
 							            <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
@@ -109,8 +123,10 @@
                 <div class="col-sm-10">
                     <div class="form-group">
                         <select class="form-control" disabled v-model="userInfo.userType">
-                            <option value="1" >VIP用户</option>
-                            <option value="2" >普通用户</option>
+                            <option value="1" >金牌会员</option>
+                            <option value="2" >银牌会员</option>
+                            <option value="3" >铜牌会员</option>
+                            <option value="4" >普通会员</option>
                         </select>
                     </div>
                 </div>
@@ -134,14 +150,24 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">性别</div>
-                <label class="radio-inline">
-                    <input type="radio" disabled name="userSex" value="0" v-model="userInfo.userSex" /> 男
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" disabled name="userSex" value="1" v-model="userInfo.userSex"/> 女
-                </label>
+                <div class="col-sm-2 control-label">OPENID</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="userInfo.wxOpenid" placeholder="OPENID"/>
+                </div>
             </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">机构名称</div>
+                <div class="col-sm-10">
+                    <input disabled class="form-control" rows="8" v-model="userInfo.organization" name="organization"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">身份证号码</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="userInfo.userIdCard" placeholder="身份证号码"/>
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-sm-2 control-label">备注说明</div>
                 <div class="col-sm-10">

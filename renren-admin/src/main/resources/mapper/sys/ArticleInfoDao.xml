@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.ArticleInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.ArticleInfoEntity" id="articleInfoMap">
+        <result property="id" column="id"/>
+        <result property="articleNo" column="article_no"/>
+        <result property="articlePic" column="article_pic"/>
+        <result property="articleName" column="article_name"/>
+        <result property="articleType" column="article_type"/>
+        <result property="articleStatus" column="article_status"/>
+        <result property="articleTag" column="article_tag"/>
+        <result property="articleAuthor" column="article_author"/>
+        <result property="articleHref" column="article_href"/>
+        <result property="articleBrief" column="article_brief"/>
+        <result property="articleContent" column="article_content"/>
+        <result property="articleSort" column="article_sort"/>
+        <result property="articleReads" column="article_reads"/>
+        <result property="createTime" column="create_time"/>
+        <result property="publishTime" column="publish_time"/>
+        <result property="downTime" column="down_time"/>
+    </resultMap>
+
+
+</mapper>

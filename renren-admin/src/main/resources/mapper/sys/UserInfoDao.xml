@@ -8,20 +8,22 @@
         <result property="userId" column="USER_ID"/>
         <result property="userName" column="USER_NAME"/>
         <result property="userType" column="USER_TYPE"/>
-        <result property="userSex" column="USER_SEX"/>
+        <result property="userIdCard" column="USER_ID_CARD"/>
         <result property="phone" column="PHONE"/>
         <result property="address" column="ADDRESS"/>
         <result property="wxUname" column="WX_UNAME"/>
         <result property="wxOpenid" column="WX_OPENID"/>
-        <result property="wxHeadpic" column="WX_HEADPIC"/>
+        <result property="organization" column="ORGANIZATION"/>
         <result property="memo" column="MEMO"/>
         <result property="userNo" column="USER_NO"/>
         <result property="registTime" column="REGIST_TIME"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
     </resultMap>
 
     <select id="getOpenId" resultMap="userInfoMap">
         SELECT
-        WX_OPENID,USER_ID,USER_NAME,PHONE,WX_UNAME,WX_OPENID,WX_HEADPIC,USER_NO,REGIST_TIME,USER_TYPE
+        WX_OPENID,USER_ID,USER_NAME,PHONE,WX_UNAME,WX_OPENID,ORGANIZATION,USER_NO,REGIST_TIME,USER_TYPE
         FROM
         user_info
         WHERE WX_OPENID = #{wxOpenid,jdbcType=VARCHAR}

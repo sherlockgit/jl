@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+			<#if shiro.hasPermission("sys:articleinfo:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("sys:articleinfo:update")>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("sys:articleinfo:delete")>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+														                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文章编号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleNo" placeholder="文章编号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文章封面图</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articlePic" placeholder="文章封面图"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文章名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleName" placeholder="文章名称"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文章分类</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleType" placeholder="文章分类"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文章状态[0-上线, 1-下线， 2-新建]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleStatus" placeholder="文章状态[0-上线, 1-下线， 2-新建]"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文章标签[0-私募 1-财经 2-保险]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleTag" placeholder="文章标签[0-私募 1-财经 2-保险]"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文章作者</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleAuthor" placeholder="文章作者"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">外部引用地址</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleHref" placeholder="外部引用地址"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文章简介</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleBrief" placeholder="文章简介"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文章内容</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleContent" placeholder="文章内容"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">文章排序</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleSort" placeholder="文章排序"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">阅读数</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.articleReads" placeholder="阅读数"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.createTime" placeholder="创建时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发布时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.publishTime" placeholder="发布时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">下线时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="articleInfo.downTime" placeholder="下线时间"/>
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/articleinfo.js?_${.now?long}"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+			<#if shiro.hasPermission("sys:courseinfo:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("sys:courseinfo:update")>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("sys:courseinfo:delete")>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+														                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程编号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseNo" placeholder="课程编号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程封面图</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.coursePic" placeholder="课程封面图"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseName" placeholder="课程名称"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程老师</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseTeacher" placeholder="课程老师"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程总价格</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.coursePrice" placeholder="课程总价格"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程时长(min)</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseMinute" placeholder="课程时长(min)"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程标签[0-私募,1-财经，2-保险]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseTag" placeholder="课程标签[0-私募,1-财经，2-保险]"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程分类[0-热门推荐， 1-精品课程， 2-免费专区  3-线下课程]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseType" placeholder="课程分类[0-热门推荐， 1-精品课程， 2-免费专区  3-线下课程]"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程状态[0-上线, 1-下线， 2-新建]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseStatus" placeholder="课程状态[0-上线, 1-下线， 2-新建]"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程排序</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseSort" placeholder="课程排序"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程文件URL</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseFile" placeholder="课程文件URL"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">播放总次数</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.coursePalys" placeholder="播放总次数"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程简介</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseBrief" placeholder="课程简介"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">课程详情</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.courseContent" placeholder="课程详情"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.createTime" placeholder="创建时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发布时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.publishTime" placeholder="发布时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">下线时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="courseInfo.downTime" placeholder="下线时间"/>
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/courseinfo.js?_${.now?long}"></script>
+</body>
+</html>

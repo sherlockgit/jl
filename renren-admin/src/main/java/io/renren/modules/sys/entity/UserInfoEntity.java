@@ -42,14 +42,14 @@ public class UserInfoEntity implements Serializable {
 	@NotBlank(message="会员姓名不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String userName;
 	/**
-	 * 用户类型[1-VIP  2-普通用户]
+	 * 用户类型[1-金牌会员  2-银牌会员 3-铜牌会员 4-普通会员]
 	 */
 	@NotBlank(message="会员类型不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String userType;
 	/**
 	 * 性别
 	 */
-	private String userSex;
+	private String userIdCard;
 	/**
 	 * 手机号码
 	 */
@@ -72,7 +72,7 @@ public class UserInfoEntity implements Serializable {
 	/**
 	 * 微信头像
 	 */
-	private String wxHeadpic;
+	private String organization;
 	/**
 	 * 说明
 	 */
@@ -83,6 +83,18 @@ public class UserInfoEntity implements Serializable {
 	private String userNo;
 	/**
 	 * 注册时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date startTime;
+
+	/**
+	 * 开通时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date endTime;
+
+	/**
+	 * 到期时间
 	 */
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date registTime;
@@ -135,18 +147,6 @@ public class UserInfoEntity implements Serializable {
 		return userType;
 	}
 	/**
-	 * 设置：性别
-	 */
-	public void setUserSex(String userSex) {
-		this.userSex = userSex;
-	}
-	/**
-	 * 获取：性别
-	 */
-	public String getUserSex() {
-		return userSex;
-	}
-	/**
 	 * 设置：手机号码
 	 */
 	public void setPhone(String phone) {
@@ -194,18 +194,39 @@ public class UserInfoEntity implements Serializable {
 	public String getWxOpenid() {
 		return wxOpenid;
 	}
-	/**
-	 * 设置：微信头像
-	 */
-	public void setWxHeadpic(String wxHeadpic) {
-		this.wxHeadpic = wxHeadpic;
+
+	public String getUserIdCard() {
+		return userIdCard;
 	}
-	/**
-	 * 获取：微信头像
-	 */
-	public String getWxHeadpic() {
-		return wxHeadpic;
+
+	public void setUserIdCard(String userIdCard) {
+		this.userIdCard = userIdCard;
 	}
+
+	public String getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(String organization) {
+		this.organization = organization;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
 	/**
 	 * 设置：说明
 	 */

@@ -1,0 +1,92 @@
+package io.renren.modules.sys.controller;
+
+import java.util.Arrays;
+import java.util.Map;
+
+import io.renren.common.validator.ValidatorUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.renren.modules.sys.entity.CourseInfoEntity;
+import io.renren.modules.sys.service.CourseInfoService;
+import io.renren.common.utils.PageUtils;
+import io.renren.common.utils.R;
+
+
+
+/**
+ * 
+ *
+ * @author chenshun
+ * @email sunlightcs@gmail.com
+ * @date 2018-09-27 11:35:10
+ */
+@RestController
+@RequestMapping("sys/courseinfo")
+public class CourseInfoController {
+    @Autowired
+    private CourseInfoService courseInfoService;
+
+    /**
+     * 列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("sys:courseinfo:list")
+    public R list(@RequestParam Map<String, Object> params){
+        PageUtils page = courseInfoService.queryPage(params);
+
+        return R.ok().put("page", page);
+    }
+
+
+    /**
+     * 信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("sys:courseinfo:info")
+    public R info(@PathVariable("id") Integer id){
+        CourseInfoEntity courseInfo = courseInfoService.selectById(id);
+
+        return R.ok().put("courseInfo", courseInfo);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("sys:courseinfo:save")
+    public R save(@RequestBody CourseInfoEntity courseInfo){
+        courseInfoService.insert(courseInfo);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("sys:courseinfo:update")
+    public R update(@RequestBody CourseInfoEntity courseInfo){
+        ValidatorUtils.validateEntity(courseInfo);
+        courseInfoService.updateAllColumnById(courseInfo);//全部更新
+        
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("sys:courseinfo:delete")
+    public R delete(@RequestBody Integer[] ids){
+        courseInfoService.deleteBatchIds(Arrays.asList(ids));
+
+        return R.ok();
+    }
+
+}

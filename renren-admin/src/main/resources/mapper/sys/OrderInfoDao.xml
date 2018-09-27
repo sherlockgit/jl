@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.OrderInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.OrderInfoEntity" id="orderInfoMap">
+        <result property="id" column="id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="courseName" column="course_name"/>
+        <result property="coursePrice" column="course_price"/>
+        <result property="orderType" column="order_type"/>
+        <result property="orderPrice" column="order_price"/>
+        <result property="orderCoupon" column="order_coupon"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="payType" column="pay_type"/>
+        <result property="orgName" column="org_name"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="createTime" column="create_time"/>
+        <result property="payTime" column="pay_time"/>
+    </resultMap>
+
+
+</mapper>

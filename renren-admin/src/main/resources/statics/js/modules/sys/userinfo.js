@@ -10,27 +10,28 @@ $(function () {
                     '<span>--</span>' :
                     value;
             }},
-			{ label: '性别', name: 'userSex', width: 80, formatter: function(value, options, row){
-                if (value == '0') {
-                    return '<span>男</span>';
-                } else if (value == '1') {
-                    return '<span>女</span>';
-                } else {
-                    return '<span>--</span>';
-                }
-            }},
+            { label: '机构名称', name: 'organization', index: 'organization', width: 80 },
 			{ label: '手机号码', name: 'phone', index: 'PHONE', width: 80 ,formatter: function(value, options, row){
                 return value == null ?
                     '<span>--</span>' :
                     value;
             }},
             { label: '会员类型', name: 'userType',width: 80, formatter: function(value, options, row){
-                return value == '1' ?
-                    '<span >VIP用户</span>' :
-                    '<span >普通用户</span>';
+                if (value == '1') {
+                    return '<span>金牌会员</span>';
+                } else if (value == '2') {
+                    return '<span>银牌会员</span>';
+                }else if (value == '3') {
+                    return '<span>铜牌会员</span>';
+                } else {
+                    return '<span>普通会员</span>';
+                }
             }},
 			{ label: '微信号', name: 'wxUname', index: 'WX_UNAME', width: 80 },
+            { label: 'OPENID', name: 'wxOpenid', index: 'WX_OPENID', width: 80 },
 			{ label: '注册时间', name: 'registTime', index: 'REGIST_TIME', width: 80 },
+            { label: '开通时间', name: 'startTime', index: 'START_TIME', width: 80 },
+            { label: '到期时间', name: 'endTime', index: 'END_TIME', width: 80 },
             {
                 label: '操作', name: '', index: 'operate', width: 50, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
@@ -90,7 +91,7 @@ var vm = new Vue({
 			vm.showList = false;
             vm.showSaveOrUpdate = true,
 			vm.title = "新增";
-			vm.userInfo = {userSex:0};
+			vm.userInfo = {userType:4};
 		},
 		update: function (event) {
 			var userId = getSelectedRow();

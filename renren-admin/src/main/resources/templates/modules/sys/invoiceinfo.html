@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+			<#if shiro.hasPermission("sys:invoiceinfo:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("sys:invoiceinfo:update")>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("sys:invoiceinfo:delete")>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+														                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发票编号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.invoiceNo" placeholder="发票编号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发票抬头</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.invoiceName" placeholder="发票抬头"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">开票金额</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.invoiceAmt" placeholder="开票金额"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">开票装[0-未开票  1-开票中  2-已开票]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.invoiceStauts" placeholder="开票装[0-未开票  1-开票中  2-已开票]"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">开票类型[0-普票  1- 专票]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.invoiceType" placeholder="开票类型[0-普票  1- 专票]"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发票性质[0-电子发票，1-纸质发票]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.invoiceNature" placeholder="发票性质[0-电子发票，1-纸质发票]"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">开票类目[0-服务费， 1-会务费   2-咨询费]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.invoiceCategory" placeholder="开票类目[0-服务费， 1-会务费   2-咨询费]"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">稅务登记号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.taxNo" placeholder="稅务登记号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">开户银行</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.bankName" placeholder="开户银行"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">开户账号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.bankCard" placeholder="开户账号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">收件人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.cneeName" placeholder="收件人"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">收件电话</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.cneePhone" placeholder="收件电话"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">收件地址</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.cneeAddr" placeholder="收件地址"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">快递公司</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.expressOrg" placeholder="快递公司"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">快递编号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.expressNo" placeholder="快递编号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">快递签收[0-未签收， 1-已签收]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.expressSign" placeholder="快递签收[0-未签收， 1-已签收]"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">开票时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.expressTime" placeholder="开票时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">申请开票时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.applyTime" placeholder="申请开票时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">订单编号集合[aa,bbb]</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="invoiceInfo.orderNos" placeholder="订单编号集合[aa,bbb]"/>
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/invoiceinfo.js?_${.now?long}"></script>
+</body>
+</html>

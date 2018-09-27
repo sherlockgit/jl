@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.InvoiceInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.InvoiceInfoEntity" id="invoiceInfoMap">
+        <result property="id" column="id"/>
+        <result property="invoiceNo" column="invoice_no"/>
+        <result property="invoiceName" column="invoice_name"/>
+        <result property="invoiceAmt" column="invoice_amt"/>
+        <result property="invoiceStauts" column="invoice_stauts"/>
+        <result property="invoiceType" column="invoice_type"/>
+        <result property="invoiceNature" column="invoice_nature"/>
+        <result property="invoiceCategory" column="invoice_category"/>
+        <result property="taxNo" column="tax_no"/>
+        <result property="bankName" column="bank_name"/>
+        <result property="bankCard" column="bank_card"/>
+        <result property="cneeName" column="cnee_name"/>
+        <result property="cneePhone" column="cnee_phone"/>
+        <result property="cneeAddr" column="cnee_addr"/>
+        <result property="expressOrg" column="express_org"/>
+        <result property="expressNo" column="express_no"/>
+        <result property="expressSign" column="express_sign"/>
+        <result property="expressTime" column="express_time"/>
+        <result property="applyTime" column="apply_time"/>
+        <result property="orderNos" column="order_nos"/>
+    </resultMap>
+
+
+</mapper>

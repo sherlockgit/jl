@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.CourseInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.CourseInfoEntity" id="courseInfoMap">
+        <result property="id" column="id"/>
+        <result property="courseNo" column="course_no"/>
+        <result property="coursePic" column="course_pic"/>
+        <result property="courseName" column="course_name"/>
+        <result property="courseTeacher" column="course_teacher"/>
+        <result property="coursePrice" column="course_price"/>
+        <result property="courseMinute" column="course_minute"/>
+        <result property="courseTag" column="course_tag"/>
+        <result property="courseType" column="course_type"/>
+        <result property="courseStatus" column="course_status"/>
+        <result property="courseSort" column="course_sort"/>
+        <result property="courseFile" column="course_file"/>
+        <result property="coursePalys" column="course_palys"/>
+        <result property="courseBrief" column="course_brief"/>
+        <result property="courseContent" column="course_content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="publishTime" column="publish_time"/>
+        <result property="downTime" column="down_time"/>
+    </resultMap>
+
+
+</mapper>
