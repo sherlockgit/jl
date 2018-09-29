@@ -7,6 +7,15 @@ $(function () {
 			{ label: '标题', name: 'title', index: 'TITLE', width: 80 },
             { label: '图片地址', name: 'picture', index: 'PICTURE', width: 80 },
             { label: '跳转地址', name: 'href', index: 'HREF', width: 80 },
+            { label: '归属', name: 'come', width: 80, formatter: function(value, options, row){
+                if (value == '1') {
+                    return '<span>全部</span>';
+                } else if (value == '2') {
+                    return '<span>首页</span>';
+                } else {
+                    return '<span>发现</span>';
+                }
+            }},
 			{ label: '排序', name: 'sort', index: 'SORT', width: 80 }, 			
 			{ label: '轮播状态', name: 'statu', width: 80, formatter: function(value, options, row){
 				if (value == '0') {

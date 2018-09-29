@@ -41,6 +41,20 @@ public class BannerEntity implements Serializable {
 	 * 跳转地址
 	 */
 	private String href;
+
+	public String getCome() {
+		return come;
+	}
+
+	public void setCome(String come) {
+		this.come = come;
+	}
+
+	/**
+	 * 归属【1-全部，2-首页，3发现】
+
+	 */
+	private String come;
 	/**
 	 * 排序
 	 */

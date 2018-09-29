@@ -8,6 +8,7 @@
         <result property="bannerId" column="BANNER_ID"/>
         <result property="title" column="TITLE"/>
         <result property="href" column="HREF"/>
+        <result property="come" column="COME"/>
         <result property="sort" column="SORT"/>
         <result property="statu" column="STATU"/>
         <result property="picture" column="PICTURE"/>

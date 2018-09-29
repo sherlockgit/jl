@@ -3,22 +3,37 @@ $(function () {
         url: baseURL + 'sys/articleinfo/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
-			{ label: '文章编号', name: 'articleNo', index: 'article_no', width: 80 }, 			
-			{ label: '文章封面图', name: 'articlePic', index: 'article_pic', width: 80 }, 			
-			{ label: '文章名称', name: 'articleName', index: 'article_name', width: 80 }, 			
-			{ label: '文章分类', name: 'articleType', index: 'article_type', width: 80 }, 			
-			{ label: '文章状态[0-上线, 1-下线， 2-新建]', name: 'articleStatus', index: 'article_status', width: 80 }, 			
-			{ label: '文章标签[0-私募 1-财经 2-保险]', name: 'articleTag', index: 'article_tag', width: 80 }, 			
-			{ label: '文章作者', name: 'articleAuthor', index: 'article_author', width: 80 }, 			
-			{ label: '外部引用地址', name: 'articleHref', index: 'article_href', width: 80 }, 			
-			{ label: '文章简介', name: 'articleBrief', index: 'article_brief', width: 80 }, 			
-			{ label: '文章内容', name: 'articleContent', index: 'article_content', width: 80 }, 			
-			{ label: '文章排序', name: 'articleSort', index: 'article_sort', width: 80 }, 			
-			{ label: '阅读数', name: 'articleReads', index: 'article_reads', width: 80 }, 			
-			{ label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 			
-			{ label: '发布时间', name: 'publishTime', index: 'publish_time', width: 80 }, 			
-			{ label: '下线时间', name: 'downTime', index: 'down_time', width: 80 }			
+			{ label: 'id',hidden: true, name: 'id', index: 'id', width: 50, key: true },
+			{ label: '文章编号', name: 'articleNo', index: 'article_no', width: 80 },
+            { label: '文章名称', name: 'articleName', index: 'article_name', width: 80 },
+            { label: '文章标签', name: 'articleTag', width: 80, formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>私募</span>';
+                } else if (value == '1') {
+                    return '<span>财经</span>';
+                } else {
+                    return '<span>保险</span>';
+                }
+            }},
+            { label: '文章状态', name: 'articleStatus',  width: 80, formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>上线</span>';
+                } else if (value == '1') {
+                    return '<span>下线</span>';
+                } else {
+                    return '<span>新建</span>';
+                }
+            }},
+            { label: '文章作者', name: 'articleAuthor', index: 'article_author', width: 80 },
+            { label: '创建时间', name: 'createTime', index: 'create_time', width: 80 },
+            { label: '发布时间', name: 'publishTime', index: 'publish_time', width: 80 },
+            {
+                label: '操作', name: '', index: 'operate', width: 50, align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    var detail="<a  onclick='vm.detail(\""+ rowObject.bannerId + "\")'' href=\"#\" >详情</a>";
+                    return detail;
+                },
+            },
         ],
 		viewrecords: true,
         height: 385,
@@ -50,6 +65,13 @@ $(function () {
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
+        q:{
+            articleNo: null,
+            articleName: null,
+            articleAuthor: null,
+            articleTag: "",
+            articleStatus: ""
+        },
 		showList: true,
 		title: null,
 		articleInfo: {}
@@ -128,4 +150,38 @@ var vm = new Vue({
             }).trigger("reloadGrid");
 		}
 	}
+});
+
+layui.use('upload', function(){
+    var $ = layui.jquery
+        ,upload = layui.upload;
+
+    //普通图片上传
+    var uploadInst = upload.render({
+        elem: '#file'
+        ,url: baseURL + "common/upload/"
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            layer.load(2);
+            obj.preview(function(index, file, result){
+                $('#img').attr('src', result); //图片链接（base64）
+            });
+        }
+        ,done: function(res){
+            //如果上传失败
+            if(res.code > 0){
+                return layer.msg('上传失败');
+            }
+            vm.articleInfo.articlePic = res.msg//上传成功
+            layer.closeAll('loading');
+        }
+        ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+        }
+    });
 });
