@@ -51,7 +51,7 @@
         <div id="jqGridPager"></div>
     </div>
 
-    <div v-show="!showList" class="panel panel-default">
+    <div v-show="showSaveOrUpdate" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group">
@@ -130,7 +130,85 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                <input type="button" class="btn btn-primary site-demo-layedit" data-type="content"  value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+
+    <div v-show="showDetail" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">文章名称</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="articleInfo.articleName" placeholder="文章名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">文章作者</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="articleInfo.articleAuthor" placeholder="文章作者"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">外部引用地址</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="articleInfo.articleHref" placeholder="外部引用地址"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">文章标签</div>
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <select class="form-control" disabled  v-model="articleInfo.articleTag">
+                            <option value="0" disabled >私募</option>
+                            <option value="1" disabled >财经</option>
+                            <option value="2" disabled >保险</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">文章状态</div>
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <select class="form-control" disabled  v-model="articleInfo.articleStatus">
+                            <option value="0" disabled >上线</option>
+                            <option value="1" disabled >下线</option>
+                            <option value="2" disabled >新建</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章封面图</label>
+                <div class="layui-inline">
+                    <div class="layui-upload-list layui-input-inline">
+                        <img class="layui-upload-img" id="imgd" width="100px" height="100px" >
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">文章排序</div>
+                <div class="col-sm-10">
+                    <input type="number" disabled class="form-control" v-model="articleInfo.articleSort" placeholder="文章排序"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">文章简介</div>
+                <div class="col-sm-10">
+                    <textarea disabled class="form-control" lay-verify="number" rows="2" v-model="articleInfo.articleBrief" name="proBrief"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">文章内容</div>
+                <div class="col-sm-10">
+                    <textarea class="layui-textarea" disabled id="LAY_demo1d" v-model="articleInfo.articleContent" style="display: none"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
             </div>
         </form>

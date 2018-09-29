@@ -30,7 +30,7 @@ $(function () {
             {
                 label: '操作', name: '', index: 'operate', width: 50, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
-                    var detail="<a  onclick='vm.detail(\""+ rowObject.bannerId + "\")'' href=\"#\" >详情</a>";
+                    var detail="<a  onclick='vm.detail(\""+ rowObject.id + "\")'' href=\"#\" >详情</a>";
                     return detail;
                 },
             },
@@ -72,7 +72,9 @@ var vm = new Vue({
             articleTag: "",
             articleStatus: ""
         },
-		showList: true,
+        showList: true,
+        showSaveOrUpdate: false,
+        showDetail: false,
 		title: null,
 		articleInfo: {}
 	},
@@ -82,8 +84,58 @@ var vm = new Vue({
 		},
 		add: function(){
 			vm.showList = false;
+            vm.showSaveOrUpdate = true;
 			vm.title = "新增";
-			vm.articleInfo = {};
+			vm.articleInfo = {articleTag: 0,articleStatus:2 ,articleSort: 1};
+
+            layui.use('layedit', function(){
+                var layedit = layui.layedit
+                    ,$ = layui.jquery;
+
+
+                layedit.set({
+                    uploadImage: {
+                        url: baseURL + "common/uploadEdit/" //接口url
+                        ,type: 'post' //默认post
+                    }
+                });
+
+
+                //构建一个默认的编辑器
+                var index = layedit.build('LAY_demo1',{
+                    height: 520 ,//设置编辑器高度
+                });
+
+                var active = {
+                    content: function () {
+                        vm.articleInfo.articleContent = layedit.getContent(index)
+                        var url = vm.articleInfo.id == null ? "sys/articleInfo/save" : "sys/articleInfo/update";
+
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + url,
+                            contentType: "application/json",
+                            data: JSON.stringify(vm.articleInfo),
+                            success: function(r){
+                                if(r.code === 0){
+                                    alert('操作成功', function(index){
+                                        location.reload()
+                                    });
+                                }else{
+                                    alert(r.msg);
+                                }
+                            }
+                        });
+
+                    }
+                }
+                $('.site-demo-layedit').on('click', function(){
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+
+
+            });
 		},
 		update: function (event) {
 			var id = getSelectedRow();
@@ -91,10 +143,24 @@ var vm = new Vue({
 				return ;
 			}
 			vm.showList = false;
+            vm.showSaveOrUpdate = true;
             vm.title = "修改";
             
             vm.getInfo(id)
 		},
+        detail: function (id) {
+            if(id == null){
+                return ;
+            }
+
+            vm.showList = false;
+            vm.showDetail = true,
+                vm.title = "详情";
+
+            vm.getInfo(id)
+
+
+        },
 		saveOrUpdate: function (event) {
 			var url = vm.articleInfo.id == null ? "sys/articleinfo/save" : "sys/articleinfo/update";
 			$.ajax({
@@ -139,11 +205,35 @@ var vm = new Vue({
 		},
 		getInfo: function(id){
 			$.get(baseURL + "sys/articleinfo/info/"+id, function(r){
+                $('#img').attr('src', r.articleInfo.articlePic);
+                $('#imgd').attr('src', r.articleInfo.articlePic);
+                layui.use('layedit', function(){
+                    var layedit = layui.layedit
+                        ,$ = layui.jquery;
+
+
+                    layedit.set({
+                        uploadImage: {
+                            url: baseURL + "common/uploadEdit/" //接口url
+                            ,type: 'post' //默认post
+                        }
+                    });
+
+                    //构建一个默认的编辑器
+                    var index = layedit.build('LAY_demo1d',{
+                        height: 520 ,//设置编辑器高度
+                    });
+                    layedit.setContent(index,r.articleInfo.articleContent,false)
+
+                });
                 vm.articleInfo = r.articleInfo;
             });
+
 		},
 		reload: function (event) {
 			vm.showList = true;
+            vm.showSaveOrUpdate = false;
+            vm.showDetail = false;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
                 page:page
