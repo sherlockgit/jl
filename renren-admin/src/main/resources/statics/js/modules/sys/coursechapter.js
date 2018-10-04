@@ -3,20 +3,31 @@ $(function () {
         url: baseURL + 'sys/coursechapter/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
-			{ label: '课程PID', name: 'courseId', index: 'course_id', width: 80 }, 			
-			{ label: '课程编号', name: 'courseNo', index: 'course_no', width: 80 }, 			
-			{ label: '章节编号', name: 'chapterNo', index: 'chapter_no', width: 80 }, 			
-			{ label: '章节名称', name: 'chapterName', index: 'chapter_name', width: 80 }, 			
-			{ label: '章节价格', name: 'chapterPrice', index: 'chapter_price', width: 80 }, 			
-			{ label: '课程类型[0-直播， 1-录播， 2-问答]', name: 'chapterType', index: 'chapter_type', width: 80 }, 			
-			{ label: '章节排序', name: 'chapterSort', index: 'chapter_sort', width: 80 }, 			
-			{ label: '章节状态[0-上线, 1-下线， 2-新建]', name: 'chapterStatus', index: 'chapter_status', width: 80 }, 			
-			{ label: '章节老师', name: 'chapterTeacher', index: 'chapter_teacher', width: 80 }, 			
-			{ label: '章节文件[视频/音频文件]', name: 'chapterFile', index: 'chapter_file', width: 80 }, 			
-			{ label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 			
-			{ label: '发布时间', name: 'publishTime', index: 'publish_time', width: 80 }, 			
-			{ label: '下线时间', name: 'downTime', index: 'down_time', width: 80 }			
+			{ label: 'id',hidden: true, name: 'id', index: 'id', width: 50, key: true },
+            { label: '章节名称', name: 'chapterName', index: 'chapter_name', width: 80 },
+            { label: '章节价格', name: 'chapterPrice', index: 'chapter_price', width: 80 },
+            { label: '章节状态', name: 'chapterStatus',  width: 80, formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>新建</span>';
+                } else if (value == '1') {
+                    return '<span>上线</span>';
+                } else {
+                    return '<span>下线</span>';
+                }
+            }},
+            { label: '章节排序', name: 'chapterSort', index: 'chapter_sort', width: 80 },
+            { label: '章节播放次数', name: 'chapterPlays', index: 'chapter_plays', width: 80 },
+            { label: '章节老师', name: 'chapterTeacher', index: 'chapter_teacher', width: 80 },
+            { label: '创建时间', name: 'createTime', index: 'create_time', width: 80 },
+            { label: '上线时间', name: 'publishTime', index: 'publish_time', width: 80 },
+            {
+                label: '操作', name: '', index: 'operate', width: 50, align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    var detail="<a  onclick='vm.detail(\""+ rowObject.id + "\")'' href=\"#\" >详情</a>|";
+                    var update="<a  onclick='vm.update(\""+ rowObject.id + "\")'' href=\"#\" >修改</a>"
+                    return detail+update;
+                },
+            },
         ],
 		viewrecords: true,
         height: 385,
@@ -48,7 +59,9 @@ $(function () {
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
-		showList: true,
+        showList: true,
+        showSaveOrUpdate: false,
+        showDetail: false,
 		title: null,
 		courseChapter: {}
 	},
@@ -57,7 +70,8 @@ var vm = new Vue({
 			vm.reload();
 		},
 		add: function(){
-			vm.showList = false;
+            vm.showList = false;
+            vm.showSaveOrUpdate = true;
 			vm.title = "新增";
 			vm.courseChapter = {};
 		},
@@ -71,6 +85,30 @@ var vm = new Vue({
             
             vm.getInfo(id)
 		},
+        detail: function (id) {
+            if(id == null){
+                return ;
+            }
+
+            vm.showList = false;
+            vm.showDetail = true,
+                vm.title = "详情";
+
+            vm.getInfo(id)
+
+
+        },
+        update: function (id) {
+            if(id == null){
+                return ;
+            }
+            vm.showList = false;
+            vm.showSaveOrUpdate = true;
+            vm.showDetail =false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+        },
 		saveOrUpdate: function (event) {
 			var url = vm.courseChapter.id == null ? "sys/coursechapter/save" : "sys/coursechapter/update";
 			$.ajax({

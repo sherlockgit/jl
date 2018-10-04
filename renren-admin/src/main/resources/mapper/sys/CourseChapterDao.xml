@@ -7,18 +7,22 @@
     <resultMap type="io.renren.modules.sys.entity.CourseChapterEntity" id="courseChapterMap">
         <result property="id" column="id"/>
         <result property="courseId" column="course_id"/>
-        <result property="courseNo" column="course_no"/>
         <result property="chapterNo" column="chapter_no"/>
         <result property="chapterName" column="chapter_name"/>
-        <result property="chapterPrice" column="chapter_price"/>
         <result property="chapterType" column="chapter_type"/>
+        <result property="chapterPrice" column="chapter_price"/>
         <result property="chapterSort" column="chapter_sort"/>
         <result property="chapterStatus" column="chapter_status"/>
         <result property="chapterTeacher" column="chapter_teacher"/>
+        <result property="chapterPlays" column="chapter_plays"/>
+        <result property="chapterIstry" column="chapter_istry"/>
         <result property="chapterFile" column="chapter_file"/>
+        <result property="previewFile" column="preview_file"/>
         <result property="createTime" column="create_time"/>
         <result property="publishTime" column="publish_time"/>
         <result property="downTime" column="down_time"/>
+        <result property="chapterMinute" column="chapter_minute"/>
+        <result property="chapterMemo" column="chapter_memo"/>
     </resultMap>
 
 

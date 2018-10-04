@@ -13,9 +13,9 @@ spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://39.108.115.173:3306/jldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
-        username: root
-        password: admin@123456
+        url: jdbc:mysql://rm-uf6g88pgs1x03vy6yao.mysql.rds.aliyuncs.com/smxydb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        username: rootsmxy
+        password: Jlsmxy2018
     jackson:
         time-zone: GMT+8
         date-format: yyyy-MM-dd HH:mm:ss

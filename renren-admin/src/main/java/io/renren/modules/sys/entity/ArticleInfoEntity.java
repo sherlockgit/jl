@@ -25,7 +25,7 @@ public class ArticleInfoEntity implements Serializable {
 	/**
 	 * 文章编号
 	 */
-	private Integer articleNo;
+	private String articleNo;
 	/**
 	 * 文章封面图
 	 */
@@ -98,13 +98,13 @@ public class ArticleInfoEntity implements Serializable {
 	/**
 	 * 设置：文章编号
 	 */
-	public void setArticleNo(Integer articleNo) {
+	public void setArticleNo(String articleNo) {
 		this.articleNo = articleNo;
 	}
 	/**
 	 * 获取：文章编号
 	 */
-	public Integer getArticleNo() {
+	public String getArticleNo() {
 		return articleNo;
 	}
 	/**

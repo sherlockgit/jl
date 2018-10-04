@@ -3,24 +3,49 @@ $(function () {
         url: baseURL + 'sys/courseinfo/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
+			{ label: 'id',hidden: true, name: 'id', index: 'id', width: 50, key: true },
 			{ label: '课程编号', name: 'courseNo', index: 'course_no', width: 80 }, 			
-			{ label: '课程封面图', name: 'coursePic', index: 'course_pic', width: 80 }, 			
-			{ label: '课程名称', name: 'courseName', index: 'course_name', width: 80 }, 			
-			{ label: '课程老师', name: 'courseTeacher', index: 'course_teacher', width: 80 }, 			
-			{ label: '课程总价格', name: 'coursePrice', index: 'course_price', width: 80 }, 			
-			{ label: '课程时长(min)', name: 'courseMinute', index: 'course_minute', width: 80 }, 			
-			{ label: '课程标签[0-私募,1-财经，2-保险]', name: 'courseTag', index: 'course_tag', width: 80 }, 			
-			{ label: '课程分类[0-热门推荐， 1-精品课程， 2-免费专区  3-线下课程]', name: 'courseType', index: 'course_type', width: 80 }, 			
-			{ label: '课程状态[0-上线, 1-下线， 2-新建]', name: 'courseStatus', index: 'course_status', width: 80 }, 			
-			{ label: '课程排序', name: 'courseSort', index: 'course_sort', width: 80 }, 			
-			{ label: '课程文件URL', name: 'courseFile', index: 'course_file', width: 80 }, 			
-			{ label: '播放总次数', name: 'coursePalys', index: 'course_palys', width: 80 }, 			
-			{ label: '课程简介', name: 'courseBrief', index: 'course_brief', width: 80 }, 			
-			{ label: '课程详情', name: 'courseContent', index: 'course_content', width: 80 }, 			
-			{ label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 			
-			{ label: '发布时间', name: 'publishTime', index: 'publish_time', width: 80 }, 			
-			{ label: '下线时间', name: 'downTime', index: 'down_time', width: 80 }			
+			{ label: '课程名称', name: 'courseName', index: 'course_name', width: 80 },
+            { label: '课程分类', name: 'courseType',  width: 80, formatter: function(value, options, row){
+                if (value == '1') {
+                    return '<span>精品课程</span>';
+                } else if (value == '2') {
+                    return '<span>免费专区</span>';
+                } else {
+                    return '<span>线下课程</span>';
+                }
+            }},
+            { label: '课程标签', name: 'courseTag', width: 80, formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>私募</span>';
+                } else if (value == '1') {
+                    return '<span>财经</span>';
+                } else {
+                    return '<span>保险</span>';
+                }
+            }},
+            { label: '课程总价格', name: 'coursePrice', index: 'course_price', width: 80 },
+            { label: '课程状态', name: 'courseStatus', width: 80, formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>新建</span>';
+                } else if (value == '1') {
+                    return '<span>上线</span>';
+                } else {
+                    return '<span>下线</span>';
+                }
+            }},
+            { label: '播放总次数', name: 'coursePalys', index: 'course_palys', width: 80 },
+            { label: '课程老师', name: 'courseTeacher', index: 'course_teacher', width: 80 },
+            { label: '创建时间', name: 'createTime', index: 'create_time', width: 80 },
+            { label: '发布时间', name: 'publishTime', index: 'publish_time', width: 80 },
+            {
+                label: '操作', name: '', index: 'operate', width: 50, align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    var detail="<a  onclick='vm.detail(\""+ rowObject.id + "\")'' href=\"#\" >详情</a>|";
+                    var update="<a  onclick='vm.update(\""+ rowObject.id + "\")'' href=\"#\" >修改</a>"
+                    return detail+update;
+                },
+            },
         ],
 		viewrecords: true,
         height: 385,
@@ -52,7 +77,16 @@ $(function () {
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
+        q:{
+            courseNo: null,
+            courseName: null,
+            courseTeacher: null,
+            courseType: "",
+            courseStatus: ""
+        },
 		showList: true,
+        showSaveOrUpdate: false,
+        showDetail: false,
 		title: null,
 		courseInfo: {}
 	},
@@ -61,16 +95,82 @@ var vm = new Vue({
 			vm.reload();
 		},
 		add: function(){
-			vm.showList = false;
+            $('#img').removeAttr("src")
+
+            vm.showList = false;
+            vm.showSaveOrUpdate = true;
 			vm.title = "新增";
 			vm.courseInfo = {};
+
+            layui.use('layedit', function(){
+                var layedit = layui.layedit
+                    ,$ = layui.jquery;
+
+
+                layedit.set({
+                    uploadImage: {
+                        url: baseURL + "common/uploadEdit/" //接口url
+                        ,type: 'post' //默认post
+                    }
+                });
+
+
+                //构建一个默认的编辑器
+                var index = layedit.build('LAY_demo1',{
+                    height: 520 ,//设置编辑器高度
+                });
+
+                var active = {
+                    content: function () {
+                        vm.courseInfo.courseContent = layedit.getContent(index)
+                        var url = vm.courseInfo.id == null ? "sys/courseinfo/save" : "sys/courseinfo/update";
+                        console.log(url)
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + url,
+                            contentType: "application/json",
+                            data: JSON.stringify(vm.courseInfo),
+                            success: function(r){
+                                if(r.code === 0){
+                                    alert('操作成功', function(index){
+                                        vm.reload();
+                                    });
+                                }else{
+                                    alert(r.msg);
+                                }
+                            }
+                        });
+
+                    }
+                }
+                $('.site-demo-layedit').on('click', function(){
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+
+
+            });
 		},
-		update: function (event) {
-			var id = getSelectedRow();
+        detail: function (id) {
+            if(id == null){
+                return ;
+            }
+
+            vm.showList = false;
+            vm.showDetail = true,
+                vm.title = "详情";
+
+            vm.getInfo(id)
+
+
+        },
+		update: function (id) {
 			if(id == null){
 				return ;
 			}
-			vm.showList = false;
+            vm.showList = false;
+            vm.showSaveOrUpdate = true;
+            vm.showDetail =false;
             vm.title = "修改";
             
             vm.getInfo(id)
@@ -120,14 +220,72 @@ var vm = new Vue({
 		getInfo: function(id){
 			$.get(baseURL + "sys/courseinfo/info/"+id, function(r){
                 vm.courseInfo = r.courseInfo;
+                $('#img').attr('src', r.courseInfo.coursePic);
+                $('#imgd').attr('src', r.courseInfo.coursePic);
+                layui.use('layedit', function(){
+                    var layedit = layui.layedit
+                        ,$ = layui.jquery;
+
+
+                    layedit.set({
+                        uploadImage: {
+                            url: baseURL + "common/uploadEdit/" //接口url
+                            ,type: 'post' //默认post
+                        }
+                    });
+
+                    //构建一个默认的编辑器
+                    var index = layedit.build('LAY_demo1d',{
+                        height: 520 ,//设置编辑器高度
+                    });
+                    layedit.setContent(index,r.courseInfo.courseContent,false)
+
+                });
             });
 		},
 		reload: function (event) {
-			vm.showList = true;
+            vm.showList = true;
+            vm.showSaveOrUpdate = false;
+            vm.showDetail = false;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
                 page:page
             }).trigger("reloadGrid");
 		}
 	}
+});
+
+
+layui.use('upload', function(){
+    var $ = layui.jquery
+        ,upload = layui.upload;
+
+    //普通图片上传
+    var uploadInst = upload.render({
+        elem: '#file'
+        ,url: baseURL + "common/upload/"
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            layer.load(2);
+            obj.preview(function(index, file, result){
+                $('#img').attr('src', result); //图片链接（base64）
+            });
+        }
+        ,done: function(res){
+            //如果上传失败
+            if(res.code > 0){
+                return layer.msg('上传失败');
+            }
+            vm.courseInfo.coursePic = res.msg//上传成功
+            layer.closeAll('loading');
+        }
+        ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+        }
+    });
 });

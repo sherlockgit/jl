@@ -12,7 +12,7 @@ import java.util.Date;
  * 
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-09-27 11:35:10
+ * @date 2018-10-04 11:10:26
  */
 @TableName("course_info")
 public class CourseInfoEntity implements Serializable {
@@ -26,45 +26,53 @@ public class CourseInfoEntity implements Serializable {
 	/**
 	 * 课程编号
 	 */
-	private Integer courseNo;
-	/**
-	 * 课程封面图
-	 */
-	private String coursePic;
+	private String courseNo;
 	/**
 	 * 课程名称
 	 */
 	private String courseName;
 	/**
-	 * 课程老师
+	 * 课程封面图
 	 */
-	private String courseTeacher;
+	private String coursePic;
 	/**
 	 * 课程总价格
 	 */
 	private BigDecimal coursePrice;
 	/**
+	 * 课程老师
+	 */
+	private String courseTeacher;
+	/**
 	 * 课程时长(min)
 	 */
 	private String courseMinute;
+	/**
+	 * 课程分类[1-精品课程， 2-免费专区  3-线下课程]
+	 */
+	private String courseType;
 	/**
 	 * 课程标签[0-私募,1-财经，2-保险]
 	 */
 	private String courseTag;
 	/**
-	 * 课程分类[0-热门推荐， 1-精品课程， 2-免费专区  3-线下课程]
-	 */
-	private String courseType;
-	/**
-	 * 课程状态[0-上线, 1-下线， 2-新建]
+	 * 课程状态[0-新建 1-上线, 2-下线 ]
 	 */
 	private String courseStatus;
+	/**
+	 * 是否有章节[0-无章节  1- 有章节]
+	 */
+	private String courseIschapter;
+	/**
+	 * 是否热门[0-否  1- 是]
+	 */
+	private String courseIshot;
 	/**
 	 * 课程排序
 	 */
 	private String courseSort;
 	/**
-	 * 课程文件URL
+	 * 课程文件URL（非必填)
 	 */
 	private String courseFile;
 	/**
@@ -107,26 +115,14 @@ public class CourseInfoEntity implements Serializable {
 	/**
 	 * 设置：课程编号
 	 */
-	public void setCourseNo(Integer courseNo) {
+	public void setCourseNo(String courseNo) {
 		this.courseNo = courseNo;
 	}
 	/**
 	 * 获取：课程编号
 	 */
-	public Integer getCourseNo() {
+	public String getCourseNo() {
 		return courseNo;
-	}
-	/**
-	 * 设置：课程封面图
-	 */
-	public void setCoursePic(String coursePic) {
-		this.coursePic = coursePic;
-	}
-	/**
-	 * 获取：课程封面图
-	 */
-	public String getCoursePic() {
-		return coursePic;
 	}
 	/**
 	 * 设置：课程名称
@@ -141,16 +137,16 @@ public class CourseInfoEntity implements Serializable {
 		return courseName;
 	}
 	/**
-	 * 设置：课程老师
+	 * 设置：课程封面图
 	 */
-	public void setCourseTeacher(String courseTeacher) {
-		this.courseTeacher = courseTeacher;
+	public void setCoursePic(String coursePic) {
+		this.coursePic = coursePic;
 	}
 	/**
-	 * 获取：课程老师
+	 * 获取：课程封面图
 	 */
-	public String getCourseTeacher() {
-		return courseTeacher;
+	public String getCoursePic() {
+		return coursePic;
 	}
 	/**
 	 * 设置：课程总价格
@@ -165,6 +161,18 @@ public class CourseInfoEntity implements Serializable {
 		return coursePrice;
 	}
 	/**
+	 * 设置：课程老师
+	 */
+	public void setCourseTeacher(String courseTeacher) {
+		this.courseTeacher = courseTeacher;
+	}
+	/**
+	 * 获取：课程老师
+	 */
+	public String getCourseTeacher() {
+		return courseTeacher;
+	}
+	/**
 	 * 设置：课程时长(min)
 	 */
 	public void setCourseMinute(String courseMinute) {
@@ -175,6 +183,18 @@ public class CourseInfoEntity implements Serializable {
 	 */
 	public String getCourseMinute() {
 		return courseMinute;
+	}
+	/**
+	 * 设置：课程分类[1-精品课程， 2-免费专区  3-线下课程]
+	 */
+	public void setCourseType(String courseType) {
+		this.courseType = courseType;
+	}
+	/**
+	 * 获取：课程分类[1-精品课程， 2-免费专区  3-线下课程]
+	 */
+	public String getCourseType() {
+		return courseType;
 	}
 	/**
 	 * 设置：课程标签[0-私募,1-财经，2-保险]
@@ -189,28 +209,40 @@ public class CourseInfoEntity implements Serializable {
 		return courseTag;
 	}
 	/**
-	 * 设置：课程分类[0-热门推荐， 1-精品课程， 2-免费专区  3-线下课程]
-	 */
-	public void setCourseType(String courseType) {
-		this.courseType = courseType;
-	}
-	/**
-	 * 获取：课程分类[0-热门推荐， 1-精品课程， 2-免费专区  3-线下课程]
-	 */
-	public String getCourseType() {
-		return courseType;
-	}
-	/**
-	 * 设置：课程状态[0-上线, 1-下线， 2-新建]
+	 * 设置：课程状态[0-新建 1-上线, 2-下线 ]
 	 */
 	public void setCourseStatus(String courseStatus) {
 		this.courseStatus = courseStatus;
 	}
 	/**
-	 * 获取：课程状态[0-上线, 1-下线， 2-新建]
+	 * 获取：课程状态[0-新建 1-上线, 2-下线 ]
 	 */
 	public String getCourseStatus() {
 		return courseStatus;
+	}
+	/**
+	 * 设置：是否有章节[0-无章节  1- 有章节]
+	 */
+	public void setCourseIschapter(String courseIschapter) {
+		this.courseIschapter = courseIschapter;
+	}
+	/**
+	 * 获取：是否有章节[0-无章节  1- 有章节]
+	 */
+	public String getCourseIschapter() {
+		return courseIschapter;
+	}
+	/**
+	 * 设置：是否热门[0-否  1- 是]
+	 */
+	public void setCourseIshot(String courseIshot) {
+		this.courseIshot = courseIshot;
+	}
+	/**
+	 * 获取：是否热门[0-否  1- 是]
+	 */
+	public String getCourseIshot() {
+		return courseIshot;
 	}
 	/**
 	 * 设置：课程排序
@@ -225,13 +257,13 @@ public class CourseInfoEntity implements Serializable {
 		return courseSort;
 	}
 	/**
-	 * 设置：课程文件URL
+	 * 设置：课程文件URL（非必填)
 	 */
 	public void setCourseFile(String courseFile) {
 		this.courseFile = courseFile;
 	}
 	/**
-	 * 获取：课程文件URL
+	 * 获取：课程文件URL（非必填)
 	 */
 	public String getCourseFile() {
 		return courseFile;

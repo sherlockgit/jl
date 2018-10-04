@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-09-27 11:35:10
+ * @date 2018-10-04 11:10:26
  */
 public interface CourseInfoService extends IService<CourseInfoEntity> {
 

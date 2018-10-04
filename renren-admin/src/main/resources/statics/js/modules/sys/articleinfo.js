@@ -83,6 +83,9 @@ var vm = new Vue({
 			vm.reload();
 		},
 		add: function(){
+            $('#img').removeAttr("src")
+            $('#imgd').removeAttr("src")
+
 			vm.showList = false;
             vm.showSaveOrUpdate = true;
 			vm.title = "新增";
@@ -109,8 +112,8 @@ var vm = new Vue({
                 var active = {
                     content: function () {
                         vm.articleInfo.articleContent = layedit.getContent(index)
-                        var url = vm.articleInfo.id == null ? "sys/articleInfo/save" : "sys/articleInfo/update";
-
+                        var url = vm.articleInfo.id == null ? "sys/articleinfo/save" : "sys/articleinfo/update";
+                        console.log(url)
                         $.ajax({
                             type: "POST",
                             url: baseURL + url,
@@ -119,7 +122,7 @@ var vm = new Vue({
                             success: function(r){
                                 if(r.code === 0){
                                     alert('操作成功', function(index){
-                                        location.reload()
+                                        vm.reload();
                                     });
                                 }else{
                                     alert(r.msg);
