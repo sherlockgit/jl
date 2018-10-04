@@ -31,7 +31,8 @@ $(function () {
                 label: '操作', name: '', index: 'operate', width: 50, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
                     var detail="<a  onclick='vm.detail(\""+ rowObject.bannerId + "\")'' href=\"#\" >详情</a>";
-                    return detail;
+                    var update="<a  onclick='vm.update(\""+ rowObject.bannerId + "\")'' href=\"#\" >修改</a>"
+                    return detail+'|'+update;
                 },
             },
         ],
@@ -83,8 +84,7 @@ var vm = new Vue({
 			vm.title = "新增";
 			vm.banner = {statu: 0,sort: 1};
 		},
-		update: function (event) {
-			var bannerId = getSelectedRow();
+		update: function (bannerId) {
 			if(bannerId == null){
 				return ;
 			}

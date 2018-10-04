@@ -1,5 +1,6 @@
 package io.renren.modules.sys.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -18,9 +19,20 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoDao, CourseInfo
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String courseNo = (String)params.get("courseNo");
+        String courseName = (String)params.get("courseName");
+        String courseTeacher = (String)params.get("courseTeacher");
+        String courseType = (String)params.get("courseType");
+        String courseStatus = (String)params.get("courseStatus");
+
         Page<CourseInfoEntity> page = this.selectPage(
                 new Query<CourseInfoEntity>(params).getPage(),
                 new EntityWrapper<CourseInfoEntity>()
+                        .like(StringUtils.isNotBlank(courseNo),"course_no", courseNo)
+                        .like(StringUtils.isNotBlank(courseName),"course_name", courseName)
+                        .like(StringUtils.isNotBlank(courseTeacher),"course_teacher", courseTeacher)
+                        .like(StringUtils.isNotBlank(courseType),"course_type", courseType)
+                        .like(StringUtils.isNotBlank(courseStatus),"course_status", courseStatus)
         );
 
         return new PageUtils(page);

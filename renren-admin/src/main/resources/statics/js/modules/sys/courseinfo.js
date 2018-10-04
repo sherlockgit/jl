@@ -100,7 +100,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.showSaveOrUpdate = true;
 			vm.title = "新增";
-			vm.courseInfo = {};
+			vm.courseInfo = {courseType: 2,courseTag: 0,courseStatus:0,courseIschapter:0,courseIshot:0 };
 
             layui.use('layedit', function(){
                 var layedit = layui.layedit
@@ -173,7 +173,7 @@ var vm = new Vue({
             vm.showDetail =false;
             vm.title = "修改";
             
-            vm.getInfo(id)
+            vm.getInfoUpdate(id)
 		},
 		saveOrUpdate: function (event) {
 			var url = vm.courseInfo.id == null ? "sys/courseinfo/save" : "sys/courseinfo/update";
@@ -220,7 +220,6 @@ var vm = new Vue({
 		getInfo: function(id){
 			$.get(baseURL + "sys/courseinfo/info/"+id, function(r){
                 vm.courseInfo = r.courseInfo;
-                $('#img').attr('src', r.courseInfo.coursePic);
                 $('#imgd').attr('src', r.courseInfo.coursePic);
                 layui.use('layedit', function(){
                     var layedit = layui.layedit
@@ -243,18 +242,49 @@ var vm = new Vue({
                 });
             });
 		},
+        getInfoUpdate: function(id){
+            $.get(baseURL + "sys/courseinfo/info/"+id, function(r){
+                vm.courseInfo = r.courseInfo;
+                $('#img').attr('src', r.courseInfo.coursePic);
+                layui.use('layedit', function(){
+                    var layedit = layui.layedit
+                        ,$ = layui.jquery;
+
+
+                    layedit.set({
+                        uploadImage: {
+                            url: baseURL + "common/uploadEdit/" //接口url
+                            ,type: 'post' //默认post
+                        }
+                    });
+
+                    //构建一个默认的编辑器
+                    var index = layedit.build('LAY_demo1',{
+                        height: 520 ,//设置编辑器高度
+                    });
+                    layedit.setContent(index,r.courseInfo.courseContent,false)
+
+                });
+            });
+        },
 		reload: function (event) {
             vm.showList = true;
             vm.showSaveOrUpdate = false;
             vm.showDetail = false;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{ 
+			$("#jqGrid").jqGrid('setGridParam',{
+                postData:{
+                    'courseNo': vm.q.courseNo,
+                    'courseName': vm.q.courseName,
+                    'courseTeacher': vm.q.courseTeacher,
+                    'courseType': vm.q.courseType,
+                    'courseStatus': vm.q.courseStatus
+                },
                 page:page
             }).trigger("reloadGrid");
 		}
 	}
 });
-
 
 layui.use('upload', function(){
     var $ = layui.jquery

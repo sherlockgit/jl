@@ -1,8 +1,10 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
+import io.renren.common.utils.NoUtils;
 import io.renren.common.validator.ValidatorUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,8 @@ public class CourseInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:courseinfo:save")
     public R save(@RequestBody CourseInfoEntity courseInfo){
+        courseInfo.setCourseNo(NoUtils.genOrderNo());
+        courseInfo.setCreateTime(new Date());
         courseInfoService.insert(courseInfo);
 
         return R.ok();

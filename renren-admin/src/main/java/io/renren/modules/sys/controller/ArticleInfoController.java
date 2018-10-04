@@ -53,8 +53,6 @@ public class ArticleInfoController {
     @RequiresPermissions("sys:articleinfo:info")
     public R info(@PathVariable("id") Integer id){
         ArticleInfoEntity articleInfo = articleInfoService.selectById(id);
-        articleInfo.setArticleNo(NoUtils.genOrderNo());
-        articleInfo.setCreateTime(new Date());
         return R.ok().put("articleInfo", articleInfo);
     }
 
@@ -64,6 +62,8 @@ public class ArticleInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:articleinfo:save")
     public R save(@RequestBody ArticleInfoEntity articleInfo){
+        articleInfo.setArticleNo(NoUtils.genOrderNo());
+        articleInfo.setCreateTime(new Date());
         articleInfoService.insert(articleInfo);
 
         return R.ok();
