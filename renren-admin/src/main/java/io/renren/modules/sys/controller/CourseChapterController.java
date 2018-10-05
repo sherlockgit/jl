@@ -1,9 +1,13 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
+import io.renren.common.utils.NoUtils;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.entity.CourseInfoEntity;
+import io.renren.modules.sys.service.CourseInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +36,9 @@ public class CourseChapterController {
     @Autowired
     private CourseChapterService courseChapterService;
 
+    @Autowired
+    private CourseInfoService courseInfoService;
+
     /**
      * 列表
      */
@@ -39,7 +46,10 @@ public class CourseChapterController {
     @RequiresPermissions("sys:coursechapter:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = courseChapterService.queryPage(params);
-
+        page.getList().forEach(o->{
+            CourseChapterEntity courseChapterEntity = (CourseChapterEntity)o;
+            courseChapterEntity.setCourseName(courseInfoService.selectById(courseChapterEntity.getCourseId()).getCourseName());
+        });
         return R.ok().put("page", page);
     }
 
@@ -61,6 +71,8 @@ public class CourseChapterController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:coursechapter:save")
     public R save(@RequestBody CourseChapterEntity courseChapter){
+        courseChapter.setCreateTime(new Date());
+        courseChapter.setChapterNo(NoUtils.genOrderNo());
         courseChapterService.insert(courseChapter);
 
         return R.ok();

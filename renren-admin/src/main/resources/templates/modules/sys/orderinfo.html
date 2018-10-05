@@ -8,104 +8,259 @@
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
-			<#if shiro.hasPermission("sys:orderinfo:save")>
-            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			</#if>
-			<#if shiro.hasPermission("sys:orderinfo:update")>
-            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			</#if>
-			<#if shiro.hasPermission("sys:orderinfo:delete")>
-            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if>
+            <div class="form-inline">
+                <label class="form-inline">订单编号：<input type="text" v-model="q.orderNo" @keyup.enter="query" class="form-control" placeholder="章节编号"></label>
+                <label class="form-inline">手机号码：<input type="text" v-model="q.userPhone" @keyup.enter="query" class="form-control" placeholder="章节名称"></label>
+                <label class="form-inline">订单来源：
+                    <div class="form-group">
+                        <select  class="form-control" v-model="q.orderSource" @keyup.enter="query" >
+                            <option value="" >全部</option>
+                            <option value="0" >堂课</option>
+                            <option value="1" >直播</option>
+                            <option value="2" >录播</option>
+                            <option value="3" >音频</option>
+                        </select>
+                    </div>
+                </label>
+                <label class="form-inline">付款方式：
+                    <div class="form-group">
+                        <select  class="form-control" v-model="q.payType" @keyup.enter="query" >
+                            <option value="" >全部</option>
+                            <option value="0" >微信支付</option>
+                            <option value="1" >支付宝</option>
+                            <option value="2" >银联支付</option>
+                            <option value="3" >线下转账</option>
+                        </select>
+                    </div>
+                </label>
+                <label class="form-inline">付款状态：
+                    <div class="form-group">
+                        <select  class="form-control" v-model="q.payStatus" @keyup.enter="query" >
+                            <option value="" >全部</option>
+                            <option value="0" >待付款</option>
+                            <option value="1" >已付款</option>
+                        </select>
+                    </div>
+                </label>
+                <a class="btn btn-default" @click="query">查询</a>
+            </div>
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
     </div>
 
-    <div v-show="!showList" class="panel panel-default">
+    <div v-show="showSaveOrUpdate" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
-        <form class="form-horizontal">
-														                    <div class="form-group">
-                        <div class="col-sm-2 control-label">订单编号[自动生成]</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.orderNo" placeholder="订单编号[自动生成]"/>
-                        </div>
+        <form class="form-horizontal" style="width:1100px">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">订单编号</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="orderInfo.orderNo" placeholder="订单编号[自动生成]"/>
+                </div>
+                <div class="col-sm-1 control-label">订单来源</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control"  v-model="orderInfo.orderSource">
+                            <option value="0" >堂课</option>
+                            <option value="1" >直播</option>
+                            <option value="2" >录播</option>
+                            <option value="3" >音频</option>
+                        </select>
                     </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">订单名称[课程/问答/直播]</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.courseName" placeholder="订单名称[课程/问答/直播]"/>
-                        </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">课程名称</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="orderInfo.courseName" placeholder="课程名称"/>
+                </div>
+                <div class="col-sm-1 control-label">课程价格</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="orderInfo.coursePrice" placeholder="课程价格"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">订单抵扣</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="orderInfo.orderCoupon" placeholder="订单抵扣"/>
+                </div>
+                <div class="col-sm-1 control-label">实际收款</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="orderInfo.orderPrice" placeholder="实际收款"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">付款方式</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control"  v-model="orderInfo.payType">
+                            <option value="0" >微信支付</option>
+                            <option value="1" >支付宝</option>
+                            <option value="2" >银联支付</option>
+                            <option value="3" >线下转账</option>
+                        </select>
                     </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">课程价格</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.coursePrice" placeholder="课程价格"/>
-                        </div>
+                </div>
+                <div class="col-sm-1 control-label">付款状态</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control"  v-model="orderInfo.payStatus">
+                            <option value="0" >待付款</option>
+                            <option value="1" >已付款</option>
+                        </select>
                     </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">订单类型[0-课程， 2-问答  3-直播]</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.orderType" placeholder="订单类型[0-课程， 2-问答  3-直播]"/>
-                        </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">发票状态</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control"  v-model="orderInfo.invoiceStatus">
+                            <option value="0" >未开票</option>
+                            <option value="1" >需开票</option>
+                            <option value="2" >已开票</option>
+                        </select>
                     </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">订单金额</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.orderPrice" placeholder="订单金额"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">订单抵扣</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.orderCoupon" placeholder="订单抵扣"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">订单状态[0-待付款， 1-已付款， 2-待退款， 3-已退款，4-拒退款]</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.orderStatus" placeholder="订单状态[0-待付款， 1-已付款， 2-待退款， 3-已退款，4-拒退款]"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">付款方式[0-微信， 1-支付宝,  2-银联]</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.payType" placeholder="付款方式[0-微信， 1-支付宝,  2-银联]"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">机构名称</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.orgName" placeholder="机构名称"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">会员姓名</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.userName" placeholder="会员姓名"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">会员电话</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.userPhone" placeholder="会员电话"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">下单时间</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.createTime" placeholder="下单时间"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">付款时间</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="orderInfo.payTime" placeholder="付款时间"/>
-                        </div>
-                    </div>
-							            <div class="form-group">
+                </div>
+                <div class="col-sm-1 control-label">付款时间</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="orderInfo.payTime" placeholder="付款时间"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">会员姓名</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="orderInfo.userName" placeholder="会员姓名"/>
+                </div>
+                <div class="col-sm-1 control-label">会员电话</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="orderInfo.userPhone" placeholder="会员电话"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">机构名称</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="orderInfo.orgName" placeholder="机构名称"/>
+                </div>
+                <div class="col-sm-1 control-label">下单时间</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="orderInfo.createTime" placeholder="下单时间"/>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+
+
+
+    <div v-show="showDetail" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal" style="width:1100px">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">订单编号</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="orderInfo.orderNo" placeholder="订单编号[自动生成]"/>
+                </div>
+                <div class="col-sm-1 control-label">订单来源</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control" disabled v-model="orderInfo.orderSource">
+                            <option value="0" >堂课</option>
+                            <option value="1" >直播</option>
+                            <option value="2" >录播</option>
+                            <option value="3" >音频</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">课程名称</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" disabled v-model="orderInfo.courseName" placeholder="课程名称"/>
+                </div>
+                <div class="col-sm-1 control-label">课程价格</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" disabled v-model="orderInfo.coursePrice" placeholder="课程价格"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">订单抵扣</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" disabled v-model="orderInfo.orderCoupon" placeholder="订单抵扣"/>
+                </div>
+                <div class="col-sm-1 control-label">实际收款</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" disabled v-model="orderInfo.orderPrice" placeholder="实际收款"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">付款方式</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control" disabled  v-model="orderInfo.payType">
+                            <option value="0" >微信支付</option>
+                            <option value="1" >支付宝</option>
+                            <option value="2" >银联支付</option>
+                            <option value="3" >线下转账</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-1 control-label">付款状态</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control" disabled  v-model="orderInfo.payStatus">
+                            <option value="0" >待付款</option>
+                            <option value="1" >已付款</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">发票状态</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control" disabled  v-model="orderInfo.invoiceStatus">
+                            <option value="0" >未开票</option>
+                            <option value="1" >需开票</option>
+                            <option value="2" >已开票</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-1 control-label">付款时间</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" disabled v-model="orderInfo.payTime" placeholder="付款时间"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">会员姓名</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" disabled v-model="orderInfo.userName" placeholder="会员姓名"/>
+                </div>
+                <div class="col-sm-1 control-label">会员电话</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" disabled v-model="orderInfo.userPhone" placeholder="会员电话"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">机构名称</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" disabled v-model="orderInfo.orgName" placeholder="机构名称"/>
+                </div>
+                <div class="col-sm-1 control-label">下单时间</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" disabled v-model="orderInfo.createTime" placeholder="下单时间"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
             </div>
         </form>

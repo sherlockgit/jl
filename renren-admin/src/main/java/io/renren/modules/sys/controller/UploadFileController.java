@@ -46,6 +46,23 @@ public class UploadFileController {
 		return R.ok(path);
 	}
 
+	/**
+	 * 文件上传具体方法
+	 * @param file
+	 * @return
+	 */
+	@PostMapping("/UploadFile")
+	public R UploadFile(@RequestParam("file") MultipartFile file){
+
+		System.out.println("文件上传开始");
+
+		OSSClient ossClient= OSSUtil.getOSSClient();
+		String path = OSSUtil.uploadObject2OSS(ossClient,file, OSSConfig.folder);
+		System.out.println(path);
+		System.out.println("文件上传结束");
+		return R.ok(path);
+	}
+
 	@PostMapping("/uploadEdit")
 	public R uploadEdit(@RequestParam("file") MultipartFile file){
 		System.out.println("文件上传开始");

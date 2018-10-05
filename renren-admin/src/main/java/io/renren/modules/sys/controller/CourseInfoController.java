@@ -2,6 +2,7 @@ package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import io.renren.common.utils.NoUtils;
@@ -43,6 +44,16 @@ public class CourseInfoController {
         PageUtils page = courseInfoService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 所有列表
+     */
+    @RequestMapping("/getCourseNameList")
+    public R getCourseNameList(){
+        List<CourseInfoEntity> list = courseInfoService.getCourseNameList();
+
+        return R.ok().put("list", list);
     }
 
 

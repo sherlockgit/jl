@@ -3,34 +3,153 @@
 <head>
     <title></title>
 		<#include "/header.html">
+            <link rel="stylesheet" href="${request.contextPath}/statics/plugins/layui2_3_0/css/layui.css" media="all">
+            <script src="${request.contextPath}/statics/plugins/layui2_3_0/layui.js"></script>
+            <script src="${request.contextPath}/statics/plugins/layer/layer.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
-			<#if shiro.hasPermission("sys:coursechapter:save")>
-            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			</#if>
-			<#if shiro.hasPermission("sys:coursechapter:update")>
-            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			</#if>
-			<#if shiro.hasPermission("sys:coursechapter:delete")>
-            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if>
+            <div class="form-inline">
+                <label class="form-inline">章节编号：<input type="text" v-model="q.chapterNo" @keyup.enter="query" class="form-control" placeholder="章节编号"></label>
+                <label class="form-inline">章节名称：<input type="text" v-model="q.chapterName" @keyup.enter="query" class="form-control" placeholder="章节名称"></label>
+                <label class="form-inline">章节老师：<input type="text" v-model="q.chapterTeacher" @keyup.enter="query" class="form-control" placeholder="章节老师"></label>
+                <label class="form-inline">章节分类：
+                    <div class="form-group">
+                        <select  class="form-control" v-model="q.chapterType" @keyup.enter="query" >
+                            <option value="" >全部</option>
+                            <option value="0" >视频</option>
+                            <option value="1" >音频</option>
+                        </select>
+                    </div>
+                </label>
+                <label class="form-inline">章节状态：
+                    <div class="form-group">
+                        <select  class="form-control" v-model="q.chapterStatus" @keyup.enter="query" >
+                            <option value="" >全部</option>
+                            <option value="0" >新建</option>
+                            <option value="1" >上线</option>
+                            <option value="2" >下线</option>
+                        </select>
+                    </div>
+                </label>
+                <a class="btn btn-default" @click="query">查询</a>
+                <#if shiro.hasPermission("sys:articleinfo:save")>
+                    <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                </#if>
+                <#if shiro.hasPermission("sys:articleinfo:delete")>
+                    <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                </#if>
+            </div>
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
     </div>
 
-    <div v-show="!showList" class="panel panel-default">
+    <div v-show="showDetail" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal" style="width:1100px">
             <div class="form-group">
                 <div class="col-sm-2 control-label">归属课程</div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <select class="form-control" id="courseName"  v-model="courseChapter.courseName">
-                            <option value="" ></option>
+                        <select class="form-control" id="courseNameDetail"  v-model="courseChapter.courseId">
+                            <option value="" >请选择课程</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-1 control-label">章节名称</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseChapter.chapterName" placeholder="章节名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">章节排序</div>
+                <div class="col-sm-4">
+                    <input type="number" disabled class="form-control" v-model="courseChapter.chapterSort" placeholder="排序号"/>
+                </div>
+                <div class="col-sm-1 control-label">章节价格</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseChapter.chapterPrice" placeholder="章节价格"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2  control-label">章节状态</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control" disabled  v-model="courseChapter.chapterStatus">
+                            <option value="0" >新建</option>
+                            <option value="1" >上线</option>
+                            <option value="2" >下线</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-1  control-label">章节类型</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control" disabled  v-model="courseChapter.chapterType">
+                            <option value="0" >视频</option>
+                            <option value="1" >音频</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">章节老师</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseChapter.chapterTeacher" placeholder="章节老师"/>
+                </div>
+                <div class="col-sm-1 control-label">播放次数</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseChapter.chapterPlays" placeholder="章节播放次数"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">是否允许试看</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control" disabled  v-model="courseChapter.chapterIstry">
+                            <option value="0" >不允许</option>
+                            <option value="1" >允许</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-1 control-label">章节时长</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseChapter.chapterMinute" placeholder="章节时长"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">章节文件</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseChapter.chapterFile" placeholder="章节文件"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">章节说明</div>
+                <div class="col-sm-10">
+                    <textarea class="form-control" disabled lay-verify="number" rows="2" v-model="courseChapter.chapterMemo" name="proBrief"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+
+    <div v-show="showSaveOrUpdate" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal" style="width:1100px">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">归属课程</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control"  v-model="courseChapter.courseId" autocomplete="off">
+                            <option value="2" >请选择课程</option>
+                            <option value="1">aa</option>
                         </select>
                     </div>
                 </div>
@@ -96,15 +215,21 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">章节试听文件</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="courseChapter.previewFile" placeholder="章节试听文件"/>
+                <label class="col-sm-2 control-label">章节文件</label>
+                <div class="layui-inline">
+                    <div class="layui-upload-list layui-input-inline">
+                        <input type="text" id="text" class="form-control" v-model="courseChapter.chapterFile" placeholder="章节文件"/>
+                        <p id="demoText"></p>
+                    </div>
+                    <button type="button" class="layui-btn" id="file">
+                        <i class="layui-icon">&#xe67c;</i>上传文件
+                    </button>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">章节说明</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="courseChapter.chapterMemo" placeholder="章节试听文件"/>
+                    <textarea class="form-control" lay-verify="number" rows="2" v-model="courseChapter.chapterMemo" name="proBrief"></textarea>
                 </div>
             </div>
 

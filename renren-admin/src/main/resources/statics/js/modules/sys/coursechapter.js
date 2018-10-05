@@ -4,6 +4,8 @@ $(function () {
         datatype: "json",
         colModel: [			
 			{ label: 'id',hidden: true, name: 'id', index: 'id', width: 50, key: true },
+            { label: '章节编号', name: 'chapterNo', index: 'chapter_no', width: 80 },
+            { label: '课程名称', name: 'courseName', width: 80 },
             { label: '章节名称', name: 'chapterName', index: 'chapter_name', width: 80 },
             { label: '章节价格', name: 'chapterPrice', index: 'chapter_price', width: 80 },
             { label: '章节状态', name: 'chapterStatus',  width: 80, formatter: function(value, options, row){
@@ -56,9 +58,17 @@ $(function () {
     });
 });
 
+var list = new Array();
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
+        q:{
+            chapterNo: null,
+            chapterName: null,
+            chapterTeacher: null,
+            chapterType: "",
+            chapterStatus: ""
+        },
         showList: true,
         showSaveOrUpdate: false,
         showDetail: false,
@@ -72,42 +82,61 @@ var vm = new Vue({
 		add: function(){
             vm.showList = false;
             vm.showSaveOrUpdate = true;
+            vm.showDetail = false;
 			vm.title = "新增";
-			vm.courseChapter = {};
+			vm.courseChapter = {chapterSort:1,chapterStatus:0,chapterType:0,chapterIstry:0};
+            $.get(baseURL + "sys/courseinfo/getCourseNameList", function(r){
+                if(list.length==0){
+                    list = r.list
+                    for(var i = 0;i<list.length;i++){
+                        $('#courseName').append('<option value='+list[i].id+' >'+list[i].courseName+'</option>')
+                    }
+                }
+            });
 		},
-		update: function (event) {
-			var id = getSelectedRow();
+		update: function (id) {
 			if(id == null){
 				return ;
 			}
-			vm.showList = false;
+            vm.showList = false;
+            vm.showSaveOrUpdate = true;
+            vm.showDetail =false;
             vm.title = "修改";
-            
             vm.getInfo(id)
+
+            // $.get(baseURL + "sys/courseinfo/getCourseNameList", function(r){
+            //     if(list.length==0){
+            //         list = r.list
+            //         for(var i = 0;i<list.length;i++){
+            //             $('#courseName').append('<option value='+list[i].id+' >'+list[i].courseName+'</option>')
+            //         }
+            //     }
+            //
+            // });
+
 		},
         detail: function (id) {
             if(id == null){
                 return ;
             }
-
+            $.get(baseURL + "sys/courseinfo/getCourseNameList", function(r){
+                if(list.length==0){
+                    list = r.list
+                    console.log(r.list)
+                    for(var i = 0;i<list.length;i++){
+                        console.log(list[i])
+                        $('#courseNameDetail').append('<option value='+list[i].id+' >'+list[i].courseName+'</option>')
+                    }
+                }
+            });
             vm.showList = false;
-            vm.showDetail = true,
+            vm.showDetail = true;
+            vm.showSaveOrUpdate= false;
                 vm.title = "详情";
 
             vm.getInfo(id)
 
 
-        },
-        update: function (id) {
-            if(id == null){
-                return ;
-            }
-            vm.showList = false;
-            vm.showSaveOrUpdate = true;
-            vm.showDetail =false;
-            vm.title = "修改";
-
-            vm.getInfo(id)
         },
 		saveOrUpdate: function (event) {
 			var url = vm.courseChapter.id == null ? "sys/coursechapter/save" : "sys/coursechapter/update";
@@ -152,16 +181,64 @@ var vm = new Vue({
 			});
 		},
 		getInfo: function(id){
+
 			$.get(baseURL + "sys/coursechapter/info/"+id, function(r){
+                r.courseChapter.courseId =  r.courseChapter.courseId.toString()
                 vm.courseChapter = r.courseChapter;
+
             });
 		},
 		reload: function (event) {
-			vm.showList = true;
+            vm.showList = true;
+            vm.showSaveOrUpdate = false;
+            vm.showDetail = false;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{ 
+			$("#jqGrid").jqGrid('setGridParam',{
+                postData:{
+                    'chapterNo': vm.q.chapterNo,
+                    'chapterName': vm.q.chapterName,
+                    'chapterTeacher': vm.q.chapterTeacher,
+                    'chapterType': vm.q.chapterType,
+                    'chapterStatus': vm.q.chapterStatus
+                },
                 page:page
             }).trigger("reloadGrid");
 		}
 	}
+});
+
+
+layui.use('upload', function(){
+    var $ = layui.jquery
+        ,upload = layui.upload;
+
+    //普通图片上传
+    var uploadInst = upload.render({
+        elem: '#file'
+        ,url: baseURL + "common/UploadFile/"
+        ,accept: 'file'
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            layer.load(2);
+        }
+        ,done: function(res){
+            //如果上传失败
+            if(res.code > 0){
+                return layer.msg('上传失败');
+            }
+            vm.courseChapter.chapterFile = res.msg;//上传成功
+            var value = document.getElementById("text");
+            value.value = res.msg
+            layer.closeAll('loading');
+        }
+        ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+            layer.closeAll('loading');
+        }
+    });
 });

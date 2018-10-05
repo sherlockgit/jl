@@ -1,7 +1,10 @@
 package io.renren.modules.sys.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -16,6 +19,9 @@ import io.renren.modules.sys.service.CourseInfoService;
 
 @Service("courseInfoService")
 public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoDao, CourseInfoEntity> implements CourseInfoService {
+
+    @Autowired
+    private CourseInfoDao dao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -36,6 +42,11 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoDao, CourseInfo
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<CourseInfoEntity> getCourseNameList() {
+        return dao.selectAll();
     }
 
 }

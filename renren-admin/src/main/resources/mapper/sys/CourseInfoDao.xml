@@ -27,5 +27,9 @@
         <result property="downTime" column="down_time"/>
     </resultMap>
 
+    <select id="selectAll" resultMap="courseInfoMap">
+        SELECT id,course_name FROM course_info
+    </select>
+
 
 </mapper>

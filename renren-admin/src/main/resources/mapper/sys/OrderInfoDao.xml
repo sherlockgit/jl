@@ -8,15 +8,17 @@
         <result property="id" column="id"/>
         <result property="orderNo" column="order_no"/>
         <result property="courseName" column="course_name"/>
+        <result property="orderSource" column="order_source"/>
         <result property="coursePrice" column="course_price"/>
-        <result property="orderType" column="order_type"/>
-        <result property="orderPrice" column="order_price"/>
         <result property="orderCoupon" column="order_coupon"/>
-        <result property="orderStatus" column="order_status"/>
+        <result property="orderPrice" column="order_price"/>
+        <result property="payStatus" column="pay_status"/>
         <result property="payType" column="pay_type"/>
-        <result property="orgName" column="org_name"/>
+        <result property="invoiceStatus" column="invoice_status"/>
+        <result property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
         <result property="userPhone" column="user_phone"/>
+        <result property="orgName" column="org_name"/>
         <result property="createTime" column="create_time"/>
         <result property="payTime" column="pay_time"/>
     </resultMap>

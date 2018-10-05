@@ -1,7 +1,10 @@
 package io.renren.modules.sys.entity;
 
+import com.alibaba.fastjson.annotation.JSONType;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -26,6 +29,7 @@ public class CourseChapterEntity implements Serializable {
 	/**
 	 * 课程PID
 	 */
+	@JsonSerialize
 	private Integer courseId;
 	/**
 	 * 章节编号
@@ -35,6 +39,19 @@ public class CourseChapterEntity implements Serializable {
 	 * 章节名称
 	 */
 	private String chapterName;
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	/**
+	 * 课程名称
+	 */
+	private String courseName;
 	/**
 	 * 章节类型[0-视频 1-音频]
 	 */
@@ -74,28 +91,32 @@ public class CourseChapterEntity implements Serializable {
 	/**
 	 * 创建时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;
 	/**
 	 * 发布时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date publishTime;
 	/**
 	 * 下线时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date downTime;
+
+	public String getChapterMinute() {
+		return chapterMinute;
+	}
+
+	public void setChapterMinute(String chapterMinute) {
+		this.chapterMinute = chapterMinute;
+	}
 
 	/**
 	 * 章节时长
 	 */
-	private String chapterinute;
+	private String chapterMinute;
 
-	public String getChapterinute() {
-		return chapterinute;
-	}
-
-	public void setChapterinute(String chapterinute) {
-		this.chapterinute = chapterinute;
-	}
 
 	public String getChapterMemo() {
 		return chapterMemo;
