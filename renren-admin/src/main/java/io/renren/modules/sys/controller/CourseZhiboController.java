@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.renren.modules.sys.entity.InvoiceInfoEntity;
-import io.renren.modules.sys.service.InvoiceInfoService;
+import io.renren.modules.sys.entity.CourseZhiboEntity;
+import io.renren.modules.sys.service.CourseZhiboService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
@@ -24,21 +24,21 @@ import io.renren.common.utils.R;
  *
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-10-05 10:07:01
+ * @date 2018-10-05 22:02:06
  */
 @RestController
-@RequestMapping("sys/invoiceinfo")
-public class InvoiceInfoController {
+@RequestMapping("sys/coursezhibo")
+public class CourseZhiboController {
     @Autowired
-    private InvoiceInfoService invoiceInfoService;
+    private CourseZhiboService courseZhiboService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("sys:invoiceinfo:list")
+    @RequiresPermissions("sys:coursezhibo:list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = invoiceInfoService.queryPage(params);
+        PageUtils page = courseZhiboService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -48,20 +48,20 @@ public class InvoiceInfoController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    @RequiresPermissions("sys:invoiceinfo:info")
+    @RequiresPermissions("sys:coursezhibo:info")
     public R info(@PathVariable("id") Integer id){
-        InvoiceInfoEntity invoiceInfo = invoiceInfoService.selectById(id);
+        CourseZhiboEntity courseZhibo = courseZhiboService.selectById(id);
 
-        return R.ok().put("invoiceInfo", invoiceInfo);
+        return R.ok().put("courseZhibo", courseZhibo);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("sys:invoiceinfo:save")
-    public R save(@RequestBody InvoiceInfoEntity invoiceInfo){
-        invoiceInfoService.insert(invoiceInfo);
+    @RequiresPermissions("sys:coursezhibo:save")
+    public R save(@RequestBody CourseZhiboEntity courseZhibo){
+        courseZhiboService.insert(courseZhibo);
 
         return R.ok();
     }
@@ -70,10 +70,10 @@ public class InvoiceInfoController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("sys:invoiceinfo:update")
-    public R update(@RequestBody InvoiceInfoEntity invoiceInfo){
-        ValidatorUtils.validateEntity(invoiceInfo);
-        invoiceInfoService.updateAllColumnById(invoiceInfo);//全部更新
+    @RequiresPermissions("sys:coursezhibo:update")
+    public R update(@RequestBody CourseZhiboEntity courseZhibo){
+        ValidatorUtils.validateEntity(courseZhibo);
+        courseZhiboService.updateAllColumnById(courseZhibo);//全部更新
         
         return R.ok();
     }
@@ -82,9 +82,9 @@ public class InvoiceInfoController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("sys:invoiceinfo:delete")
+    @RequiresPermissions("sys:coursezhibo:delete")
     public R delete(@RequestBody Integer[] ids){
-        invoiceInfoService.deleteBatchIds(Arrays.asList(ids));
+        courseZhiboService.deleteBatchIds(Arrays.asList(ids));
 
         return R.ok();
     }

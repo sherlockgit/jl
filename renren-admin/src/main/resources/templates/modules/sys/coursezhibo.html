@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+		<#include "/header.html">
+            <link rel="stylesheet" href="${request.contextPath}/statics/plugins/layui2_3_0/css/layui.css" media="all">
+            <script src="${request.contextPath}/statics/plugins/layui2_3_0/layui.js"></script>
+            <script src="${request.contextPath}/statics/plugins/layer/layer.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-inline">
+                <label class="form-inline">直播编号：<input type="text" v-model="q.courseNo" @keyup.enter="query" class="form-control" placeholder="章节编号"></label>
+                <label class="form-inline">课程名称：<input type="text" v-model="q.courseName" @keyup.enter="query" class="form-control" placeholder="章节名称"></label>
+                <label class="form-inline">直播老师：<input type="text" v-model="q.courseTeacher" @keyup.enter="query" class="form-control" placeholder="章节老师"></label>
+                <label class="form-inline">开播时间：<input type="text" v-model="q.publishTime" @keyup.enter="query" class="form-control" placeholder="章节老师"></label>
+                <a class="btn btn-default" @click="query">查询</a>
+                <#if shiro.hasPermission("sys:articleinfo:save")>
+                    <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                </#if>
+                <#if shiro.hasPermission("sys:articleinfo:delete")>
+                    <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                </#if>
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="showSaveOrUpdate" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal" style="width:1100px">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">课程名称</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="courseZhibo.courseName" placeholder="课程名称"/>
+                </div>
+                <div class="col-sm-1 control-label">课程老师</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="courseZhibo.courseTeacher" placeholder="课程老师"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">课程总价格</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="courseZhibo.coursePrice" placeholder="课程总价格"/>
+                </div>
+                <div class="col-sm-1 control-label">发布时间</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="courseZhibo.publishTime" placeholder="发布时间"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">直播时长(min)</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="courseZhibo.courseMinute" placeholder="直播时长(min)"/>
+                </div>
+                <div class="col-sm-1 control-label">直播状态</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control"  v-model="courseZhibo.courseStatus">
+                            <option value="0" >新建</option>
+                            <option value="1" >预告</option>
+                            <option value="2" >正在直播</option>
+                            <option value="3" >直播结束</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">预约人数</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="courseZhibo.courseCount" placeholder="预约人数"/>
+                </div>
+                <div class="col-sm-1 control-label">直播电话</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="courseZhibo.coursePhone" placeholder="直播电话"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">课程封面</label>
+                <div class="layui-inline">
+                    <div class="layui-upload-list layui-input-inline">
+                        <img class="layui-upload-img" id="img" width="100px" height="100px" >
+                        <p id="demoText"></p>
+                    </div>
+                    <button type="button" class="layui-btn" id="file">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">直播简介</div>
+                <div class="col-sm-10">
+                    <textarea class="form-control" lay-verify="number" rows="2" v-model="courseZhibo.courseBrief" name="proBrief"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目介绍</div>
+                <div class="col-sm-4">
+                    <textarea class="layui-textarea" id="LAY_demo1" v-model="courseZhibo.courseContent" style="display: none">
+                        sadasdsad
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary site-demo-layedit" data-type="content"  value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+
+
+    <div v-show="showDetail" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal" style="width:1100px">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">课程名称</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseZhibo.courseName" placeholder="课程名称"/>
+                </div>
+                <div class="col-sm-1 control-label">课程老师</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseZhibo.courseTeacher" placeholder="课程老师"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">课程总价格</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseZhibo.coursePrice" placeholder="课程总价格"/>
+                </div>
+                <div class="col-sm-1 control-label">发布时间</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseZhibo.publishTime" placeholder="发布时间"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">直播时长(min)</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseZhibo.courseMinute" placeholder="直播时长(min)"/>
+                </div>
+                <div class="col-sm-1 control-label">直播状态</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control" disabled  v-model="courseZhibo.courseStatus">
+                            <option value="0" >新建</option>
+                            <option value="1" >预告</option>
+                            <option value="2" >正在直播</option>
+                            <option value="3" >直播结束</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">预约人数</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseZhibo.courseCount" placeholder="预约人数"/>
+                </div>
+                <div class="col-sm-1 control-label">直播电话</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseZhibo.coursePhone" placeholder="直播电话"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">课程封面</label>
+                <div class="layui-inline">
+                    <div class="layui-inline">
+                        <div class="layui-upload-list layui-input-inline">
+                            <img class="layui-upload-img" id="imgd" width="100px" height="100px" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">直播简介</div>
+                <div class="col-sm-10">
+                    <textarea class="form-control" disabled lay-verify="number" rows="2" v-model="courseZhibo.courseBrief" name="proBrief"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">项目介绍</div>
+                <div class="col-sm-4">
+                    <textarea class="layui-textarea" id="LAY_demo1d" v-model="courseZhibo.courseContent" style="display: none">
+                        sadasdsad
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/coursezhibo.js?_${.now?long}"></script>
+</body>
+</html>

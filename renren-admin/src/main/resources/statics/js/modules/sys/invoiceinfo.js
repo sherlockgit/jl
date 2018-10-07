@@ -3,26 +3,60 @@ $(function () {
         url: baseURL + 'sys/invoiceinfo/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
+			{ label: 'id',hidden: true, name: 'id', index: 'id', width: 50, key: true },
 			{ label: '发票编号', name: 'invoiceNo', index: 'invoice_no', width: 80 }, 			
 			{ label: '发票抬头', name: 'invoiceName', index: 'invoice_name', width: 80 }, 			
 			{ label: '开票金额', name: 'invoiceAmt', index: 'invoice_amt', width: 80 }, 			
-			{ label: '开票装[0-未开票  1-开票中  2-已开票]', name: 'invoiceStauts', index: 'invoice_stauts', width: 80 }, 			
-			{ label: '开票类型[0-普票  1- 专票]', name: 'invoiceType', index: 'invoice_type', width: 80 }, 			
-			{ label: '发票性质[0-电子发票，1-纸质发票]', name: 'invoiceNature', index: 'invoice_nature', width: 80 }, 			
-			{ label: '开票类目[0-服务费， 1-会务费   2-咨询费]', name: 'invoiceCategory', index: 'invoice_category', width: 80 }, 			
-			{ label: '稅务登记号', name: 'taxNo', index: 'tax_no', width: 80 }, 			
-			{ label: '开户银行', name: 'bankName', index: 'bank_name', width: 80 }, 			
-			{ label: '开户账号', name: 'bankCard', index: 'bank_card', width: 80 }, 			
-			{ label: '收件人', name: 'cneeName', index: 'cnee_name', width: 80 }, 			
-			{ label: '收件电话', name: 'cneePhone', index: 'cnee_phone', width: 80 }, 			
-			{ label: '收件地址', name: 'cneeAddr', index: 'cnee_addr', width: 80 }, 			
-			{ label: '快递公司', name: 'expressOrg', index: 'express_org', width: 80 }, 			
-			{ label: '快递编号', name: 'expressNo', index: 'express_no', width: 80 }, 			
-			{ label: '快递签收[0-未签收， 1-已签收]', name: 'expressSign', index: 'express_sign', width: 80 }, 			
-			{ label: '开票时间', name: 'expressTime', index: 'express_time', width: 80 }, 			
-			{ label: '申请开票时间', name: 'applyTime', index: 'apply_time', width: 80 }, 			
-			{ label: '订单编号集合[aa,bbb]', name: 'orderNos', index: 'order_nos', width: 80 }			
+			{ label: '开票状态', name: 'invoiceStauts', width: 80, formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>开票中</span>';
+                } else if (value == '1') {
+                    return '<span>已开票</span>';
+                }
+            }},
+			{ label: '开票类型', name: 'invoiceType', width: 80, formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>普票</span>';
+                } else if (value == '1') {
+                    return '<span>专票</span>';
+                }
+            }},
+			{ label: '发票性质', name: 'invoiceNature', width: 80 , formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>电子发票</span>';
+                } else if (value == '1') {
+                    return '<span>纸质发票</span>';
+                }
+            }},
+			{ label: '开票类目', name: 'invoiceCategory', width: 80 , formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>服务费</span>';
+                } else if (value == '1') {
+                    return '<span>会务费</span>';
+                }else if (value == '2') {
+                    return '<span>咨询费</span>';
+                }
+            }},
+            { label: '快递编号', name: 'expressNo', index: 'express_no', width: 80 },
+            { label: '快递签收', name: 'expressSign', width: 80 , formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>未签收</span>';
+                } else if (value == '1') {
+                    return '<span>已签收</span>';
+                }
+            }},
+            { label: '收件人', name: 'cneeName', index: 'cnee_name', width: 80 },
+            { label: '收件电话', name: 'cneePhone', index: 'cnee_phone', width: 80 },
+			{ label: '开票时间', name: 'expressTime', index: 'express_time', width: 80 },
+			{ label: '申请开票时间', name: 'applyTime', index: 'apply_time', width: 80 },
+            {
+                label: '操作', name: '', index: 'operate', width: 50, align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    var detail="<a  onclick='vm.detail(\""+ rowObject.id + "\")'' href=\"#\" >详情</a>|";
+                    var update="<a  onclick='vm.update(\""+ rowObject.id + "\")'' href=\"#\" >修改</a>"
+                    return detail+update;
+                },
+            },
         ],
 		viewrecords: true,
         height: 385,
@@ -54,7 +88,17 @@ $(function () {
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
-		showList: true,
+        q:{
+            invoiceNo: null,
+            expressNo: null,
+            cneeName: null,
+            invoiceStauts: "",
+            invoiceType: "",
+            invoiceCategory: ""
+        },
+        showList: true,
+        showSaveOrUpdate: false,
+        showDetail: false,
 		title: null,
 		invoiceInfo: {}
 	},
@@ -63,20 +107,34 @@ var vm = new Vue({
 			vm.reload();
 		},
 		add: function(){
-			vm.showList = false;
+            vm.showList = false;
+            vm.showSaveOrUpdate = true;
+            vm.showDetail = false;
 			vm.title = "新增";
-			vm.invoiceInfo = {};
+			vm.invoiceInfo = {invoiceType:0,invoiceNature:0,invoiceCategory:0,invoiceStauts:0,expressSign:0};
 		},
-		update: function (event) {
-			var id = getSelectedRow();
+		update: function (id) {
 			if(id == null){
 				return ;
 			}
-			vm.showList = false;
+            vm.showList = false;
+            vm.showSaveOrUpdate = true;
+            vm.showDetail =false;
             vm.title = "修改";
             
             vm.getInfo(id)
 		},
+        detail: function (id) {
+            if(id == null){
+                return ;
+            }
+            vm.showList = false;
+            vm.showDetail = true;
+            vm.showSaveOrUpdate= false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+        },
 		saveOrUpdate: function (event) {
 			var url = vm.invoiceInfo.id == null ? "sys/invoiceinfo/save" : "sys/invoiceinfo/update";
 			$.ajax({
@@ -125,11 +183,56 @@ var vm = new Vue({
             });
 		},
 		reload: function (event) {
-			vm.showList = true;
+            vm.showList = true;
+            vm.showSaveOrUpdate = false;
+            vm.showDetail = false;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{ 
+			$("#jqGrid").jqGrid('setGridParam',{
+                postData:{
+                    'invoiceNo': vm.q.invoiceNo,
+                    'expressNo': vm.q.expressNo,
+                    'cneeName': vm.q.cneeName,
+                    'invoiceStauts': vm.q.invoiceStauts,
+                    'invoiceType': vm.q.invoiceType,
+                    'invoiceCategory': vm.q.invoiceCategory
+                },
                 page:page
             }).trigger("reloadGrid");
 		}
 	}
+});
+
+layui.use('upload', function(){
+    var $ = layui.jquery
+        ,upload = layui.upload;
+
+    //普通图片上传
+    var uploadInst = upload.render({
+        elem: '#file'
+        ,url: baseURL + "common/UploadFile/"
+        ,accept: 'file'
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            layer.load(2);
+        }
+        ,done: function(res){
+            //如果上传失败
+            if(res.code > 0){
+                return layer.msg('上传失败');
+            }
+            vm.invoiceInfo.invoiceFile = res.msg;//上传成功
+            var value = document.getElementById("text");
+            value.value = res.msg
+            layer.closeAll('loading');
+        }
+        ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+            layer.closeAll('loading');
+        }
+    });
 });

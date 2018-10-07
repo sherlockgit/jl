@@ -2,6 +2,7 @@ package io.renren.modules.sys.entity;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.util.Date;
  * 
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-09-27 11:35:10
+ * @date 2018-10-05 10:07:01
  */
 @TableName("invoice_info")
 public class InvoiceInfoEntity implements Serializable {
@@ -26,7 +27,7 @@ public class InvoiceInfoEntity implements Serializable {
 	/**
 	 * 发票编号
 	 */
-	private Integer invoiceNo;
+	private String invoiceNo;
 	/**
 	 * 发票抬头
 	 */
@@ -36,7 +37,7 @@ public class InvoiceInfoEntity implements Serializable {
 	 */
 	private BigDecimal invoiceAmt;
 	/**
-	 * 开票装[0-未开票  1-开票中  2-已开票]
+	 * 开票装[0-开票中  1-已开票]
 	 */
 	private String invoiceStauts;
 	/**
@@ -52,6 +53,14 @@ public class InvoiceInfoEntity implements Serializable {
 	 */
 	private String invoiceCategory;
 	/**
+	 * 发票凭证
+	 */
+	private String invoiceFile;
+	/**
+	 * 电子发票链接
+	 */
+	private String invoiceUrl;
+	/**
 	 * 稅务登记号
 	 */
 	private String taxNo;
@@ -62,7 +71,11 @@ public class InvoiceInfoEntity implements Serializable {
 	/**
 	 * 开户账号
 	 */
-	private Integer bankCard;
+	private String bankCard;
+	/**
+	 * 会员ID
+	 */
+	private String userId;
 	/**
 	 * 收件人
 	 */
@@ -90,15 +103,17 @@ public class InvoiceInfoEntity implements Serializable {
 	/**
 	 * 开票时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date expressTime;
 	/**
 	 * 申请开票时间
 	 */
-	private String applyTime;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date applyTime;
 	/**
 	 * 订单编号集合[aa,bbb]
 	 */
-	private Integer orderNos;
+	private String orderNos;
 
 	/**
 	 * 设置：
@@ -115,13 +130,13 @@ public class InvoiceInfoEntity implements Serializable {
 	/**
 	 * 设置：发票编号
 	 */
-	public void setInvoiceNo(Integer invoiceNo) {
+	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
 	}
 	/**
 	 * 获取：发票编号
 	 */
-	public Integer getInvoiceNo() {
+	public String getInvoiceNo() {
 		return invoiceNo;
 	}
 	/**
@@ -149,13 +164,13 @@ public class InvoiceInfoEntity implements Serializable {
 		return invoiceAmt;
 	}
 	/**
-	 * 设置：开票装[0-未开票  1-开票中  2-已开票]
+	 * 设置：开票装[0-开票中  1-已开票]
 	 */
 	public void setInvoiceStauts(String invoiceStauts) {
 		this.invoiceStauts = invoiceStauts;
 	}
 	/**
-	 * 获取：开票装[0-未开票  1-开票中  2-已开票]
+	 * 获取：开票装[0-开票中  1-已开票]
 	 */
 	public String getInvoiceStauts() {
 		return invoiceStauts;
@@ -197,6 +212,30 @@ public class InvoiceInfoEntity implements Serializable {
 		return invoiceCategory;
 	}
 	/**
+	 * 设置：发票凭证
+	 */
+	public void setInvoiceFile(String invoiceFile) {
+		this.invoiceFile = invoiceFile;
+	}
+	/**
+	 * 获取：发票凭证
+	 */
+	public String getInvoiceFile() {
+		return invoiceFile;
+	}
+	/**
+	 * 设置：电子发票链接
+	 */
+	public void setInvoiceUrl(String invoiceUrl) {
+		this.invoiceUrl = invoiceUrl;
+	}
+	/**
+	 * 获取：电子发票链接
+	 */
+	public String getInvoiceUrl() {
+		return invoiceUrl;
+	}
+	/**
 	 * 设置：稅务登记号
 	 */
 	public void setTaxNo(String taxNo) {
@@ -223,14 +262,26 @@ public class InvoiceInfoEntity implements Serializable {
 	/**
 	 * 设置：开户账号
 	 */
-	public void setBankCard(Integer bankCard) {
+	public void setBankCard(String bankCard) {
 		this.bankCard = bankCard;
 	}
 	/**
 	 * 获取：开户账号
 	 */
-	public Integer getBankCard() {
+	public String getBankCard() {
 		return bankCard;
+	}
+	/**
+	 * 设置：会员ID
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	/**
+	 * 获取：会员ID
+	 */
+	public String getUserId() {
+		return userId;
 	}
 	/**
 	 * 设置：收件人
@@ -319,25 +370,25 @@ public class InvoiceInfoEntity implements Serializable {
 	/**
 	 * 设置：申请开票时间
 	 */
-	public void setApplyTime(String applyTime) {
+	public void setApplyTime(Date applyTime) {
 		this.applyTime = applyTime;
 	}
 	/**
 	 * 获取：申请开票时间
 	 */
-	public String getApplyTime() {
+	public Date getApplyTime() {
 		return applyTime;
 	}
 	/**
 	 * 设置：订单编号集合[aa,bbb]
 	 */
-	public void setOrderNos(Integer orderNos) {
+	public void setOrderNos(String orderNos) {
 		this.orderNos = orderNos;
 	}
 	/**
 	 * 获取：订单编号集合[aa,bbb]
 	 */
-	public Integer getOrderNos() {
+	public String getOrderNos() {
 		return orderNos;
 	}
 }

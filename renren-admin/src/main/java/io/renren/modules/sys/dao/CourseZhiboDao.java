@@ -1,6 +1,6 @@
 package io.renren.modules.sys.dao;
 
-import io.renren.modules.sys.entity.InvoiceInfoEntity;
+import io.renren.modules.sys.entity.CourseZhiboEntity;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -8,8 +8,8 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * 
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-10-05 10:07:01
+ * @date 2018-10-05 22:02:06
  */
-public interface InvoiceInfoDao extends BaseMapper<InvoiceInfoEntity> {
+public interface CourseZhiboDao extends BaseMapper<CourseZhiboEntity> {
 	
 }
