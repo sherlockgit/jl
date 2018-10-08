@@ -1,5 +1,6 @@
 package io.renren.modules.sys.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -18,11 +19,20 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundDao, OrderRef
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String orderNo = (String)params.get("orderNo");
+        String phone = (String)params.get("phone");
+        String userName = (String)params.get("userName");
+        String applyType = (String)params.get("applyType");
+        String refundStatus = (String)params.get("refundStatus");
         Page<OrderRefundEntity> page = this.selectPage(
                 new Query<OrderRefundEntity>(params).getPage(),
                 new EntityWrapper<OrderRefundEntity>()
+                        .like(StringUtils.isNotBlank(orderNo),"order_no", orderNo)
+                        .like(StringUtils.isNotBlank(phone),"phone", phone)
+                        .like(StringUtils.isNotBlank(userName),"user_name", userName)
+                        .like(StringUtils.isNotBlank(applyType),"apply_type", applyType)
+                        .like(StringUtils.isNotBlank(refundStatus),"refund_status", refundStatus)
         );
-
         return new PageUtils(page);
     }
 

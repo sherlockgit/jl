@@ -10,11 +10,17 @@
         <result property="orderPrice" column="order_price"/>
         <result property="refundPrice" column="refund_price"/>
         <result property="refundStatus" column="refund_status"/>
-        <result property="refundMemo" column="refund_memo"/>
         <result property="refundNo" column="refund_no"/>
         <result property="refundOper" column="refund_oper"/>
+        <result property="refundMemo" column="refund_memo"/>
+        <result property="operTime" column="oper_time"/>
         <result property="refundTime" column="refund_time"/>
         <result property="applyTime" column="apply_time"/>
+        <result property="courseName" column="course_name"/>
+        <result property="userName" column="user_name"/>
+        <result property="phone" column="phone"/>
+        <result property="organization" column="organization"/>
+        <result property="applyType" column="apply_type"/>
     </resultMap>
 
 
