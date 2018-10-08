@@ -3,16 +3,28 @@ $(function () {
         url: baseURL + 'sys/usercnee/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
+			{ label: 'id',hidden: true, name: 'id', index: 'id', width: 50, key: true },
 			{ label: '会员id', name: 'userId', index: 'user_id', width: 80 }, 			
-			{ label: '收货人姓名', name: 'cneeName', index: 'cnee_name', width: 80 }, 			
-			{ label: '收货人号码', name: 'cneePhone', index: 'cnee_phone', width: 80 }, 			
+			{ label: '收货人', name: 'cneeName', index: 'cnee_name', width: 80 },
+			{ label: '手机号码', name: 'cneePhone', index: 'cnee_phone', width: 80 },
 			{ label: '收货人地址', name: 'cneeAddr', index: 'cnee_addr', width: 80 }, 			
-			{ label: '是否删除(y 删除 n 未删除)', name: 'isDelete', index: 'is_delete', width: 80 }, 			
-			{ label: '是否默认(y 是 n 否)', name: 'isDefaute', index: 'is_defaute', width: 80 }, 			
+			{ label: '是否默认[0- 否 ,  1- 是 ]', name: 'isDefaute',  width: 80 , formatter: function(value, options, row){
+                if (value == '0') {
+                    return '<span>否</span>';
+                } else if (value == '1') {
+                    return '<span>是</span>';
+                }
+            }},
 			{ label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 			
-			{ label: '修改时间', name: 'updateTime', index: 'update_time', width: 80 }, 			
-			{ label: '创建者', name: 'createdby', index: 'createdby', width: 80 }			
+			{ label: '修改时间', name: 'updateTime', index: 'update_time', width: 80 },
+            {
+                label: '操作', name: '', index: 'operate', width: 50, align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    var detail="<a  onclick='vm.detail(\""+ rowObject.id + "\")'' href=\"#\" >详情</a>|";
+                    var update="<a  onclick='vm.update(\""+ rowObject.id + "\")'' href=\"#\" >修改</a>"
+                    return detail+update;
+                },
+            },
         ],
 		viewrecords: true,
         height: 385,
@@ -44,7 +56,15 @@ $(function () {
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
-		showList: true,
+        q:{
+            userNo: null,
+            userName: null,
+            phone: null,
+            cneeAddr: null
+        },
+        showList: true,
+        showSaveOrUpdate: false,
+        showDetail: false,
 		title: null,
 		userCnee: {}
 	},
@@ -53,20 +73,34 @@ var vm = new Vue({
 			vm.reload();
 		},
 		add: function(){
-			vm.showList = false;
+            vm.showList = false;
+            vm.showSaveOrUpdate = true;
+            vm.showDetail = false;
 			vm.title = "新增";
 			vm.userCnee = {};
 		},
-		update: function (event) {
-			var id = getSelectedRow();
+		update: function (id) {
 			if(id == null){
 				return ;
 			}
-			vm.showList = false;
+            vm.showList = false;
+            vm.showSaveOrUpdate = true;
+            vm.showDetail =false;
             vm.title = "修改";
             
             vm.getInfo(id)
 		},
+        detail: function (id) {
+            if(id == null){
+                return ;
+            }
+            vm.showList = false;
+            vm.showDetail = true;
+            vm.showSaveOrUpdate= false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+        },
 		saveOrUpdate: function (event) {
 			var url = vm.userCnee.id == null ? "sys/usercnee/save" : "sys/usercnee/update";
 			$.ajax({
@@ -115,9 +149,17 @@ var vm = new Vue({
             });
 		},
 		reload: function (event) {
-			vm.showList = true;
+            vm.showList = true;
+            vm.showSaveOrUpdate = false;
+            vm.showDetail = false;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{ 
+			$("#jqGrid").jqGrid('setGridParam',{
+                postData:{
+                    'userNo': vm.q.userNo,
+                    'userName': vm.q.userName,
+                    'phone': vm.q.phone,
+                    'cneeAddr': vm.q.cneeAddr
+                },
                 page:page
             }).trigger("reloadGrid");
 		}

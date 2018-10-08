@@ -10,11 +10,9 @@
         <result property="cneeName" column="cnee_name"/>
         <result property="cneePhone" column="cnee_phone"/>
         <result property="cneeAddr" column="cnee_addr"/>
-        <result property="isDelete" column="is_delete"/>
         <result property="isDefaute" column="is_defaute"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
-        <result property="createdby" column="createdby"/>
     </resultMap>
 
 

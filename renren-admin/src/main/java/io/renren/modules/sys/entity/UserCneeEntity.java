@@ -11,7 +11,7 @@ import java.util.Date;
  * 
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-09-27 11:35:10
+ * @date 2018-10-08 17:26:29
  */
 @TableName("user_cnee")
 public class UserCneeEntity implements Serializable {
@@ -38,12 +38,21 @@ public class UserCneeEntity implements Serializable {
 	 * 收货人地址
 	 */
 	private String cneeAddr;
+
+	public String getCneeMemo() {
+		return cneeMemo;
+	}
+
+	public void setCneeMemo(String cneeMemo) {
+		this.cneeMemo = cneeMemo;
+	}
+
 	/**
-	 * 是否删除(y 删除 n 未删除)
+	 * 说明
 	 */
-	private String isDelete;
+	private String cneeMemo;
 	/**
-	 * 是否默认(y 是 n 否)
+	 * 是否默认[0- 否 ,  1- 是 ]
 	 */
 	private String isDefaute;
 	/**
@@ -54,10 +63,6 @@ public class UserCneeEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
-	/**
-	 * 创建者
-	 */
-	private String createdby;
 
 	/**
 	 * 设置：
@@ -120,25 +125,13 @@ public class UserCneeEntity implements Serializable {
 		return cneeAddr;
 	}
 	/**
-	 * 设置：是否删除(y 删除 n 未删除)
-	 */
-	public void setIsDelete(String isDelete) {
-		this.isDelete = isDelete;
-	}
-	/**
-	 * 获取：是否删除(y 删除 n 未删除)
-	 */
-	public String getIsDelete() {
-		return isDelete;
-	}
-	/**
-	 * 设置：是否默认(y 是 n 否)
+	 * 设置：是否默认[0- 否 ,  1- 是 ]
 	 */
 	public void setIsDefaute(String isDefaute) {
 		this.isDefaute = isDefaute;
 	}
 	/**
-	 * 获取：是否默认(y 是 n 否)
+	 * 获取：是否默认[0- 否 ,  1- 是 ]
 	 */
 	public String getIsDefaute() {
 		return isDefaute;
@@ -166,17 +159,5 @@ public class UserCneeEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
-	}
-	/**
-	 * 设置：创建者
-	 */
-	public void setCreatedby(String createdby) {
-		this.createdby = createdby;
-	}
-	/**
-	 * 获取：创建者
-	 */
-	public String getCreatedby() {
-		return createdby;
 	}
 }

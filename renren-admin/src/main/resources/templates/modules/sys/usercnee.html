@@ -8,80 +8,118 @@
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
-			<#if shiro.hasPermission("sys:usercnee:save")>
-            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			</#if>
-			<#if shiro.hasPermission("sys:usercnee:update")>
-            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			</#if>
-			<#if shiro.hasPermission("sys:usercnee:delete")>
-            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if>
+            <div class="form-inline">
+                <label class="form-inline">会员编号：<input type="text" v-model="q.userNo" @keyup.enter="query" class="form-control" placeholder="订单编号"></label>
+                <label class="form-inline">收件人：<input type="text" v-model="q.userName" @keyup.enter="query" class="form-control" placeholder="收件人"></label>
+                <label class="form-inline">手机号码：<input type="text" v-model="q.phone" @keyup.enter="query" class="form-control" placeholder="手机号码"></label>
+                <label class="form-inline">收货地址：<input type="text" v-model="q.cneeAddr" @keyup.enter="query" class="form-control" placeholder="收货地址"></label>
+
+                <a class="btn btn-default" @click="query">查询</a>
+                <#if shiro.hasPermission("sys:articleinfo:save")>
+                    <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                </#if>
+                <#if shiro.hasPermission("sys:articleinfo:delete")>
+                    <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                </#if>
+            </div>
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
     </div>
 
-    <div v-show="!showList" class="panel panel-default">
+    <div v-show="showSaveOrUpdate" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
-        <form class="form-horizontal">
-														                    <div class="form-group">
-                        <div class="col-sm-2 control-label">会员id</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="userCnee.userId" placeholder="会员id"/>
-                        </div>
+        <form class="form-horizontal" style="width:1100px">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">会员id</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="userCnee.userId" placeholder="会员id"/>
+                </div>
+                <div class="col-sm-1 control-label">收货人</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="userCnee.cneeName" placeholder="收货人姓名"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">手机号码</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="userCnee.cneePhone" placeholder="收货人号码"/>
+                </div>
+                <div class="col-sm-1  control-label">是否默认</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control"   v-model="userCnee.isDefaute">
+                            <option value="0" >否</option>
+                            <option value="1" >是</option>
+                        </select>
                     </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">收货人姓名</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="userCnee.cneeName" placeholder="收货人姓名"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">收货人号码</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="userCnee.cneePhone" placeholder="收货人号码"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">收货人地址</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="userCnee.cneeAddr" placeholder="收货人地址"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">是否删除(y 删除 n 未删除)</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="userCnee.isDelete" placeholder="是否删除(y 删除 n 未删除)"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">是否默认(y 是 n 否)</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="userCnee.isDefaute" placeholder="是否默认(y 是 n 否)"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">创建时间</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="userCnee.createTime" placeholder="创建时间"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">修改时间</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="userCnee.updateTime" placeholder="修改时间"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">创建者</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="userCnee.createdby" placeholder="创建者"/>
-                        </div>
-                    </div>
-							            <div class="form-group">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">收货人地址</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="userCnee.cneeAddr" placeholder="收货人地址"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">修改说明</div>
+                <div class="col-sm-10">
+                    <textarea class="form-control"  lay-verify="number" rows="2" v-model="userCnee.cneeMemo" name="proBrief"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+
+
+    <div v-show="showDetail" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal" style="width:1100px">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">会员id</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="userCnee.userId" placeholder="会员id"/>
+                </div>
+                <div class="col-sm-1 control-label">收货人</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="userCnee.cneeName" placeholder="收货人姓名"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">手机号码</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="userCnee.cneePhone" placeholder="收货人号码"/>
+                </div>
+                <div class="col-sm-1  control-label">是否默认</div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="form-control" disabled  v-model="userCnee.isDefaute">
+                            <option value="0" >否</option>
+                            <option value="1" >是</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">收货人地址</div>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" v-model="userCnee.cneeAddr" placeholder="收货人地址"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">修改说明</div>
+                <div class="col-sm-10">
+                    <textarea class="form-control" disabled  lay-verify="number" rows="2" v-model="userCnee.cneeMemo" name="proBrief"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
             </div>
         </form>
