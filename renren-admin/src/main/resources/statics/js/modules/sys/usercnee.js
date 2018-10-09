@@ -4,11 +4,11 @@ $(function () {
         datatype: "json",
         colModel: [			
 			{ label: 'id',hidden: true, name: 'id', index: 'id', width: 50, key: true },
-			{ label: '会员id', name: 'userId', index: 'user_id', width: 80 }, 			
-			{ label: '收货人', name: 'cneeName', index: 'cnee_name', width: 80 },
+			{ label: '会员编号', name: 'userNo', index: 'USER_NO', width: 80 },
+			{ label: '收件人', name: 'cneeName', index: 'cnee_name', width: 80 },
 			{ label: '手机号码', name: 'cneePhone', index: 'cnee_phone', width: 80 },
-			{ label: '收货人地址', name: 'cneeAddr', index: 'cnee_addr', width: 80 }, 			
-			{ label: '是否默认[0- 否 ,  1- 是 ]', name: 'isDefaute',  width: 80 , formatter: function(value, options, row){
+			{ label: '收件地址', name: 'cneeAddr', index: 'cnee_addr', width: 80 },
+			{ label: '是否默认', name: 'isDefaute',  width: 80 , formatter: function(value, options, row){
                 if (value == '0') {
                     return '<span>否</span>';
                 } else if (value == '1') {
@@ -20,9 +20,8 @@ $(function () {
             {
                 label: '操作', name: '', index: 'operate', width: 50, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
-                    var detail="<a  onclick='vm.detail(\""+ rowObject.id + "\")'' href=\"#\" >详情</a>|";
                     var update="<a  onclick='vm.update(\""+ rowObject.id + "\")'' href=\"#\" >修改</a>"
-                    return detail+update;
+                    return update;
                 },
             },
         ],
@@ -58,7 +57,7 @@ var vm = new Vue({
 	data:{
         q:{
             userNo: null,
-            userName: null,
+            cneeName: null,
             phone: null,
             cneeAddr: null
         },
@@ -156,7 +155,7 @@ var vm = new Vue({
 			$("#jqGrid").jqGrid('setGridParam',{
                 postData:{
                     'userNo': vm.q.userNo,
-                    'userName': vm.q.userName,
+                    'cneeName': vm.q.cneeName,
                     'phone': vm.q.phone,
                     'cneeAddr': vm.q.cneeAddr
                 },

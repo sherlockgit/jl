@@ -15,6 +15,6 @@ import java.util.Map;
  */
 public interface UserCneeService extends IService<UserCneeEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Map<String, Object> map);
 }
 

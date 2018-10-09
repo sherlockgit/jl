@@ -2,6 +2,7 @@ package io.renren.modules.sys.dao;
 
 import io.renren.modules.sys.entity.OrderRefundEntity;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 
@@ -11,5 +12,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @date 2018-10-08 14:48:16
  */
 public interface OrderRefundDao extends BaseMapper<OrderRefundEntity> {
+    OrderRefundEntity getByOrder(@Param("orderNo") String orderNo);
 	
 }

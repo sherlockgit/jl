@@ -3,7 +3,10 @@ package io.renren.modules.sys.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import io.renren.common.utils.NoUtils;
+import io.renren.common.utils.UUIDUtils;
 import io.renren.common.validator.ValidatorUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,6 +64,8 @@ public class OrderRefundController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:orderrefund:save")
     public R save(@RequestBody OrderRefundEntity orderRefund){
+        orderRefund.setId(UUIDUtils.getUUID());
+        orderRefund.setRefundNo(NoUtils.genOrderNo());
         orderRefundService.insert(orderRefund);
 
         return R.ok();
@@ -88,5 +93,20 @@ public class OrderRefundController {
 
         return R.ok();
     }
+    @RequestMapping("/getByOrder/{orderNo}")
+    public R getByOrder(@PathVariable("orderNo") String orderNo){
 
+
+
+        if ("null".equals(orderNo)){
+            return R.error("订单编号不能为空");
+        }
+        OrderRefundEntity orderRefundEntity = orderRefundService.getByOrder(orderNo);
+
+        if (orderRefundEntity == null) {
+            return R.error("没有该编号对应的订单");
+        }
+        return R.ok().put("data",orderRefundEntity);
+
+    }
 }

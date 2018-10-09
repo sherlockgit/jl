@@ -31,8 +31,12 @@ $(function () {
             { label: '机构名称', name: 'organization', index: 'organization', width: 80 },
             { label: '用户姓名', name: 'userName', index: 'user_name', width: 80 },
             { label: '手机号码', name: 'phone', index: 'phone', width: 80 },
-            { label: '退款申请时间', name: 'applyTime', index: 'apply_time', width: 80 },
-            { label: '退款处理时间', name: 'operTime', index: 'oper_time', width: 80 },
+            { label: '退款申请时间', name: 'applyTime', width: 80 ,formatter:function(value,options,row){
+                return new Date(value).Format('yyyy-MM-dd HH:mm');
+            }},
+            { label: '退款处理时间', name: 'operTime',  width: 80 ,formatter:function(value,options,row){
+                return new Date(value).Format('yyyy-MM-dd HH:mm');
+            }},
             {
                 label: '操作', name: '', index: 'operate', width: 50, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
@@ -69,6 +73,22 @@ $(function () {
     });
 });
 
+Date.prototype.Format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "H+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
@@ -94,7 +114,7 @@ var vm = new Vue({
             vm.showSaveOrUpdate = true;
             vm.showDetail = false;
 			vm.title = "新增";
-			vm.orderRefund = {};
+			vm.orderRefund = {orderNo:null,applyType:0,refundStatus:0};
 		},
 		update: function (id) {
 			if(id == null){
@@ -120,6 +140,8 @@ var vm = new Vue({
         },
 		saveOrUpdate: function (event) {
 			var url = vm.orderRefund.id == null ? "sys/orderrefund/save" : "sys/orderrefund/update";
+            vm.orderRefund.applyTime=$("#datetimepicker").data("datetimepicker").getDate();
+            vm.orderRefund.operTime=$("#datetimepickerd").data("datetimepicker").getDate();
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -163,8 +185,29 @@ var vm = new Vue({
 		getInfo: function(id){
 			$.get(baseURL + "sys/orderrefund/info/"+id, function(r){
                 vm.orderRefund = r.orderRefund;
+                $("#datetimepicker").val(new Date(vm.orderRefund.applyTime).Format('yyyy-MM-dd HH:mm'))
+                $("#datetimepickerd").val(new Date(vm.orderRefund.operTime).Format('yyyy-MM-dd HH:mm'))
+                $("#datetimepicker1").val(new Date(vm.orderRefund.applyTime).Format('yyyy-MM-dd HH:mm'))
+                $("#datetimepickerd1").val(new Date(vm.orderRefund.operTime).Format('yyyy-MM-dd HH:mm'))
+
             });
 		},
+        getOrder: function(){
+            vm.getByOrderNo()
+        },
+        getByOrderNo: function(event){
+            orderNo = vm.orderRefund.orderNo;
+            $.get(baseURL + "sys/orderrefund/getByOrder/"+orderNo, function(r){
+                if(r.code == 0){
+                    vm.orderRefund = r.data;
+                    vm.orderRefund.applyType = 0
+                    vm.orderRefund.refundStatus = 0
+                }else{
+                    alert(r.msg);
+                }
+
+            });
+        },
 		reload: function (event) {
             vm.showList = true;
             vm.showSaveOrUpdate = false;
@@ -182,4 +225,13 @@ var vm = new Vue({
             }).trigger("reloadGrid");
 		}
 	}
+});
+
+$('#datetimepicker').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii'
+});
+
+
+$('#datetimepickerd').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii'
 });

@@ -23,5 +23,10 @@
         <result property="applyType" column="apply_type"/>
     </resultMap>
 
+    <select id="getByOrder" parameterType="java.lang.String" resultMap="orderRefundMap">
+        SELECT o.order_no, o.course_name,o.course_price AS order_price,o.order_price AS refund_price,o.pay_type AS apply_type,u.USER_NAME AS user_name,u.PHONE AS phone,u.ORGANIZATION AS organization
+        FROM order_info o LEFT JOIN user_info u ON o.user_id = u.USER_ID WHERE o.order_no = #{orderNo,jdbcType=VARCHAR}
+    </select>
+
 
 </mapper>

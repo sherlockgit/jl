@@ -16,5 +16,7 @@ import java.util.Map;
 public interface OrderRefundService extends IService<OrderRefundEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    OrderRefundEntity getByOrder(String orderNo);
 }
 

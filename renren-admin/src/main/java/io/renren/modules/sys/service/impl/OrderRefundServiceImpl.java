@@ -1,6 +1,7 @@
 package io.renren.modules.sys.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -16,6 +17,9 @@ import io.renren.modules.sys.service.OrderRefundService;
 
 @Service("orderRefundService")
 public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundDao, OrderRefundEntity> implements OrderRefundService {
+
+    @Autowired
+    OrderRefundDao orderRefundDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -34,6 +38,12 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundDao, OrderRef
                         .like(StringUtils.isNotBlank(refundStatus),"refund_status", refundStatus)
         );
         return new PageUtils(page);
+    }
+
+    @Override
+    public OrderRefundEntity getByOrder(String orderNo) {
+
+        return orderRefundDao.getByOrder(orderNo);
     }
 
 }

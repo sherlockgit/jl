@@ -10,17 +10,11 @@
         <div class="grid-btn">
             <div class="form-inline">
                 <label class="form-inline">会员编号：<input type="text" v-model="q.userNo" @keyup.enter="query" class="form-control" placeholder="订单编号"></label>
-                <label class="form-inline">收件人：<input type="text" v-model="q.userName" @keyup.enter="query" class="form-control" placeholder="收件人"></label>
+                <label class="form-inline">收件人：<input type="text" v-model="q.cneeName" @keyup.enter="query" class="form-control" placeholder="收件人"></label>
                 <label class="form-inline">手机号码：<input type="text" v-model="q.phone" @keyup.enter="query" class="form-control" placeholder="手机号码"></label>
                 <label class="form-inline">收货地址：<input type="text" v-model="q.cneeAddr" @keyup.enter="query" class="form-control" placeholder="收货地址"></label>
 
                 <a class="btn btn-default" @click="query">查询</a>
-                <#if shiro.hasPermission("sys:articleinfo:save")>
-                    <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-                </#if>
-                <#if shiro.hasPermission("sys:articleinfo:delete")>
-                    <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-                </#if>
             </div>
         </div>
         <table id="jqGrid"></table>

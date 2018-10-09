@@ -1,7 +1,9 @@
 package io.renren.modules.sys.entity;
 
+import com.baomidou.mybatisplus.annotations.KeySequence;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -14,6 +16,7 @@ import java.util.Date;
  * @email sunlightcs@gmail.com
  * @date 2018-10-08 14:48:16
  */
+@KeySequence(clazz = String.class)
 @TableName("order_refund")
 public class OrderRefundEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -21,7 +24,7 @@ public class OrderRefundEntity implements Serializable {
 	/**
 	 * 
 	 */
-	@TableId
+	@TableId(type = IdType.INPUT)
 	private String id;
 	/**
 	 * 订单编号

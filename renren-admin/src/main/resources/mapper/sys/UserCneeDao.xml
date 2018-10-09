@@ -13,7 +13,39 @@
         <result property="isDefaute" column="is_defaute"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
+        <result property="cneeMemo" column="cnee_memo"/>
     </resultMap>
 
+    <resultMap type="io.renren.modules.sys.vo.UserCneeVo" id="userCneeVoMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="cneeName" column="cnee_name"/>
+        <result property="cneePhone" column="cnee_phone"/>
+        <result property="cneeAddr" column="cnee_addr"/>
+        <result property="isDefaute" column="is_defaute"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="cneeMemo" column="cnee_memo"/>
+        <result property="userNo" column="USER_NO"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="userCneeVoMap" parameterType="map">
+        SELECT c.id,c.cnee_name,c.cnee_phone,c.cnee_addr,c.is_defaute,c.create_time,c.update_time,c.cnee_memo,u.USER_NO FROM
+        user_cnee c LEFT JOIN user_info u ON c.user_id = u.USER_ID
+        <where>
+            <if test="userNo != null and userNo != ''">
+                AND u.USER_NO LIKE concat('%',#{userNo,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="cneeName != null and cneeName != ''">
+                AND c.cnee_name LIKE concat('%',#{cneeName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND c.cnee_phone LIKE concat('%',#{phone,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="cneeAddr != null and cneeAddr != ''">
+                AND c.cnee_addr LIKE concat('%',#{cneeAddr,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </select>
 
 </mapper>
