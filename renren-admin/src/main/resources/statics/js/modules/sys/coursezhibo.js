@@ -6,8 +6,10 @@ $(function () {
 			{ label: 'id',hidden: true, name: 'id', index: 'id', width: 50, key: true },
 			{ label: '课程编号', name: 'courseNo', index: 'course_no', width: 80 }, 			
 			{ label: '课程名称', name: 'courseName', index: 'course_name', width: 80 },
-            { label: '开播时间', name: 'publishTime', index: 'publish_time', width: 80 },
-            { label: '直播状态[0-新建, 1-预告, 2-正在直播，3-直播结束]', name: 'courseStatus', width: 80, formatter: function(value, options, row){
+            { label: '开播时间', name: 'publishTime',  width: 80 ,formatter:function(value,options,row){
+                return new Date(value).Format('yyyy-MM-dd HH:mm');
+            }},
+            { label: '直播状态', name: 'courseStatus', width: 80, formatter: function(value, options, row){
                 if (value == '0') {
                     return '<span>新建</span>';
                 } else if (value == '1') {
@@ -84,7 +86,7 @@ var vm = new Vue({
             vm.showSaveOrUpdate = true;
             vm.showDetail = false;
 			vm.title = "新增";
-			vm.courseZhibo = {};
+			vm.courseZhibo = {courseStatus:0};
             layui.use('layedit', function(){
                 var layedit = layui.layedit
                     ,$ = layui.jquery;
@@ -105,6 +107,7 @@ var vm = new Vue({
 
                 var active = {
                     content: function () {
+                        vm.courseZhibo.publishTime=$("#datetimepicker").data("datetimepicker").getDate();
                         vm.courseZhibo.courseContent = layedit.getContent(index)
                         var url = vm.courseZhibo.id == null ? "sys/coursezhibo/save" : "sys/coursezhibo/update";
                         console.log(url)
@@ -116,7 +119,7 @@ var vm = new Vue({
                             success: function(r){
                                 if(r.code === 0){
                                     alert('操作成功', function(index){
-                                        vm.reload();
+                                        location.reload()
                                     });
                                 }else{
                                     alert(r.msg);
@@ -218,13 +221,16 @@ var vm = new Vue({
                         height: 520 ,//设置编辑器高度
                     });
                     layedit.setContent(index,r.courseZhibo.courseContent,false)
-
                 });
                 vm.courseZhibo = r.courseZhibo;
+                $("#datetimepickerd").val(new Date(vm.courseZhibo.publishTime).Format('yyyy-MM-dd HH:mm'))
+
             });
 		},
         getInfoUpdate: function(id){
             $.get(baseURL + "sys/coursezhibo/info/"+id, function(r){
+                vm.courseZhibo = r.courseZhibo;
+                $("#datetimepicker").val(new Date(vm.courseZhibo.publishTime).Format('yyyy-MM-dd HH:mm'))
                 $('#img').attr('src', r.courseZhibo.coursePic);
                 layui.use('layedit', function(){
                     var layedit = layui.layedit
@@ -243,9 +249,37 @@ var vm = new Vue({
                         height: 520 ,//设置编辑器高度
                     });
                     layedit.setContent(index,r.courseZhibo.courseContent,false)
+                    var active = {
+                        content: function () {
+                            vm.courseZhibo.publishTime=$("#datetimepicker").data("datetimepicker").getDate();
+                            vm.courseZhibo.courseContent = layedit.getContent(index)
+                            var url = vm.courseZhibo.id == null ? "sys/coursezhibo/save" : "sys/coursezhibo/update";
+                            console.log(url)
+                            $.ajax({
+                                type: "POST",
+                                url: baseURL + url,
+                                contentType: "application/json",
+                                data: JSON.stringify(vm.courseZhibo),
+                                success: function(r){
+                                    if(r.code === 0){
+                                        alert('操作成功', function(index){
+                                            location.reload()
+                                        });
+                                    }else{
+                                        alert(r.msg);
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                    $('.site-demo-layedit').on('click', function(){
+                        var type = $(this).data('type');
+                        active[type] ? active[type].call(this) : '';
+                    });
 
                 });
-                vm.courseZhibo = r.courseZhibo;
+
             });
 
         },
@@ -300,3 +334,23 @@ layui.use('upload', function(){
         }
     });
 });
+
+$('#datetimepicker').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii'
+});
+
+Date.prototype.Format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "H+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}

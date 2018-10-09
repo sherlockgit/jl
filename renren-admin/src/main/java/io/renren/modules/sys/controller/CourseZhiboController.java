@@ -1,8 +1,10 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
+import io.renren.common.utils.NoUtils;
 import io.renren.common.validator.ValidatorUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,8 @@ public class CourseZhiboController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:coursezhibo:save")
     public R save(@RequestBody CourseZhiboEntity courseZhibo){
+        courseZhibo.setCourseNo(NoUtils.genOrderNo());
+        courseZhibo.setCreateTime(new Date());
         courseZhiboService.insert(courseZhibo);
 
         return R.ok();

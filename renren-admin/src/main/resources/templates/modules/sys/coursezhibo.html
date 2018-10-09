@@ -4,8 +4,10 @@
     <title></title>
 		<#include "/header.html">
             <link rel="stylesheet" href="${request.contextPath}/statics/plugins/layui2_3_0/css/layui.css" media="all">
+            <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-datetimepicker.min.css" >
             <script src="${request.contextPath}/statics/plugins/layui2_3_0/layui.js"></script>
             <script src="${request.contextPath}/statics/plugins/layer/layer.js"></script>
+            <script src="${request.contextPath}/statics/libs/bootstrap-datetimepicker.min.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -43,17 +45,17 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">课程总价格</div>
+                <div class="col-sm-2 control-label">直播价格</div>
                 <div class="col-sm-4">
                     <input type="text" class="form-control" v-model="courseZhibo.coursePrice" placeholder="课程总价格"/>
                 </div>
-                <div class="col-sm-1 control-label">发布时间</div>
+                <div class="col-sm-1 control-label">开始时间</div>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" v-model="courseZhibo.publishTime" placeholder="发布时间"/>
+                    <input type="text" id="datetimepicker" class="form-control" placeholder="开始时间"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">直播时长(min)</div>
+                <div class="col-sm-2 control-label">直播时长</div>
                 <div class="col-sm-4">
                     <input type="text" class="form-control" v-model="courseZhibo.courseMinute" placeholder="直播时长(min)"/>
                 </div>
@@ -134,13 +136,13 @@
                 <div class="col-sm-4">
                     <input type="text" disabled class="form-control" v-model="courseZhibo.coursePrice" placeholder="课程总价格"/>
                 </div>
-                <div class="col-sm-1 control-label">发布时间</div>
+                <div class="col-sm-1 control-label">开始时间</div>
                 <div class="col-sm-4">
-                    <input type="text" disabled class="form-control" v-model="courseZhibo.publishTime" placeholder="发布时间"/>
+                    <input type="text" id="datetimepickerd" disabled class="form-control" placeholder="发布时间"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">直播时长(min)</div>
+                <div class="col-sm-2 control-label">直播时长</div>
                 <div class="col-sm-4">
                     <input type="text" disabled class="form-control" v-model="courseZhibo.courseMinute" placeholder="直播时长(min)"/>
                 </div>
