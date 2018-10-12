@@ -14,10 +14,10 @@
     <div v-show="showList">
         <div class="grid-btn">
             <div class="form-inline">
-                <label class="form-inline">直播编号：<input type="text" v-model="q.courseNo" @keyup.enter="query" class="form-control" placeholder="章节编号"></label>
-                <label class="form-inline">课程名称：<input type="text" v-model="q.courseName" @keyup.enter="query" class="form-control" placeholder="章节名称"></label>
-                <label class="form-inline">直播老师：<input type="text" v-model="q.courseTeacher" @keyup.enter="query" class="form-control" placeholder="章节老师"></label>
-                <label class="form-inline">开播时间：<input type="text" v-model="q.publishTime" @keyup.enter="query" class="form-control" placeholder="章节老师"></label>
+                <label class="form-inline">直播编号：<input type="text" v-model="q.courseNo" @keyup.enter="query" class="form-control" placeholder="直播编号"></label>
+                <label class="form-inline">课程名称：<input type="text" v-model="q.courseName" @keyup.enter="query" class="form-control" placeholder="课程名称"></label>
+                <label class="form-inline">直播老师：<input type="text" v-model="q.courseTeacher" @keyup.enter="query" class="form-control" placeholder="直播老师"></label>
+                <label>开播时间 <input type='text' class='form-control ' id='dateBegin' name='date_begin' placeholder="开始时间" value='' ng-model="dateBegin"> </label>
                 <a class="btn btn-default" @click="query">查询</a>
                 <#if shiro.hasPermission("sys:articleinfo:save")>
                     <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>

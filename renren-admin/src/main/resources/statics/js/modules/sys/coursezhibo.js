@@ -78,6 +78,11 @@ var vm = new Vue({
 	},
 	methods: {
 		query: function () {
+            if ($("#dateBegin").val().length <= 0) {
+                vm.q.publishTime = '';
+            }else {
+                vm.q.publishTime=$("#dateBegin").data("datetimepicker").getDate();
+            }
 			vm.reload();
 		},
 		add: function(){
@@ -354,3 +359,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 }
+
+$('#dateBegin').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii'
+});

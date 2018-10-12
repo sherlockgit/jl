@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class CourseZhiboController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:coursezhibo:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) throws ParseException {
         PageUtils page = courseZhiboService.queryPage(params);
 
         return R.ok().put("page", page);
