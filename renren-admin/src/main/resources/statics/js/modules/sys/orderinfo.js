@@ -6,15 +6,15 @@ $(function () {
 			{ label: 'id',hidden: true, name: 'id', index: 'id', width: 50, key: true },
 			{ label: '订单编号', name: 'orderNo', index: 'order_no', width: 80 },
 			{ label: '课程名称', name: 'courseName', index: 'course_name', width: 80 }, 			
-			{ label: '订单来源', name: 'orderSource', width: 80, formatter: function(value, options, row){
-                if (value == '0') {
-                    return '<span>堂课</span>';
-                } else if (value == '1') {
-                    return '<span>直播</span>';
-                }else if (value == '2') {
-                    return '<span>录播</span>';
+			{ label: '订购内容类型', name: 'contentType', width: 80, formatter: function(value, options, row){
+                if (value == '1') {
+                    return '<span>全课程</span>';
+                } else if (value == '2') {
+                    return '<span>课程章节</span>';
+                }else if (value == '3') {
+                    return '<span>知识问答</span>';
                 } else {
-                    return '<span>音频</span>';
+                    return '<span>直播课程</span>';
                 }
             }},
 			{ label: '课程价格', name: 'coursePrice', index: 'course_price', width: 80 }, 			
@@ -93,7 +93,7 @@ var vm = new Vue({
         q:{
             orderNo: null,
             userPhone: null,
-            orderSource: "",
+            contentType: "",
             payType: "",
             payStatus: ""
         },
@@ -192,7 +192,7 @@ var vm = new Vue({
                 postData:{
                     'orderNo': vm.q.orderNo,
                     'userPhone': vm.q.userPhone,
-                    'orderSource': vm.q.orderSource,
+                    'contentType': vm.q.contentType,
                     'payType': vm.q.payType,
                     'payStatus': vm.q.payStatus
                 },

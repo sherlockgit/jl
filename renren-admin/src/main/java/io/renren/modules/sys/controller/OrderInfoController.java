@@ -1,9 +1,13 @@
 package io.renren.modules.sys.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+import io.renren.common.utils.ExportExcelUtils;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.vo.ExcelDataVO;
+import io.renren.modules.sys.vo.OrderCountVo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +21,7 @@ import io.renren.modules.sys.service.OrderInfoService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -43,7 +48,51 @@ public class OrderInfoController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 列表
+     */
+    @RequestMapping("/getExcle")
+    public void getExcle(@RequestParam Map<String, Object> params,HttpServletResponse response) throws Exception {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
+        String dataName = simpleDateFormat.format(date);
 
+        ExcelDataVO data = new ExcelDataVO();
+        data.setName("订单"+dataName);
+        List<String> titles = new ArrayList<>();
+        titles.add("课程名称");
+        titles.add("课程价格");
+        titles.add("实际收款");
+        titles.add("抵扣费用");
+        titles.add("微信收款（元）");
+        titles.add("支付宝收款（元）");
+        titles.add("付款时间");
+        data.setTitles(titles);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<OrderCountVo> list = orderInfoService.getExcle(params);
+        List<List<Object>> rows = new ArrayList();
+        list.forEach(o->{
+            List<Object> row = new ArrayList();
+            row.add(o.getCourseName());
+            row.add(o.getCoursePrice());
+            row.add(o.getOrderPrice());
+            row.add(o.getOrderCoupon());
+            row.add(o.getWechatPrice());
+            row.add(o.getZhifuPrice());
+            row.add(sdf.format(o.getPayTime()));
+            rows.add(row);
+
+        });
+        data.setRows(rows);
+        ExportExcelUtils.exportExcel(response,"发货订单"+dataName+".xlsx",data);
+    }
+
+    @RequestMapping("/getCount")
+    public R getCount(@RequestParam Map<String, Object> params) throws ParseException {
+        PageUtils page = orderInfoService.getCount(params);
+
+        return R.ok().put("page", page);
+    }
     /**
      * 信息
      */

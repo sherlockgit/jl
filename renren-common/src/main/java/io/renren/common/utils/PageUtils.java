@@ -38,6 +38,8 @@ public class PageUtils implements Serializable {
 	private int totalPage;
 	//当前页数
 	private int currPage;
+	/*其余数据*/
+	private List<Integer> count;
 	//列表数据
 	private List<?> list;
 	
@@ -65,6 +67,15 @@ public class PageUtils implements Serializable {
 		this.pageSize = page.getSize();
 		this.currPage = page.getCurrent();
 		this.totalPage = page.getPages();
+	}
+
+	public PageUtils(Page<?> page,List<Integer> count) {
+		this.list = page.getRecords();
+		this.totalCount = page.getTotal();
+		this.pageSize = page.getSize();
+		this.currPage = page.getCurrent();
+		this.totalPage = page.getPages();
+		this.count = count;
 	}
 
 	public int getTotalCount() {
@@ -105,6 +116,14 @@ public class PageUtils implements Serializable {
 
 	public void setList(List<?> list) {
 		this.list = list;
+	}
+
+	public List<Integer> getCount() {
+		return count;
+	}
+
+	public void setCount(List<Integer> count) {
+		this.count = count;
 	}
 	
 }

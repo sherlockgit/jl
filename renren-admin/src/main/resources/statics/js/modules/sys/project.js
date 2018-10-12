@@ -80,7 +80,8 @@ var vm = new Vue({
         showEdit: false,
         showDetail: false,
 		title: null,
-		project: {proStatus: 0}
+		project: {proStatus: 0},
+        title: 55555,
 	},
 	methods: {
 		query: function () {

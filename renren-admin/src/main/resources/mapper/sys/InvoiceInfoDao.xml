@@ -30,5 +30,28 @@
         <result property="orderNos" column="order_nos"/>
     </resultMap>
 
+    <select id="getCount" resultType="java.lang.Integer" parameterType="map">
+        SELECT SUM(invoice_amt) FROM invoice_info
+        <where>
+            <if test="invoiceNo != null and invoiceNo != ''">
+                AND invoice_no LIKE concat('%',#{invoiceNo,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="expressNo != null and expressNo != ''">
+                AND express_no LIKE concat('%',#{expressNo,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="cneeName != null and cneeName != ''">
+                AND cnee_name LIKE concat('%',#{cneeName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="invoiceStauts != null and invoiceStauts != ''">
+                AND invoice_stauts LIKE concat('%',#{invoiceStauts,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="invoiceType != null and invoiceType != '' or invoiceType == 0">
+                AND invoice_type LIKE concat('%',#{invoiceType,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="invoiceCategory != null and invoiceCategory != ''">
+                AND invoice_category LIKE concat('%',#{invoiceCategory,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </select>
 
 </mapper>

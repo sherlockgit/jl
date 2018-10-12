@@ -1,7 +1,11 @@
 package io.renren.modules.sys.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -16,6 +20,9 @@ import io.renren.modules.sys.service.InvoiceInfoService;
 
 @Service("invoiceInfoService")
 public class InvoiceInfoServiceImpl extends ServiceImpl<InvoiceInfoDao, InvoiceInfoEntity> implements InvoiceInfoService {
+
+    @Autowired
+    InvoiceInfoDao invoiceInfoDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -37,7 +44,31 @@ public class InvoiceInfoServiceImpl extends ServiceImpl<InvoiceInfoDao, InvoiceI
                         .like(StringUtils.isNotBlank(invoiceCategory),"invoice_category", invoiceCategory)
         );
 
-        return new PageUtils(page);
+        Integer isOpen = 0;
+        Integer unOpen = 0;
+        if (invoiceType == null || "".equals(invoiceType)) {
+            /*已开票*/
+            params.put("invoiceType",1);
+            isOpen = invoiceInfoDao.getCount(params);
+            params.put("invoiceType",0);
+            unOpen = invoiceInfoDao.getCount(params);
+        }else {
+            if (invoiceType.equals("0")){
+                unOpen = invoiceInfoDao.getCount(params);
+            }else {
+                isOpen = invoiceInfoDao.getCount(params);
+            }
+        }
+        List<Integer> list = new ArrayList<>();
+        if (isOpen == null) {
+            isOpen = 0;
+        }
+        if (unOpen == null) {
+            unOpen = 0;
+        }
+        list.add(unOpen);
+        list.add(isOpen);
+        return new PageUtils(page,list);
     }
 
 }

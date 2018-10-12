@@ -35,7 +35,7 @@ public class OrderInfoEntity implements Serializable {
 	/**
 	 * 订单来源[0-堂课， 1-直播  2-录播  3-音频]
 	 */
-	private String orderSource;
+	private String contentType;
 	/**
 	 * 课程价格
 	 */
@@ -90,7 +90,6 @@ public class OrderInfoEntity implements Serializable {
 	/**
 	 * 付款时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private String orderMemo;
 
 	public String getOrderMemo() {
@@ -140,14 +139,14 @@ public class OrderInfoEntity implements Serializable {
 	/**
 	 * 设置：订单来源[0-堂课， 1-直播  2-录播  3-音频]
 	 */
-	public void setOrderSource(String orderSource) {
-		this.orderSource = orderSource;
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 	/**
-	 * 获取：订单来源[0-堂课， 1-直播  2-录播  3-音频]
+	 * 获取：订单来源[1-堂课， 2-直播  3-录播  4-音频]
 	 */
-	public String getOrderSource() {
-		return orderSource;
+	public String getContentType() {
+		return contentType;
 	}
 	/**
 	 * 设置：课程价格

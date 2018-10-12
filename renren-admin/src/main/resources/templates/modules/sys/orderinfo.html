@@ -13,12 +13,12 @@
                 <label class="form-inline">手机号码：<input type="text" v-model="q.userPhone" @keyup.enter="query" class="form-control" placeholder="章节名称"></label>
                 <label class="form-inline">订单来源：
                     <div class="form-group">
-                        <select  class="form-control" v-model="q.orderSource" @keyup.enter="query" >
+                        <select  class="form-control" v-model="q.contentType" @keyup.enter="query" >
                             <option value="" >全部</option>
-                            <option value="0" >堂课</option>
-                            <option value="1" >直播</option>
-                            <option value="2" >录播</option>
-                            <option value="3" >音频</option>
+                            <option value="1" >全课程</option>
+                            <option value="2" >课程章节</option>
+                            <option value="3" >知识问答</option>
+                            <option value="4" >直播课程</option>
                         </select>
                     </div>
                 </label>
@@ -57,14 +57,14 @@
                 <div class="col-sm-4">
                     <input type="text" disabled class="form-control" v-model="orderInfo.orderNo" placeholder="订单编号[自动生成]"/>
                 </div>
-                <div class="col-sm-1 control-label">订单来源</div>
+                <div class="col-sm-1 control-label">订购内容类型</div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <select class="form-control"  v-model="orderInfo.orderSource">
-                            <option value="0" >堂课</option>
-                            <option value="1" >直播</option>
-                            <option value="2" >录播</option>
-                            <option value="3" >音频</option>
+                        <select class="form-control"  v-model="orderInfo.contentType">
+                            <option value="1" >全课程</option>
+                            <option value="2" >课程章节</option>
+                            <option value="3" >知识问答</option>
+                            <option value="4" >直播课程</option>
                         </select>
                     </div>
                 </div>
@@ -167,14 +167,14 @@
                 <div class="col-sm-4">
                     <input type="text" disabled class="form-control" v-model="orderInfo.orderNo" placeholder="订单编号[自动生成]"/>
                 </div>
-                <div class="col-sm-1 control-label">订单来源</div>
+                <div class="col-sm-1 control-label">订购内容类型</div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <select class="form-control" disabled v-model="orderInfo.orderSource">
-                            <option value="0" >堂课</option>
-                            <option value="1" >直播</option>
-                            <option value="2" >录播</option>
-                            <option value="3" >音频</option>
+                        <select class="form-control" disabled v-model="orderInfo.contentType">
+                            <option value="1" >全课程</option>
+                            <option value="2" >课程章节</option>
+                            <option value="3" >知识问答</option>
+                            <option value="4" >直播课程</option>
                         </select>
                     </div>
                 </div>

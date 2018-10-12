@@ -71,7 +71,8 @@ $(function () {
             root: "page.list",
             page: "page.currPage",
             total: "page.totalPage",
-            records: "page.totalCount"
+            records: "page.totalCount",
+            userdata: "page.count"
         },
         prmNames : {
             page:"page", 
@@ -80,8 +81,11 @@ $(function () {
         },
         gridComplete:function(){
         	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
-        }
+        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+            vm.isOpen = $("#jqGrid").getGridParam('userData')[0]
+            vm.unOpen = $("#jqGrid").getGridParam('userData')[1]
+        },
+
     });
 });
 
@@ -100,11 +104,15 @@ var vm = new Vue({
         showSaveOrUpdate: false,
         showDetail: false,
 		title: null,
-		invoiceInfo: {}
+		invoiceInfo: {},
+        isOpen: null,
+        unOpen: null
 	},
 	methods: {
 		query: function () {
 			vm.reload();
+            vm.isOpen = $("#jqGrid").getGridParam('userData')[0]
+            vm.unOpen = $("#jqGrid").getGridParam('userData')[1]
 		},
 		add: function(){
             vm.showList = false;

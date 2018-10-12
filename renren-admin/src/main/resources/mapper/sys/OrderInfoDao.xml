@@ -23,5 +23,26 @@
         <result property="payTime" column="pay_time"/>
     </resultMap>
 
+    <select id="getCount" resultMap="orderInfoMap" parameterType="map" >
+        SELECT sum(course_price) as course_price ,sum(order_coupon) as  order_coupon,sum(order_price) as order_price FROM order_info
+        <where>
+            <if test="orderNo != null and orderNo != ''">
+                AND order_no LIKE concat('%',#{orderNo,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="courseName != null and courseName != ''">
+                AND course_name LIKE concat('%',#{courseName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="payType != null and payType != '' or payType == 0">
+                AND pay_type LIKE concat('%',#{payType,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="startTime != null and startTime != ''">
+                AND #{startTime} &lt;= pay_time
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND #{endTime} &gt;= pay_time
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

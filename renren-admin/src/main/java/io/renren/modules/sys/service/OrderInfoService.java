@@ -3,7 +3,10 @@ package io.renren.modules.sys.service;
 import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.OrderInfoEntity;
+import io.renren.modules.sys.vo.OrderCountVo;
 
+import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +19,9 @@ import java.util.Map;
 public interface OrderInfoService extends IService<OrderInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    PageUtils getCount (Map<String,Object> map) throws ParseException;
+
+    List<OrderCountVo> getExcle (Map<String,Object> map) throws ParseException;
 }
 
