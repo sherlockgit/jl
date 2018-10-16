@@ -6,6 +6,8 @@ import java.util.*;
 
 import io.renren.common.utils.ExportExcelUtils;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 import io.renren.modules.sys.vo.ExcelDataVO;
 import io.renren.modules.sys.vo.OrderCountVo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -110,6 +112,8 @@ public class OrderInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:orderinfo:save")
     public R save(@RequestBody OrderInfoEntity orderInfo){
+        ValidatorUtils.validateEntity(orderInfo, AddGroup.class);
+
         orderInfoService.insert(orderInfo);
 
         return R.ok();
@@ -121,6 +125,7 @@ public class OrderInfoController {
     @RequestMapping("/update")
     @RequiresPermissions("sys:orderinfo:update")
     public R update(@RequestBody OrderInfoEntity orderInfo){
+        ValidatorUtils.validateEntity(orderInfo, UpdateGroup.class);
         ValidatorUtils.validateEntity(orderInfo);
         orderInfoService.updateAllColumnById(orderInfo);//全部更新
         

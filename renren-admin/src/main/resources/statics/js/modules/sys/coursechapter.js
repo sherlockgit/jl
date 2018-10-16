@@ -58,7 +58,6 @@ $(function () {
     });
 });
 
-var list = new Array();
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
@@ -73,7 +72,8 @@ var vm = new Vue({
         showSaveOrUpdate: false,
         showDetail: false,
 		title: null,
-		courseChapter: {}
+		courseChapter: {},
+        list:[]
 	},
 	methods: {
 		query: function () {
@@ -86,11 +86,9 @@ var vm = new Vue({
 			vm.title = "新增";
 			vm.courseChapter = {chapterSort:1,chapterStatus:0,chapterType:0,chapterIstry:0};
             $.get(baseURL + "sys/courseinfo/getCourseNameList", function(r){
-                if(list.length==0){
-                    list = r.list
-                    for(var i = 0;i<list.length;i++){
-                        $('#courseName').append('<option value='+list[i].id+' >'+list[i].courseName+'</option>')
-                    }
+                if(vm.list.length==0){
+                    vm.list = r.list
+                    console.log(vm.list)
                 }
             });
 		},
@@ -102,17 +100,13 @@ var vm = new Vue({
             vm.showSaveOrUpdate = true;
             vm.showDetail =false;
             vm.title = "修改";
-            vm.getInfo(id)
 
-            // $.get(baseURL + "sys/courseinfo/getCourseNameList", function(r){
-            //     if(list.length==0){
-            //         list = r.list
-            //         for(var i = 0;i<list.length;i++){
-            //             $('#courseName').append('<option value='+list[i].id+' >'+list[i].courseName+'</option>')
-            //         }
-            //     }
-            //
-            // });
+            $.get(baseURL + "sys/courseinfo/getCourseNameList", function(r){
+                if(vm.list.length==0){
+                    vm.list = r.list
+                }
+            });
+            vm.getInfo(id)
 
 		},
         detail: function (id) {
@@ -120,13 +114,8 @@ var vm = new Vue({
                 return ;
             }
             $.get(baseURL + "sys/courseinfo/getCourseNameList", function(r){
-                if(list.length==0){
-                    list = r.list
-                    console.log(r.list)
-                    for(var i = 0;i<list.length;i++){
-                        console.log(list[i])
-                        $('#courseNameDetail').append('<option value='+list[i].id+' >'+list[i].courseName+'</option>')
-                    }
+                if(vm.list.length==0){
+                    vm.list = r.list
                 }
             });
             vm.showList = false;
@@ -140,6 +129,9 @@ var vm = new Vue({
         },
 		saveOrUpdate: function (event) {
 			var url = vm.courseChapter.id == null ? "sys/coursechapter/save" : "sys/coursechapter/update";
+			if ( vm.courseChapter.id != null) {
+                vm.courseChapter.courseId = vm.courseChapter.courseIdName
+            }
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -183,9 +175,8 @@ var vm = new Vue({
 		getInfo: function(id){
 
 			$.get(baseURL + "sys/coursechapter/info/"+id, function(r){
-                r.courseChapter.courseId =  r.courseChapter.courseId.toString()
                 vm.courseChapter = r.courseChapter;
-
+                vm.courseChapter.courseIdName=  r.courseChapter.courseId
             });
 		},
 		reload: function (event) {

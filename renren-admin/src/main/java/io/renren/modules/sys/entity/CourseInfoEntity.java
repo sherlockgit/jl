@@ -3,7 +3,11 @@ package io.renren.modules.sys.entity;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
@@ -31,18 +35,22 @@ public class CourseInfoEntity implements Serializable {
 	/**
 	 * 课程名称
 	 */
+	@NotBlank(message="课程名称不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String courseName;
 	/**
 	 * 课程封面图
 	 */
+	@NotBlank(message="课程封面图不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String coursePic;
 	/**
 	 * 课程总价格
 	 */
+	@Digits(integer = 8, fraction = 2,message = "请输入正确的课程价格",groups = {AddGroup.class, UpdateGroup.class})
 	private BigDecimal coursePrice;
 	/**
 	 * 课程老师
 	 */
+	@NotBlank(message="课程老师不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String courseTeacher;
 	/**
 	 * 课程时长(min)
@@ -83,10 +91,12 @@ public class CourseInfoEntity implements Serializable {
 	/**
 	 * 课程简介
 	 */
+	@NotBlank(message="课程简介不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String courseBrief;
 	/**
 	 * 课程详情
 	 */
+	@NotBlank(message="课程详情不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String courseContent;
 	/**
 	 * 创建时间

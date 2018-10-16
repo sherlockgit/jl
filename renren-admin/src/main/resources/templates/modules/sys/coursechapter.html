@@ -54,8 +54,8 @@
                 <div class="col-sm-2 control-label">归属课程</div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <select class="form-control" id="courseNameDetail"  v-model="courseChapter.courseId">
-                            <option value="" >请选择课程</option>
+                        <select class="form-control"  disabled v-model="courseChapter.courseIdName">
+                            <option v-for="lists in list" :value="lists.id" :key="lists.id">{{lists.courseName}}</option>
                         </select>
                     </div>
                 </div>
@@ -147,9 +147,8 @@
                 <div class="col-sm-2 control-label">归属课程</div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <select class="form-control"  v-model="courseChapter.courseId" autocomplete="off">
-                            <option value="2" >请选择课程</option>
-                            <option value="1">aa</option>
+                        <select class="form-control" v-model="courseChapter.courseIdName">
+                            <option v-for="lists in list" :value="lists.id" :key="lists.id">{{lists.courseName}}</option>
                         </select>
                     </div>
                 </div>

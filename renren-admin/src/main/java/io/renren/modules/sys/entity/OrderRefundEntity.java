@@ -4,7 +4,11 @@ import com.baomidou.mybatisplus.annotations.KeySequence;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
@@ -33,10 +37,12 @@ public class OrderRefundEntity implements Serializable {
 	/**
 	 * 订单金额
 	 */
+	@Digits(integer = 8, fraction = 2,message = "请输入正确的订单金额",groups = {AddGroup.class, UpdateGroup.class})
 	private BigDecimal orderPrice;
 	/**
 	 * 实际退款金额
 	 */
+	@Digits(integer = 8, fraction = 2,message = "请输入正确的实际退款金额",groups = {AddGroup.class, UpdateGroup.class})
 	private BigDecimal refundPrice;
 	/**
 	 * 退款状态[0-待退款 1-已退款 2-拒退款]
@@ -49,10 +55,12 @@ public class OrderRefundEntity implements Serializable {
 	/**
 	 * 退款操作人
 	 */
+	@NotBlank(message="退款操作人不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String refundOper;
 	/**
 	 * 退款说明-必填
 	 */
+	@NotBlank(message="退款说明不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String refundMemo;
 	/**
 	 * 退款处理时间

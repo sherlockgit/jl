@@ -1,13 +1,15 @@
 package io.renren.modules.sys.controller;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import io.renren.common.utils.NoUtils;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
+import io.renren.modules.sys.vo.CourseInfoEntityVo;
+import io.renren.modules.sys.vo.CourseNameList;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,7 +55,14 @@ public class CourseInfoController {
     public R getCourseNameList(){
         List<CourseInfoEntity> list = courseInfoService.getCourseNameList();
 
-        return R.ok().put("list", list);
+        List<CourseNameList> lists = new ArrayList<>();
+        list.forEach(o->{
+            CourseNameList courseNameList = new CourseNameList();
+            courseNameList.setId(o.getId().toString());
+            courseNameList.setCourseName(o.getCourseName());
+            lists.add(courseNameList);
+        });
+        return R.ok().put("list", lists);
     }
 
 
@@ -74,6 +83,8 @@ public class CourseInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:courseinfo:save")
     public R save(@RequestBody CourseInfoEntity courseInfo){
+        ValidatorUtils.validateEntity(courseInfo, AddGroup.class);
+
         courseInfo.setCourseNo(NoUtils.genOrderNo());
         courseInfo.setCreateTime(new Date());
         courseInfoService.insert(courseInfo);
@@ -87,6 +98,7 @@ public class CourseInfoController {
     @RequestMapping("/update")
     @RequiresPermissions("sys:courseinfo:update")
     public R update(@RequestBody CourseInfoEntity courseInfo){
+        ValidatorUtils.validateEntity(courseInfo, UpdateGroup.class);
         ValidatorUtils.validateEntity(courseInfo);
         courseInfoService.updateAllColumnById(courseInfo);//全部更新
         

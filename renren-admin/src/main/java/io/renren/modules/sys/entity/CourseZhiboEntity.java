@@ -3,7 +3,11 @@ package io.renren.modules.sys.entity;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
@@ -43,10 +47,12 @@ public class CourseZhiboEntity implements Serializable {
 	/**
 	 * 课程总价格
 	 */
+	@Digits(integer = 8, fraction = 2,message = "请输入正确的课程总价格",groups = {AddGroup.class, UpdateGroup.class})
 	private BigDecimal coursePrice;
 	/**
 	 * 直播时长(min)
 	 */
+	@Digits(integer = 8, fraction = 2,message = "请输入正确的直播时长",groups = {AddGroup.class, UpdateGroup.class})
 	private String courseMinute;
 	/**
 	 * 直播状态[0-新建, 1-预告, 2-正在直播，3-直播结束]
@@ -59,10 +65,12 @@ public class CourseZhiboEntity implements Serializable {
 	/**
 	 * 课程简介
 	 */
+	@NotBlank(message="课程简介不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String courseBrief;
 	/**
 	 * 课程详情
 	 */
+	@NotBlank(message="直播详情不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String courseContent;
 	/**
 	 * 直播文件URL-录制的

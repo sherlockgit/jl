@@ -7,6 +7,8 @@ import java.util.Map;
 
 import io.renren.common.utils.NoUtils;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,6 +66,8 @@ public class CourseZhiboController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:coursezhibo:save")
     public R save(@RequestBody CourseZhiboEntity courseZhibo){
+        ValidatorUtils.validateEntity(courseZhibo, AddGroup.class);
+
         courseZhibo.setCourseNo(NoUtils.genOrderNo());
         courseZhibo.setCreateTime(new Date());
         courseZhiboService.insert(courseZhibo);
@@ -77,6 +81,7 @@ public class CourseZhiboController {
     @RequestMapping("/update")
     @RequiresPermissions("sys:coursezhibo:update")
     public R update(@RequestBody CourseZhiboEntity courseZhibo){
+        ValidatorUtils.validateEntity(courseZhibo, UpdateGroup.class);
         ValidatorUtils.validateEntity(courseZhibo);
         courseZhiboService.updateAllColumnById(courseZhibo);//全部更新
         

@@ -6,6 +6,8 @@ import java.util.Map;
 import io.renren.common.utils.NoUtils;
 import io.renren.common.utils.UUIDUtils;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,7 @@ public class OrderRefundController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:orderrefund:save")
     public R save(@RequestBody OrderRefundEntity orderRefund){
+        ValidatorUtils.validateEntity(orderRefund, AddGroup.class);
         orderRefund.setId(UUIDUtils.getUUID());
         orderRefund.setRefundNo(NoUtils.genOrderNo());
         orderRefundService.insert(orderRefund);
@@ -77,6 +80,7 @@ public class OrderRefundController {
     @RequestMapping("/update")
     @RequiresPermissions("sys:orderrefund:update")
     public R update(@RequestBody OrderRefundEntity orderRefund){
+        ValidatorUtils.validateEntity(orderRefund, UpdateGroup.class);
         ValidatorUtils.validateEntity(orderRefund);
         orderRefundService.updateAllColumnById(orderRefund);//全部更新
         

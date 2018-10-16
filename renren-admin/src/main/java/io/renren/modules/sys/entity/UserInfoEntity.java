@@ -63,7 +63,6 @@ public class UserInfoEntity implements Serializable {
 	/**
 	 * 微信名称
 	 */
-	@NotBlank(message="微信号不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String wxUname;
 	/**
 	 * 微信OPENID

@@ -8,7 +8,9 @@ import io.renren.common.utils.NoUtils;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.sys.entity.CourseInfoEntity;
 import io.renren.modules.sys.service.CourseInfoService;
+import io.renren.modules.sys.vo.CourseInfoEntityVo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,8 +63,10 @@ public class CourseChapterController {
     @RequiresPermissions("sys:coursechapter:info")
     public R info(@PathVariable("id") Integer id){
         CourseChapterEntity courseChapter = courseChapterService.selectById(id);
-
-        return R.ok().put("courseChapter", courseChapter);
+        CourseInfoEntityVo courseInfoEntityVo = new CourseInfoEntityVo();
+        BeanUtils.copyProperties(courseChapter,courseInfoEntityVo);
+        courseInfoEntityVo.setCourseId(courseChapter.getCourseId().toString());
+        return R.ok().put("courseChapter", courseInfoEntityVo);
     }
 
     /**

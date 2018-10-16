@@ -3,7 +3,12 @@ package io.renren.modules.sys.entity;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
@@ -31,6 +36,7 @@ public class OrderInfoEntity implements Serializable {
 	/**
 	 * 课程名称
 	 */
+	@NotBlank(message="课程名称不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String courseName;
 	/**
 	 * 订单来源[0-堂课， 1-直播  2-录播  3-音频]
@@ -39,14 +45,17 @@ public class OrderInfoEntity implements Serializable {
 	/**
 	 * 课程价格
 	 */
+	@Digits(integer = 8, fraction = 2,message = "请输入正确的课程价格",groups = {AddGroup.class, UpdateGroup.class})
 	private BigDecimal coursePrice;
 	/**
 	 * 订单抵扣
 	 */
+	@Digits(integer = 8, fraction = 2,message = "请输入正确的订单抵扣",groups = {AddGroup.class, UpdateGroup.class})
 	private BigDecimal orderCoupon;
 	/**
 	 * 实际收款
 	 */
+	@Digits(integer = 8, fraction = 2,message = "请输入正确的实际收款",groups = {AddGroup.class, UpdateGroup.class})
 	private BigDecimal orderPrice;
 	/**
 	 * 付款状态[0-待付款 1-已付款]
@@ -67,10 +76,13 @@ public class OrderInfoEntity implements Serializable {
 	/**
 	 * 会员姓名
 	 */
+	@NotBlank(message="会员姓名不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String userName;
 	/**
 	 * 会员电话
 	 */
+	@NotBlank(message="手机号码不能为空",groups = {AddGroup.class, UpdateGroup.class})
+	@Pattern(regexp = "^[1][3,4,5,7,8][0-9]{9}$",message = "请输入正确的手机号码",groups = {AddGroup.class, UpdateGroup.class})
 	private String userPhone;
 	/**
 	 * 机构名称

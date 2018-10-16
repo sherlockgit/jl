@@ -3,7 +3,10 @@ package io.renren.modules.sys.entity;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -30,10 +33,12 @@ public class ArticleInfoEntity implements Serializable {
 	/**
 	 * 文章封面图
 	 */
+	@NotBlank(message="文章封面图不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String articlePic;
 	/**
 	 * 文章名称
 	 */
+	@NotBlank(message="文章标题不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String articleName;
 	/**
 	 * 文章分类
@@ -50,6 +55,7 @@ public class ArticleInfoEntity implements Serializable {
 	/**
 	 * 文章作者
 	 */
+	@NotBlank(message="文章作者不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String articleAuthor;
 	/**
 	 * 外部引用地址
@@ -62,6 +68,7 @@ public class ArticleInfoEntity implements Serializable {
 	/**
 	 * 文章内容
 	 */
+	@NotBlank(message="文章内容不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String articleContent;
 	/**
 	 * 文章排序

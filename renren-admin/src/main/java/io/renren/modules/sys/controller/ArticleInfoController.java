@@ -6,6 +6,8 @@ import java.util.Map;
 
 import io.renren.common.utils.NoUtils;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,6 +64,7 @@ public class ArticleInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:articleinfo:save")
     public R save(@RequestBody ArticleInfoEntity articleInfo){
+        ValidatorUtils.validateEntity(articleInfo, AddGroup.class);
         articleInfo.setArticleNo(NoUtils.genOrderNo());
         articleInfo.setCreateTime(new Date());
         articleInfoService.insert(articleInfo);
@@ -75,6 +78,7 @@ public class ArticleInfoController {
     @RequestMapping("/update")
     @RequiresPermissions("sys:articleinfo:update")
     public R update(@RequestBody ArticleInfoEntity articleInfo){
+        ValidatorUtils.validateEntity(articleInfo, UpdateGroup.class);
         ValidatorUtils.validateEntity(articleInfo);
         articleInfoService.updateAllColumnById(articleInfo);//全部更新
         
