@@ -17,11 +17,9 @@
                 <label class="form-inline">文章作者：<input type="text" v-model="q.articleAuthor" @keyup.enter="query" class="form-control" placeholder="文章作者"></label>
                 <label class="form-inline">文章标签：
                     <div class="form-group">
-                        <select  class="form-control" v-model="q.articleTag" @keyup.enter="query" >
+                        <select class="form-control" v-model="q.articleTag">
                             <option value="" >全部</option>
-                            <option value="0" >私募</option>
-                            <option value="1" >财经</option>
-                            <option value="2" >保险</option>
+                            <option v-for="lists in list" :value="lists.code" :key="lists.code">{{lists.value}}</option>
                         </select>
                     </div>
                 </label>
@@ -69,10 +67,8 @@
                 <div class="col-sm-1 control-label">文章标签</div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <select class="form-control"  v-model="articleInfo.articleTag">
-                            <option value="0" >私募</option>
-                            <option value="1" >财经</option>
-                            <option value="2" >保险</option>
+                        <select class="form-control" v-model="articleInfo.articleTag">
+                            <option v-for="lists in list" :value="lists.code" :key="lists.code">{{lists.value}}</option>
                         </select>
                     </div>
                 </div>
@@ -146,10 +142,8 @@
                 <div class="col-sm-1 control-label">文章标签</div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <select class="form-control" disabled  v-model="articleInfo.articleTag">
-                            <option value="0" >私募</option>
-                            <option value="1" >财经</option>
-                            <option value="2" >保险</option>
+                        <select class="form-control" disabled v-model="articleInfo.articleTag">
+                            <option v-for="lists in list" :value="lists.code" :key="lists.code">{{lists.value}}</option>
                         </select>
                     </div>
                 </div>

@@ -57,6 +57,7 @@ $(function () {
             order: "order"
         },
         gridComplete:function(){
+            vm.getByType();
         	//隐藏grid底部滚动条
         	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
         }
@@ -77,13 +78,16 @@ var vm = new Vue({
         showSaveOrUpdate: false,
         showDetail: false,
 		title: null,
-		articleInfo: {}
+		articleInfo: {},
+        list: []
 	},
 	methods: {
 		query: function () {
+            vm.getByType();
 			vm.reload();
 		},
 		add: function(){
+            vm.getByType();
             $('#img').removeAttr("src")
             $('#imgd').removeAttr("src")
 
@@ -123,7 +127,7 @@ var vm = new Vue({
                             success: function(r){
                                 if(r.code === 0){
                                     alert('操作成功', function(index){
-                                        vm.reload();
+                                        location.reload();
                                     });
                                 }else{
                                     alert(r.msg);
@@ -141,18 +145,8 @@ var vm = new Vue({
 
             });
 		},
-		update: function (event) {
-			var id = getSelectedRow();
-			if(id == null){
-				return ;
-			}
-			vm.showList = false;
-            vm.showSaveOrUpdate = true;
-            vm.title = "修改";
-            
-            vm.getInfo(id)
-		},
         detail: function (id) {
+            vm.getByType();
             if(id == null){
                 return ;
             }
@@ -166,6 +160,7 @@ var vm = new Vue({
 
         },
         update: function (id) {
+            vm.getByType();
             if(id == null){
                 return ;
             }
@@ -175,8 +170,6 @@ var vm = new Vue({
             vm.title = "修改";
 
             vm.getInfoUpdate(id)
-
-
         },
 		saveOrUpdate: function (event) {
 			var url = vm.articleInfo.id == null ? "sys/articleinfo/save" : "sys/articleinfo/update";
@@ -220,6 +213,11 @@ var vm = new Vue({
 				});
 			});
 		},
+        getByType: function () {
+            $.get(baseURL + "sys/dict/getByTypeForArticleTag", function(r){
+                vm.list = r.data;
+            });
+        },
 		getInfo: function(id){
 			$.get(baseURL + "sys/articleinfo/info/"+id, function(r){
                 $('#imgd').attr('src', r.articleInfo.articlePic);
@@ -261,11 +259,40 @@ var vm = new Vue({
                         }
                     });
 
+
                     //构建一个默认的编辑器
                     var index = layedit.build('LAY_demo1',{
                         height: 520 ,//设置编辑器高度
                     });
-                    layedit.setContent(index,r.articleInfo.articleContent,false)
+
+                    var active = {
+                        content: function () {
+                            vm.articleInfo.articleContent = layedit.getContent(index)
+                            var url = vm.articleInfo.id == null ? "sys/articleinfo/save" : "sys/articleinfo/update";
+                            console.log(url)
+                            $.ajax({
+                                type: "POST",
+                                url: baseURL + url,
+                                contentType: "application/json",
+                                data: JSON.stringify(vm.articleInfo),
+                                success: function(r){
+                                    if(r.code === 0){
+                                        alert('操作成功', function(index){
+                                            location.reload();
+                                        });
+                                    }else{
+                                        alert(r.msg);
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                    $('.site-demo-layedit').on('click', function(){
+                        var type = $(this).data('type');
+                        active[type] ? active[type].call(this) : '';
+                    });
+
 
                 });
                 vm.articleInfo = r.articleInfo;
