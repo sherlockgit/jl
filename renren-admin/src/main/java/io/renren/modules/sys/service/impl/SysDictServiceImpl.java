@@ -25,13 +25,18 @@ import io.renren.modules.sys.dao.SysDictDao;
 import io.renren.modules.sys.entity.SysDictEntity;
 import io.renren.modules.sys.service.SysDictService;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 
 @Service("sysDictService")
 public class SysDictServiceImpl extends ServiceImpl<SysDictDao, SysDictEntity> implements SysDictService {
+
+    @Autowired
+    SysDictDao sysDictDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -44,6 +49,11 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictDao, SysDictEntity> i
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<SysDictEntity> getByType(String type) {
+        return sysDictDao.getByType(type);
     }
 
 }

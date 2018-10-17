@@ -8,6 +8,7 @@ import io.renren.common.validator.group.UpdateGroup;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;

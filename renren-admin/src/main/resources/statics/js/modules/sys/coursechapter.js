@@ -128,6 +128,7 @@ var vm = new Vue({
 
         },
 		saveOrUpdate: function (event) {
+
 			var url = vm.courseChapter.id == null ? "sys/coursechapter/save" : "sys/coursechapter/update";
 			if ( vm.courseChapter.id != null) {
                 vm.courseChapter.courseId = vm.courseChapter.courseIdName

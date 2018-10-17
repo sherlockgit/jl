@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -100,6 +101,18 @@ public class SysDictController {
         sysDictService.deleteBatchIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    @RequestMapping("/getByTypeForCourseTag")
+    public R getByTypeForCourseTag(){
+        List<SysDictEntity> list = sysDictService.getByType("coursetag");
+        return R.ok().put("data",list);
+    }
+
+    @RequestMapping("/getByTypeForArticleTag")
+    public R getByTypeForArticleTag(){
+        List<SysDictEntity> list = sysDictService.getByType("articletag");
+        return R.ok().put("data",list);
     }
 
 }

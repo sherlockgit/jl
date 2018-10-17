@@ -18,6 +18,9 @@ package io.renren.modules.sys.dao;
 
 import io.renren.modules.sys.entity.SysDictEntity;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 数据字典
@@ -26,5 +29,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 3.1.0 2018-01-27
  */
 public interface SysDictDao extends BaseMapper<SysDictEntity> {
-	
+    List<SysDictEntity> getByType(@Param("type") String type);
 }

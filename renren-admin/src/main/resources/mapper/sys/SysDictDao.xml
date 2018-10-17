@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="io.renren.modules.sys.dao.SysDictDao">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.SysDictEntity" id="SysDictMap">
+        <result property="value" column="value"/>
+        <result property="code" column="code"/>
+    </resultMap>
 
+    <select id="getByType" parameterType="java.lang.String" resultMap="SysDictMap">
+        SELECT value,code FROM sys_dict WHERE type = #{type,jdbcType=VARCHAR}
+    </select>
 
 </mapper>

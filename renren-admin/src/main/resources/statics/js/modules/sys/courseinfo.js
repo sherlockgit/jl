@@ -88,13 +88,15 @@ var vm = new Vue({
         showSaveOrUpdate: false,
         showDetail: false,
 		title: null,
-		courseInfo: {}
+		courseInfo: {},
+		list:[]
 	},
 	methods: {
 		query: function () {
 			vm.reload();
 		},
 		add: function(){
+		    vm.getByType();
             $('#img').removeAttr("src")
 
             vm.showList = false;
@@ -133,7 +135,7 @@ var vm = new Vue({
                             success: function(r){
                                 if(r.code === 0){
                                     alert('操作成功', function(index){
-                                        vm.reload();
+                                        location.reload()
                                     });
                                 }else{
                                     alert(r.msg);
@@ -152,6 +154,7 @@ var vm = new Vue({
             });
 		},
         detail: function (id) {
+            vm.getByType();
             if(id == null){
                 return ;
             }
@@ -165,6 +168,7 @@ var vm = new Vue({
 
         },
 		update: function (id) {
+            vm.getByType();
 			if(id == null){
 				return ;
 			}
@@ -258,13 +262,47 @@ var vm = new Vue({
                         }
                     });
 
+
                     //构建一个默认的编辑器
                     var index = layedit.build('LAY_demo1',{
                         height: 520 ,//设置编辑器高度
                     });
-                    layedit.setContent(index,r.courseInfo.courseContent,false)
+
+                    var active = {
+                        content: function () {
+                            vm.courseInfo.courseContent = layedit.getContent(index)
+                            var url = vm.courseInfo.id == null ? "sys/courseinfo/save" : "sys/courseinfo/update";
+                            console.log(url)
+                            $.ajax({
+                                type: "POST",
+                                url: baseURL + url,
+                                contentType: "application/json",
+                                data: JSON.stringify(vm.courseInfo),
+                                success: function(r){
+                                    if(r.code === 0){
+                                        alert('操作成功', function(index){
+                                            location.reload()
+                                        });
+                                    }else{
+                                        alert(r.msg);
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                    $('.site-demo-layedit').on('click', function(){
+                        var type = $(this).data('type');
+                        active[type] ? active[type].call(this) : '';
+                    });
+
 
                 });
+            });
+        },
+        getByType: function () {
+            $.get(baseURL + "sys/dict/getByTypeForCourseTag", function(r){
+                vm.list = r.data;
             });
         },
 		reload: function (event) {
