@@ -50,7 +50,7 @@ $(function () {
 			{ label: '开票时间', name: 'expressTime', index: 'express_time', width: 80 },
 			{ label: '申请开票时间', name: 'applyTime', index: 'apply_time', width: 80 },
             {
-                label: '操作', name: '', index: 'operate', width: 50, align: 'center',
+                label: '操作', name: '', index: 'operate', width: 80, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
                     var detail="<a  onclick='vm.detail(\""+ rowObject.id + "\")'' href=\"#\" >详情</a>|";
                     var update="<a  onclick='vm.update(\""+ rowObject.id + "\")'' href=\"#\" >修改</a>"

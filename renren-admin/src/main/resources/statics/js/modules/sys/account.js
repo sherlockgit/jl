@@ -20,7 +20,7 @@ $(function () {
 			{ label: '账户余额（元）', name: 'balance', index: 'BALANCE', width: 80 },
 			{ label: '更新时间', name: 'updateTime', index: 'UPDATE_TIME', width: 80 },
             {
-                label: '操作', name: '', index: 'operate', width: 50, align: 'center',
+                label: '操作', name: '', index: 'operate', width: 80, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
                     var detail="<a  onclick='vm.countList(\""+ rowObject.userId + "\")'' href=\"#\" >明细</a>";
                     return detail;

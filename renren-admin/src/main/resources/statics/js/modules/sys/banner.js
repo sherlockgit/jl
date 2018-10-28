@@ -28,7 +28,7 @@ $(function () {
             }},
 			{ label: '创建时间', name: 'createTime', index: 'CREATE_TIME', width: 80 },
             {
-                label: '操作', name: '', index: 'operate', width: 50, align: 'center',
+                label: '操作', name: '', index: 'operate', width: 80, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
                     var detail="<a  onclick='vm.detail(\""+ rowObject.bannerId + "\")'' href=\"#\" >详情</a>";
                     var update="<a  onclick='vm.update(\""+ rowObject.bannerId + "\")'' href=\"#\" >修改</a>"
