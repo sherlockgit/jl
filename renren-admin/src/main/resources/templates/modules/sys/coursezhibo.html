@@ -45,21 +45,18 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">直播价格</div>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" v-model="courseZhibo.coursePrice" placeholder="课程总价格"/>
-                </div>
-                <div class="col-sm-1 control-label">开始时间</div>
+                <div class="col-sm-2 control-label">开始时间</div>
                 <div class="col-sm-4">
                     <input type="text" id="datetimepicker" class="form-control" placeholder="开始时间"/>
                 </div>
+                <div class="col-sm-1 control-label">直播价格</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="courseZhibo.coursePrice" placeholder="课程总价格"/>
+                </div>
+                <div class="control-label" style="width: 10px;float: right;">元</div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">直播时长</div>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" v-model="courseZhibo.courseMinute" placeholder="直播时长(min)"/>
-                </div>
-                <div class="col-sm-1 control-label">直播状态</div>
+                <div class="col-sm-2 control-label">直播状态</div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <select class="form-control"  v-model="courseZhibo.courseStatus">
@@ -70,6 +67,11 @@
                         </select>
                     </div>
                 </div>
+                <div class="col-sm-1 control-label">直播时长</div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" v-model="courseZhibo.courseMinute" placeholder="直播时长(min)"/>
+                </div>
+                <div class="control-label" style="width: 10px;float: right;padding-top: 0px;">分钟</div>
             </div>
 
             <div class="form-group">
@@ -86,7 +88,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">课程封面</label>
                 <div class="layui-inline">
-                    <div class="layui-upload-list layui-input-inline">
+                    <div class="layui-upload-list layui-input-inline" style="margin-left: 15px">
                         <img class="layui-upload-img" id="img" width="100px" height="100px" >
                         <p id="demoText"></p>
                     </div>
@@ -98,12 +100,12 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">直播简介</div>
                 <div class="col-sm-10">
-                    <textarea class="form-control" lay-verify="number" rows="2" v-model="courseZhibo.courseBrief" name="proBrief"></textarea>
+                    <textarea class="form-control" style="margin-left: 15px" lay-verify="number" rows="2" v-model="courseZhibo.courseBrief" name="proBrief"></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">项目介绍</div>
-                <div class="col-sm-4">
+                <div class="col-sm-8">
                     <textarea class="layui-textarea" id="LAY_demo1" v-model="courseZhibo.courseContent" style="display: none">
                         sadasdsad
                     </textarea>
@@ -132,21 +134,19 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">课程总价格</div>
-                <div class="col-sm-4">
-                    <input type="text" disabled class="form-control" v-model="courseZhibo.coursePrice" placeholder="课程总价格"/>
-                </div>
-                <div class="col-sm-1 control-label">开始时间</div>
+                <div class="col-sm-2 control-label">开始时间</div>
                 <div class="col-sm-4">
                     <input type="text" id="datetimepickerd" disabled class="form-control" placeholder="发布时间"/>
                 </div>
+                <div class="col-sm-1 control-label">直播价格</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseZhibo.coursePrice" placeholder="课程总价格"/>
+                </div>
+                <div class="control-label" style="width: 10px;float: right;">元</div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">直播时长</div>
-                <div class="col-sm-4">
-                    <input type="text" disabled class="form-control" v-model="courseZhibo.courseMinute" placeholder="直播时长(min)"/>
-                </div>
-                <div class="col-sm-1 control-label">直播状态</div>
+
+                <div class="col-sm-2 control-label">直播状态</div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <select class="form-control" disabled  v-model="courseZhibo.courseStatus">
@@ -157,6 +157,11 @@
                         </select>
                     </div>
                 </div>
+                <div class="col-sm-1 control-label">直播时长</div>
+                <div class="col-sm-4">
+                    <input type="text" disabled class="form-control" v-model="courseZhibo.courseMinute" placeholder="直播时长(min)"/>
+                </div>
+                <div class="control-label" style="width: 10px;float: right;padding-top: 0px;">分钟</div>
             </div>
 
             <div class="form-group">
@@ -174,7 +179,7 @@
                 <label class="col-sm-2 control-label">课程封面</label>
                 <div class="layui-inline">
                     <div class="layui-inline">
-                        <div class="layui-upload-list layui-input-inline">
+                        <div class="layui-upload-list layui-input-inline" style="margin-left: 15px">
                             <img class="layui-upload-img" id="imgd" width="100px" height="100px" >
                         </div>
                     </div>
@@ -183,12 +188,12 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">直播简介</div>
                 <div class="col-sm-10">
-                    <textarea class="form-control" disabled lay-verify="number" rows="2" v-model="courseZhibo.courseBrief" name="proBrief"></textarea>
+                    <textarea class="form-control" style="margin-left: 15px" disabled lay-verify="number" rows="2" v-model="courseZhibo.courseBrief" name="proBrief"></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">项目介绍</div>
-                <div class="col-sm-4">
+                <div class="col-sm-8">
                     <textarea class="layui-textarea" id="LAY_demo1d" v-model="courseZhibo.courseContent" style="display: none">
                         sadasdsad
                     </textarea>
