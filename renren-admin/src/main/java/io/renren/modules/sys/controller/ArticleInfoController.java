@@ -67,6 +67,9 @@ public class ArticleInfoController {
         ValidatorUtils.validateEntity(articleInfo, AddGroup.class);
         articleInfo.setArticleNo(NoUtils.genOrderNo());
         articleInfo.setCreateTime(new Date());
+        if ("0".equals(articleInfo.getArticleStatus())) {
+            articleInfo.setPublishTime(new Date());
+        }
         articleInfoService.insert(articleInfo);
 
         return R.ok();
@@ -79,7 +82,14 @@ public class ArticleInfoController {
     @RequiresPermissions("sys:articleinfo:update")
     public R update(@RequestBody ArticleInfoEntity articleInfo){
         ValidatorUtils.validateEntity(articleInfo, UpdateGroup.class);
+
         ValidatorUtils.validateEntity(articleInfo);
+        ArticleInfoEntity articleInfoEntity = articleInfoService.selectById(articleInfo.getId());
+        if (!"0".equals(articleInfoEntity.getArticleStatus())) {
+            if ("0".equals(articleInfo.getArticleStatus())) {
+                articleInfo.setPublishTime(new Date());
+            }
+        }
         articleInfoService.updateAllColumnById(articleInfo);//全部更新
         
         return R.ok();

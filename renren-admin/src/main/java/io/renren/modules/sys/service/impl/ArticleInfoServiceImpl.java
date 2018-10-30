@@ -33,6 +33,7 @@ public class ArticleInfoServiceImpl extends ServiceImpl<ArticleInfoDao, ArticleI
                         .like(StringUtils.isNotBlank(articleAuthor),"article_author", articleAuthor)
                         .like(StringUtils.isNotBlank(articleTag),"article_tag", articleTag)
                         .like(StringUtils.isNotBlank(articleStatus),"article_status", articleStatus)
+                .orderBy("create_time",false)
         );
 
         return new PageUtils(page);

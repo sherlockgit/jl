@@ -83,19 +83,19 @@ public class UserInfoEntity implements Serializable {
 	/**
 	 * 注册时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
 	private Date startTime;
 
 	/**
 	 * 开通时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
 	private Date endTime;
 
 	/**
 	 * 到期时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
 	private Date registTime;
 
 	@TableField(exist=false)

@@ -44,6 +44,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoDao, OrderInfoEnt
                         .like(StringUtils.isNotBlank(contentType),"content_type", contentType)
                         .like(StringUtils.isNotBlank(payType),"pay_type", payType)
                         .like(StringUtils.isNotBlank(payStatus),"pay_status", payStatus)
+                        .orderBy("create_time",false)
         );
 
         return new PageUtils(page);
@@ -97,40 +98,49 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoDao, OrderInfoEnt
 
         /*统计*/
         OrderInfoEntity orderInfoEntity = orderInfoDao.getCount(params);
+        OrderCountVo orderCountVo = new OrderCountVo();
         BigDecimal wechatPrice = new BigDecimal(0);
         BigDecimal zhifuPrice = new BigDecimal(0);
         BigDecimal duigongtPrice = new BigDecimal(0);
-        if (StringUtils.isBlank(payType)) {
+        if (!(orderInfoEntity == null)) {
+            if (StringUtils.isBlank(payType)) {
             /*查询微信*/
-            params.put("payType",0);
-            OrderInfoEntity wechatPriceVo = orderInfoDao.getCount(params);
-            if (wechatPriceVo != null) {
-                wechatPrice = wechatPriceVo.getOrderPrice();
-            }
+                params.put("payType",0);
+                OrderInfoEntity wechatPriceVo = orderInfoDao.getCount(params);
+                if (wechatPriceVo != null) {
+                    wechatPrice = wechatPriceVo.getOrderPrice();
+                }
             /*查询支付宝*/
-            params.put("payType",1);
-            OrderInfoEntity zhifuPriceVo = orderInfoDao.getCount(params);
-            if (zhifuPriceVo != null) {
-                zhifuPrice = zhifuPriceVo.getOrderPrice();
-            }
+                params.put("payType",1);
+                OrderInfoEntity zhifuPriceVo = orderInfoDao.getCount(params);
+                if (zhifuPriceVo != null) {
+                    zhifuPrice = zhifuPriceVo.getOrderPrice();
+                }
             /*查询对公账户*/
-            params.put("payType",3);
-            OrderInfoEntity duigongtPriceVo = orderInfoDao.getCount(params);
-            if (duigongtPriceVo != null) {
-                duigongtPrice = duigongtPriceVo.getOrderPrice();
+                params.put("payType",3);
+                OrderInfoEntity duigongtPriceVo = orderInfoDao.getCount(params);
+                if (duigongtPriceVo != null) {
+                    duigongtPrice = duigongtPriceVo.getOrderPrice();
+                }
+            }else if ("0".equals(payType)) {
+                wechatPrice = orderInfoEntity.getOrderPrice();
+            }else if ("1".equals(payType)) {
+                zhifuPrice = orderInfoEntity.getOrderPrice();
+            }else if ("3".equals(payType)) {
+                duigongtPrice = orderInfoEntity.getOrderPrice();
             }
-        }else if ("0".equals(payType)) {
-            wechatPrice = orderInfoEntity.getOrderPrice();
-        }else if ("1".equals(payType)) {
-            zhifuPrice = orderInfoEntity.getOrderPrice();
-        }else if ("3".equals(payType)) {
-            duigongtPrice = orderInfoEntity.getOrderPrice();
+            orderCountVo.setCoursePrice(orderInfoEntity.getCoursePrice());
+            orderCountVo.setOrderCoupon(orderInfoEntity.getOrderCoupon());
+            orderCountVo.setOrderPrice(orderInfoEntity.getOrderPrice());
+        }else {
+            orderCountVo.setCoursePrice(new BigDecimal(0));
+            orderCountVo.setOrderCoupon(new BigDecimal(0));
+            orderCountVo.setOrderPrice(new BigDecimal(0));
         }
-        OrderCountVo orderCountVo = new OrderCountVo();
+
+
         orderCountVo.setCourseName("合计");
-        orderCountVo.setCoursePrice(orderInfoEntity.getCoursePrice());
-        orderCountVo.setOrderCoupon(orderInfoEntity.getOrderCoupon());
-        orderCountVo.setOrderPrice(orderInfoEntity.getOrderPrice());
+
         orderCountVo.setZhifuPrice(zhifuPrice);
         orderCountVo.setWechatPrice(wechatPrice);
         orderCountVo.setDuigongPrice(duigongtPrice);
@@ -185,40 +195,50 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoDao, OrderInfoEnt
 
         /*统计*/
         OrderInfoEntity orderInfoEntity = orderInfoDao.getCount(params);
+        OrderCountVo orderCountVo = new OrderCountVo();
+
         BigDecimal wechatPrice = new BigDecimal(0);
         BigDecimal zhifuPrice = new BigDecimal(0);
         BigDecimal duigongtPrice = new BigDecimal(0);
-        if (StringUtils.isBlank(payType)) {
+        if (!(orderInfoEntity == null)) {
+            if (StringUtils.isBlank(payType)) {
             /*查询微信*/
-            params.put("payType",0);
-            OrderInfoEntity wechatPriceVo = orderInfoDao.getCount(params);
-            if (wechatPriceVo != null) {
-                wechatPrice = wechatPriceVo.getOrderPrice();
-            }
+                params.put("payType",0);
+                OrderInfoEntity wechatPriceVo = orderInfoDao.getCount(params);
+                if (wechatPriceVo != null) {
+                    wechatPrice = wechatPriceVo.getOrderPrice();
+                }
             /*查询支付宝*/
-            params.put("payType",1);
-            OrderInfoEntity zhifuPriceVo = orderInfoDao.getCount(params);
-            if (zhifuPriceVo != null) {
-                zhifuPrice = zhifuPriceVo.getOrderPrice();
-            }
+                params.put("payType",1);
+                OrderInfoEntity zhifuPriceVo = orderInfoDao.getCount(params);
+                if (zhifuPriceVo != null) {
+                    zhifuPrice = zhifuPriceVo.getOrderPrice();
+                }
             /*查询对公账户*/
-            params.put("payType",3);
-            OrderInfoEntity duigongtPriceVo = orderInfoDao.getCount(params);
-            if (duigongtPriceVo != null) {
-                duigongtPrice = duigongtPriceVo.getOrderPrice();
+                params.put("payType",3);
+                OrderInfoEntity duigongtPriceVo = orderInfoDao.getCount(params);
+                if (duigongtPriceVo != null) {
+                    duigongtPrice = duigongtPriceVo.getOrderPrice();
+                }
+            }else if ("0".equals(payType)) {
+                wechatPrice = orderInfoEntity.getOrderPrice();
+            }else if ("1".equals(payType)) {
+                zhifuPrice = orderInfoEntity.getOrderPrice();
+            }else if ("3".equals(payType)) {
+                duigongtPrice = orderInfoEntity.getOrderPrice();
             }
-        }else if ("0".equals(payType)) {
-            wechatPrice = orderInfoEntity.getOrderPrice();
-        }else if ("1".equals(payType)) {
-            zhifuPrice = orderInfoEntity.getOrderPrice();
-        }else if ("3".equals(payType)) {
-            duigongtPrice = orderInfoEntity.getOrderPrice();
+            orderCountVo.setCoursePrice(orderInfoEntity.getCoursePrice());
+            orderCountVo.setOrderCoupon(orderInfoEntity.getOrderCoupon());
+            orderCountVo.setOrderPrice(orderInfoEntity.getOrderPrice());
+        }else {
+            orderCountVo.setCoursePrice(new BigDecimal(0));
+            orderCountVo.setOrderCoupon(new BigDecimal(0));
+            orderCountVo.setOrderPrice(new BigDecimal(0));
         }
-        OrderCountVo orderCountVo = new OrderCountVo();
+
+
         orderCountVo.setCourseName("合计");
-        orderCountVo.setCoursePrice(orderInfoEntity.getCoursePrice());
-        orderCountVo.setOrderCoupon(orderInfoEntity.getOrderCoupon());
-        orderCountVo.setOrderPrice(orderInfoEntity.getOrderPrice());
+
         orderCountVo.setZhifuPrice(zhifuPrice);
         orderCountVo.setWechatPrice(wechatPrice);
         orderCountVo.setDuigongPrice(duigongtPrice);

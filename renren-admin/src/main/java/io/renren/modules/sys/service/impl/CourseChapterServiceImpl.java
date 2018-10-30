@@ -32,6 +32,7 @@ public class CourseChapterServiceImpl extends ServiceImpl<CourseChapterDao, Cour
                         .like(StringUtils.isNotBlank(chapterTeacher),"chapter_teacher", chapterTeacher)
                         .like(StringUtils.isNotBlank(chapterType),"chapter_type", chapterType)
                         .like(StringUtils.isNotBlank(chapterStatus),"chapter_Status", chapterStatus)
+                        .orderBy("create_time",false)
         );
 
         return new PageUtils(page);

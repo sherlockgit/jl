@@ -41,6 +41,7 @@ public class CourseZhiboServiceImpl extends ServiceImpl<CourseZhiboDao, CourseZh
                         .like(StringUtils.isNotBlank(courseName),"course_name", courseName)
                         .like(StringUtils.isNotBlank(courseTeacher),"course_teacher", courseTeacher)
                         .gt(StringUtils.isNotBlank(publishTime),"publish_time", startTimeDate)
+                        .orderBy("create_time",false)
         );
 
         return new PageUtils(page);

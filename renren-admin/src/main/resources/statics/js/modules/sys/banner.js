@@ -30,8 +30,8 @@ $(function () {
             {
                 label: '操作', name: '', index: 'operate', width: 80, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
-                    var detail="<a  onclick='vm.detail(\""+ rowObject.bannerId + "\")'' href=\"#\" >详情</a>";
-                    var update="<a  onclick='vm.update(\""+ rowObject.bannerId + "\")'' href=\"#\" >修改</a>"
+                    var detail="<a style='color: #4169E1;text-decoration:underline;' onclick='vm.detail(\""+ rowObject.bannerId + "\")'' href=\"#\" >详情</a>";
+                    var update="<a style='color: #4169E1;text-decoration:underline;' onclick='vm.update(\""+ rowObject.bannerId + "\")'' href=\"#\" >修改</a>"
                     return detail+'|'+update;
                 },
             },
@@ -204,3 +204,5 @@ layui.use('upload', function(){
         }
     });
 });
+
+

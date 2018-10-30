@@ -6,6 +6,9 @@ import java.util.Map;
 
 import io.renren.common.utils.NoUtils;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
+import io.renren.modules.sys.entity.ArticleInfoEntity;
 import io.renren.modules.sys.entity.CourseInfoEntity;
 import io.renren.modules.sys.service.CourseInfoService;
 import io.renren.modules.sys.vo.CourseInfoEntityVo;
@@ -48,10 +51,13 @@ public class CourseChapterController {
     @RequiresPermissions("sys:coursechapter:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = courseChapterService.queryPage(params);
-        page.getList().forEach(o->{
-            CourseChapterEntity courseChapterEntity = (CourseChapterEntity)o;
-            courseChapterEntity.setCourseName(courseInfoService.selectById(courseChapterEntity.getCourseId()).getCourseName());
-        });
+        if (page.getList().size()>0) {
+            page.getList().forEach(o->{
+                CourseChapterEntity courseChapterEntity = (CourseChapterEntity)o;
+                courseChapterEntity.setCourseName(courseInfoService.selectById(courseChapterEntity.getCourseId()).getCourseName());
+            });
+        }
+
         return R.ok().put("page", page);
     }
 
@@ -75,8 +81,15 @@ public class CourseChapterController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:coursechapter:save")
     public R save(@RequestBody CourseChapterEntity courseChapter){
+        ValidatorUtils.validateEntity(courseChapter, AddGroup.class);
+        if (courseChapter.getCourseId() == null) {
+            return R.error("课程不能为空");
+        }
         courseChapter.setCreateTime(new Date());
         courseChapter.setChapterNo(NoUtils.genOrderNo());
+        if ("1".equals(courseChapter.getChapterStatus())) {
+            courseChapter.setPublishTime(new Date());
+        }
         courseChapterService.insert(courseChapter);
 
         return R.ok();
@@ -88,7 +101,16 @@ public class CourseChapterController {
     @RequestMapping("/update")
     @RequiresPermissions("sys:coursechapter:update")
     public R update(@RequestBody CourseChapterEntity courseChapter){
-        ValidatorUtils.validateEntity(courseChapter);
+        ValidatorUtils.validateEntity(courseChapter, UpdateGroup.class);
+        if (courseChapter.getCourseId() == null) {
+            return R.error("课程不能为空");
+        }
+        CourseChapterEntity courseChapterEntity = courseChapterService.selectById(courseChapter.getId());
+        if (!"1".equals(courseChapterEntity.getChapterStatus())) {
+            if ("1".equals(courseChapter.getChapterStatus())) {
+                courseChapter.setPublishTime(new Date());
+            }
+        }
         courseChapterService.updateAllColumnById(courseChapter);//全部更新
         
         return R.ok();

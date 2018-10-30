@@ -39,6 +39,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoDao, CourseInfo
                         .like(StringUtils.isNotBlank(courseTeacher),"course_teacher", courseTeacher)
                         .like(StringUtils.isNotBlank(courseType),"course_type", courseType)
                         .like(StringUtils.isNotBlank(courseStatus),"course_status", courseStatus)
+                        .orderBy("create_time",false)
         );
 
         return new PageUtils(page);

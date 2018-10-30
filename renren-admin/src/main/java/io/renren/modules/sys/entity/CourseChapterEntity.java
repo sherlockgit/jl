@@ -5,7 +5,11 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
@@ -38,6 +42,7 @@ public class CourseChapterEntity implements Serializable {
 	/**
 	 * 章节名称
 	 */
+	@NotBlank(message="章节名称不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String chapterName;
 
 	public String getCourseName() {
@@ -55,10 +60,12 @@ public class CourseChapterEntity implements Serializable {
 	/**
 	 * 章节类型[0-视频 1-音频]
 	 */
+	@NotBlank(message="章节类型不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String chapterType;
 	/**
 	 * 章节价格
 	 */
+	@Digits(integer = 8, fraction = 2,message = "请输入正确的价格",groups = {AddGroup.class, UpdateGroup.class})
 	private BigDecimal chapterPrice;
 	/**
 	 * 章节排序
@@ -71,10 +78,12 @@ public class CourseChapterEntity implements Serializable {
 	/**
 	 * 章节老师
 	 */
+	@NotBlank(message="章节老师不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String chapterTeacher;
 	/**
 	 * 章节播放次数
 	 */
+	@NotBlank(message="章节播放次数不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String chapterPlays;
 	/**
 	 * 是否允许试看[0-不允许  1-允许]
@@ -83,20 +92,32 @@ public class CourseChapterEntity implements Serializable {
 	/**
 	 * 章节文件[视频/音频文件]
 	 */
+	@NotBlank(message="章节播放文件不能为空",groups = {AddGroup.class, UpdateGroup.class})
 	private String chapterFile;
 	/**
 	 * 章节试听文件
 	 */
 	private String previewFile;
+
+	public String getChapterPic() {
+		return chapterPic;
+	}
+
+	public void setChapterPic(String chapterPic) {
+		this.chapterPic = chapterPic;
+	}
+
+	@NotBlank(message="章节封面图不能为空",groups = {AddGroup.class, UpdateGroup.class})
+	private String chapterPic;
 	/**
 	 * 创建时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;
 	/**
 	 * 发布时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date publishTime;
 	/**
 	 * 下线时间

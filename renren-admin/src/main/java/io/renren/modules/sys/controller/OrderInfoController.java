@@ -81,7 +81,9 @@ public class OrderInfoController {
             row.add(o.getOrderCoupon());
             row.add(o.getWechatPrice());
             row.add(o.getZhifuPrice());
-            row.add(sdf.format(o.getPayTime()));
+            if (!(o.getPayTime() == null)) {
+                row.add(sdf.format(o.getPayTime()));
+            }
             rows.add(row);
 
         });

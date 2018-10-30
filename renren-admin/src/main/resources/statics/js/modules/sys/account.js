@@ -22,7 +22,7 @@ $(function () {
             {
                 label: '操作', name: '', index: 'operate', width: 80, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
-                    var detail="<a  onclick='vm.countList(\""+ rowObject.userId + "\")'' href=\"#\" >明细</a>";
+                    var detail="<a style='color: #4169E1;text-decoration:underline;' onclick='vm.countList(\""+ rowObject.userId + "\")'' href=\"#\" >明细</a>";
                     return detail;
                 },
             }

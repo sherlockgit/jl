@@ -3,7 +3,10 @@ package io.renren.modules.sys.vo;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -41,6 +44,15 @@ public class CourseInfoEntityVo {
     public void setCourseName(String courseName) {
         this.courseName = courseName;
     }
+    public String getChapterPic() {
+        return chapterPic;
+    }
+
+    public void setChapterPic(String chapterPic) {
+        this.chapterPic = chapterPic;
+    }
+
+    private String chapterPic;
 
     /**
      * 课程名称

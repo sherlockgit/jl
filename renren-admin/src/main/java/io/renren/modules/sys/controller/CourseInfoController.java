@@ -6,6 +6,7 @@ import io.renren.common.utils.NoUtils;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.common.validator.group.AddGroup;
 import io.renren.common.validator.group.UpdateGroup;
+import io.renren.modules.sys.entity.CourseChapterEntity;
 import io.renren.modules.sys.vo.CourseInfoEntityVo;
 import io.renren.modules.sys.vo.CourseNameList;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -87,6 +88,9 @@ public class CourseInfoController {
 
         courseInfo.setCourseNo(NoUtils.genOrderNo());
         courseInfo.setCreateTime(new Date());
+        if ("1".equals(courseInfo.getCourseStatus())) {
+            courseInfo.setPublishTime(new Date());
+        }
         courseInfoService.insert(courseInfo);
 
         return R.ok();
@@ -100,6 +104,12 @@ public class CourseInfoController {
     public R update(@RequestBody CourseInfoEntity courseInfo){
         ValidatorUtils.validateEntity(courseInfo, UpdateGroup.class);
         ValidatorUtils.validateEntity(courseInfo);
+        CourseInfoEntity courseInfoEntity = courseInfoService.selectById(courseInfo.getId());
+        if (!"1".equals(courseInfoEntity.getCourseStatus())) {
+            if ("1".equals(courseInfo.getCourseStatus())) {
+                courseInfo.setPublishTime(new Date());
+            }
+        }
         courseInfoService.updateAllColumnById(courseInfo);//全部更新
         
         return R.ok();

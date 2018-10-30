@@ -25,8 +25,8 @@ $(function () {
             {
                 label: '操作', name: '', index: 'operate', width: 80, align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
-                    var detail="<a  onclick='vm.detail(\""+ rowObject.id + "\")'' href=\"#\" >详情</a>|";
-                    var update="<a  onclick='vm.update(\""+ rowObject.id + "\")'' href=\"#\" >修改</a>"
+                    var detail="<a style='color: #4169E1;text-decoration:underline;' onclick='vm.detail(\""+ rowObject.id + "\")'' href=\"#\" >详情</a>|";
+                    var update="<a style='color: #4169E1;text-decoration:underline;' onclick='vm.update(\""+ rowObject.id + "\")'' href=\"#\" >修改</a>"
                     return detail+update;
                 },
             },
@@ -80,6 +80,9 @@ var vm = new Vue({
 			vm.reload();
 		},
 		add: function(){
+            $('#img').removeAttr("src")
+            $('#imgd').removeAttr("src")
+
             vm.showList = false;
             vm.showSaveOrUpdate = true;
             vm.showDetail = false;
@@ -130,9 +133,7 @@ var vm = new Vue({
 		saveOrUpdate: function (event) {
 
 			var url = vm.courseChapter.id == null ? "sys/coursechapter/save" : "sys/coursechapter/update";
-			if ( vm.courseChapter.id != null) {
                 vm.courseChapter.courseId = vm.courseChapter.courseIdName
-            }
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -141,7 +142,7 @@ var vm = new Vue({
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(index){
-							vm.reload();
+                            location.reload();
 						});
 					}else{
 						alert(r.msg);
@@ -176,6 +177,8 @@ var vm = new Vue({
 		getInfo: function(id){
 
 			$.get(baseURL + "sys/coursechapter/info/"+id, function(r){
+                $('#img').attr('src', r.courseChapter.chapterPic);
+                $('#imgd').attr('src', r.courseChapter.chapterPic);
                 vm.courseChapter = r.courseChapter;
                 vm.courseChapter.courseIdName=  r.courseChapter.courseId
             });
@@ -231,6 +234,40 @@ layui.use('upload', function(){
                 uploadInst.upload();
             });
             layer.closeAll('loading');
+        }
+    });
+});
+
+layui.use('upload', function(){
+    var $ = layui.jquery
+        ,upload = layui.upload;
+
+    //普通图片上传
+    var uploadInst = upload.render({
+        elem: '#filePic'
+        ,url: baseURL + "common/upload/"
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            layer.load(2);
+            obj.preview(function(index, file, result){
+                $('#img').attr('src', result); //图片链接（base64）
+            });
+        }
+        ,done: function(res){
+            //如果上传失败
+            if(res.code > 0){
+                return layer.msg('上传失败');
+            }
+            vm.courseChapter.chapterPic = res.msg//上传成功
+            layer.closeAll('loading');
+        }
+        ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoTextPic');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
         }
     });
 });

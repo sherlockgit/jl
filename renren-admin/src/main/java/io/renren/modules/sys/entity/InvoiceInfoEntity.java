@@ -103,12 +103,12 @@ public class InvoiceInfoEntity implements Serializable {
 	/**
 	 * 开票时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date expressTime;
 	/**
 	 * 申请开票时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date applyTime;
 	/**
 	 * 订单编号集合[aa,bbb]
