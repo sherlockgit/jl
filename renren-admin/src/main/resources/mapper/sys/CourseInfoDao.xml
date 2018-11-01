@@ -13,6 +13,7 @@
         <result property="courseTeacher" column="course_teacher"/>
         <result property="courseMinute" column="course_minute"/>
         <result property="courseType" column="course_type"/>
+        <result property="courseKind" column="course_kind"/>
         <result property="courseTag" column="course_tag"/>
         <result property="courseStatus" column="course_status"/>
         <result property="courseIschapter" column="course_ischapter"/>
@@ -28,7 +29,7 @@
     </resultMap>
 
     <select id="selectAll" resultMap="courseInfoMap">
-        SELECT id,course_name FROM course_info
+        SELECT id,course_name,course_kind FROM course_info WHERE course_kind = '0'
     </select>
 
 

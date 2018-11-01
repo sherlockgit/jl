@@ -103,7 +103,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.showSaveOrUpdate = true;
 			vm.title = "新增";
-			vm.courseInfo = {courseType: 2,courseTag: 0,courseStatus:0,courseIschapter:0,courseIshot:0 };
+			vm.courseInfo = {courseType: 2,courseTag: 0,courseStatus:0,courseIschapter:0,courseIshot:0,course_kind:0 };
 
 		},
         detail: function (id) {
@@ -280,5 +280,40 @@ KindEditor.ready(function(K) {
             'anchor', 'link', 'unlink', '|', 'about'
         ],
         height: '700px'
+    });
+});
+
+layui.use('upload', function(){
+    var $ = layui.jquery
+        ,upload = layui.upload;
+
+    //普通图片上传
+    var uploadInst = upload.render({
+        elem: '#fileFile'
+        ,url: baseURL + "common/UploadFile/"
+        ,accept: 'file'
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            layer.load(2);
+        }
+        ,done: function(res){
+            //如果上传失败
+            if(res.code > 0){
+                return layer.msg('上传失败');
+            }
+            vm.courseInfo.courseFile = res.msg;//上传成功
+            var value = document.getElementById("text");
+            value.value = res.msg
+            layer.closeAll('loading');
+        }
+        ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoTextFile');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+            layer.closeAll('loading');
+        }
     });
 });

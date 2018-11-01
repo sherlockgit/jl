@@ -60,6 +60,26 @@ public class CourseInfoEntity implements Serializable {
 	/**
 	 * 课程分类[1-精品课程， 2-免费专区  3-线下课程]
 	 */
+	private String courseKind;
+
+	public String getCourseKind() {
+		return courseKind;
+	}
+
+	public void setCourseKind(String courseKind) {
+		this.courseKind = courseKind;
+	}
+
+	private String courseChapters;
+
+	public String getCourseChapters() {
+		return courseChapters;
+	}
+
+	public void setCourseChapters(String courseChapters) {
+		this.courseChapters = courseChapters;
+	}
+
 	private String courseType;
 	/**
 	 * 课程标签[0-私募,1-财经，2-保险]

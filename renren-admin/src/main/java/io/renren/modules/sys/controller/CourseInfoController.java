@@ -58,10 +58,10 @@ public class CourseInfoController {
 
         List<CourseNameList> lists = new ArrayList<>();
         list.forEach(o->{
-            CourseNameList courseNameList = new CourseNameList();
-            courseNameList.setId(o.getId().toString());
-            courseNameList.setCourseName(o.getCourseName());
-            lists.add(courseNameList);
+                CourseNameList courseNameList = new CourseNameList();
+                courseNameList.setId(o.getId().toString());
+                courseNameList.setCourseName(o.getCourseName());
+                lists.add(courseNameList);
         });
         return R.ok().put("list", lists);
     }
