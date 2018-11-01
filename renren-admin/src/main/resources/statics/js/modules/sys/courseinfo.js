@@ -98,60 +98,13 @@ var vm = new Vue({
 		add: function(){
 		    vm.getByType();
             $('#img').removeAttr("src")
-
+            editor[1].html('');
+            editor[0].html('');
             vm.showList = false;
             vm.showSaveOrUpdate = true;
 			vm.title = "新增";
 			vm.courseInfo = {courseType: 2,courseTag: 0,courseStatus:0,courseIschapter:0,courseIshot:0 };
 
-            layui.use('layedit', function(){
-                var layedit = layui.layedit
-                    ,$ = layui.jquery;
-
-
-                layedit.set({
-                    uploadImage: {
-                        url: baseURL + "common/uploadEdit/" //接口url
-                        ,type: 'post' //默认post
-                    }
-                });
-
-
-                //构建一个默认的编辑器
-                var index = layedit.build('LAY_demo1',{
-                    height: 520 ,//设置编辑器高度
-                });
-
-                var active = {
-                    content: function () {
-                        vm.courseInfo.courseContent = layedit.getContent(index)
-                        var url = vm.courseInfo.id == null ? "sys/courseinfo/save" : "sys/courseinfo/update";
-                        console.log(url)
-                        $.ajax({
-                            type: "POST",
-                            url: baseURL + url,
-                            contentType: "application/json",
-                            data: JSON.stringify(vm.courseInfo),
-                            success: function(r){
-                                if(r.code === 0){
-                                    alert('操作成功', function(index){
-                                        location.reload()
-                                    });
-                                }else{
-                                    alert(r.msg);
-                                }
-                            }
-                        });
-
-                    }
-                }
-                $('.site-demo-layedit').on('click', function(){
-                    var type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
-
-
-            });
 		},
         detail: function (id) {
             vm.getByType();
@@ -181,6 +134,7 @@ var vm = new Vue({
 		},
 		saveOrUpdate: function (event) {
 			var url = vm.courseInfo.id == null ? "sys/courseinfo/save" : "sys/courseinfo/update";
+            vm.courseInfo.courseContent = editor[0].html();
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -225,80 +179,16 @@ var vm = new Vue({
 			$.get(baseURL + "sys/courseinfo/info/"+id, function(r){
                 vm.courseInfo = r.courseInfo;
                 $('#imgd').attr('src', r.courseInfo.coursePic);
-                layui.use('layedit', function(){
-                    var layedit = layui.layedit
-                        ,$ = layui.jquery;
-
-
-                    layedit.set({
-                        uploadImage: {
-                            url: baseURL + "common/uploadEdit/" //接口url
-                            ,type: 'post' //默认post
-                        }
-                    });
-
-                    //构建一个默认的编辑器
-                    var index = layedit.build('LAY_demo1d',{
-                        height: 520 ,//设置编辑器高度
-                    });
-                    layedit.setContent(index,r.courseInfo.courseContent,false)
-
-                });
-            });
-		},
+                editor[1].html(r.courseInfo.courseContent);
+                })
+    },
         getInfoUpdate: function(id){
-            $.get(baseURL + "sys/courseinfo/info/"+id, function(r){
-                vm.courseInfo = r.courseInfo;
-                $('#img').attr('src', r.courseInfo.coursePic);
-                layui.use('layedit', function(){
-                    var layedit = layui.layedit
-                        ,$ = layui.jquery;
+            $.get(baseURL + "sys/courseinfo/info/"+id, function(r) {
+                    vm.courseInfo = r.courseInfo;
+                    $('#img').attr('src', r.courseInfo.coursePic);
+                    editor[0].html(r.courseInfo.courseContent);
 
-
-                    layedit.set({
-                        uploadImage: {
-                            url: baseURL + "common/uploadEdit/" //接口url
-                            ,type: 'post' //默认post
-                        }
-                    });
-
-
-                    //构建一个默认的编辑器
-                    var index = layedit.build('LAY_demo1',{
-                        height: 520 ,//设置编辑器高度
-                    });
-
-                    var active = {
-                        content: function () {
-                            vm.courseInfo.courseContent = layedit.getContent(index)
-                            var url = vm.courseInfo.id == null ? "sys/courseinfo/save" : "sys/courseinfo/update";
-                            console.log(url)
-                            $.ajax({
-                                type: "POST",
-                                url: baseURL + url,
-                                contentType: "application/json",
-                                data: JSON.stringify(vm.courseInfo),
-                                success: function(r){
-                                    if(r.code === 0){
-                                        alert('操作成功', function(index){
-                                            location.reload()
-                                        });
-                                    }else{
-                                        alert(r.msg);
-                                    }
-                                }
-                            });
-
-                        }
-                    }
-                    $('.site-demo-layedit').on('click', function(){
-                        var type = $(this).data('type');
-                        active[type] ? active[type].call(this) : '';
-                    });
-
-
-                });
-            });
+            })
         },
         getByType: function () {
             $.get(baseURL + "sys/dict/getByTypeForCourseTag", function(r){
@@ -355,5 +245,40 @@ layui.use('upload', function(){
                 uploadInst.upload();
             });
         }
+    });
+});
+
+
+var editor = new Array();
+KindEditor.ready(function(K) {
+    editor[0] = K.create('#editor_id',{
+        uploadJson : baseURL + "common/uploadImg/",
+        filePostName: 'file',
+        items: [
+            'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+            'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image',
+            'flash', 'table', 'hr', 'emoticons', 'pagebreak',
+            'anchor', 'link', 'unlink', '|', 'about'
+        ],
+        height: '700px'
+    });
+    editor[1] = K.create('#editor_idd',{
+        uploadJson : baseURL + "common/uploadImg/",
+        filePostName: 'file',
+        items: [
+            'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+            'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image',
+            'flash', 'table', 'hr', 'emoticons', 'pagebreak',
+            'anchor', 'link', 'unlink', '|', 'about'
+        ],
+        height: '700px'
     });
 });

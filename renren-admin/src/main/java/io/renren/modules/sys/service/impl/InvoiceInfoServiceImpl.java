@@ -42,7 +42,7 @@ public class InvoiceInfoServiceImpl extends ServiceImpl<InvoiceInfoDao, InvoiceI
                         .like(StringUtils.isNotBlank(invoiceStauts),"invoice_stauts", invoiceStauts)
                         .like(StringUtils.isNotBlank(invoiceType),"invoice_type", invoiceType)
                         .like(StringUtils.isNotBlank(invoiceCategory),"invoice_category", invoiceCategory)
-                        .orderBy("create_time",false)
+                        .orderBy("apply_time",false)
         );
 
         Integer isOpen = 0;

@@ -51,6 +51,34 @@ public class UploadFileController {
 	 * @param file
 	 * @return
 	 */
+	@PostMapping("/uploadImg")
+	public R uploadImg(@RequestParam("file") MultipartFile file){
+
+		System.out.println("文件上传开始");
+
+		if(file.isEmpty()){
+			return R.error(ResultEnum.FILE_ISNELL.getCode(),ResultEnum.FILE_ISNELL.getMessage());
+		}
+
+		if(!fileType(file.getOriginalFilename())){
+			return R.error(ResultEnum.IMAGE_TYPE_ERROR.getCode(),ResultEnum.IMAGE_TYPE_ERROR.getMessage());
+		}
+
+		OSSClient ossClient= OSSUtil.getOSSClient();
+		String path = OSSUtil.uploadObject2OSS(ossClient,file, OSSConfig.folder);
+		Map<String,Object> map = new HashMap<>();
+		map.put("error",0);
+		map.put("url",path);
+		System.out.println(path);
+		System.out.println("文件上传结束");
+		return R.ok(map);
+	}
+
+	/**
+	 * 文件上传具体方法
+	 * @param file
+	 * @return
+	 */
 	@PostMapping("/UploadFile")
 	public R UploadFile(@RequestParam("file") MultipartFile file){
 

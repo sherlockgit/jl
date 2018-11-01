@@ -61,7 +61,7 @@
                 <div class="col-sm-2">
                     <input type="text" class="form-control" v-model="orderRefund.orderNo" placeholder="订单编号"/>
                 </div>
-                <a class="btn btn-primary" @click="getOrder">获取</a>
+                <a class="btn btn-primary" @click="getOrder" style="padding-left: 28px;padding-right: 28px;">获取</a>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">退款状态</div>
@@ -132,7 +132,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">退款说明</div>
                 <div class="col-sm-10">
-                    <textarea class="form-control"  style="margin-left: 15px" lay-verify="number" rows="2" v-model="orderRefund.refundMemo" name="proBrief"></textarea>
+                    <textarea class="form-control"  style="margin-left: 15px; width: 798px;" lay-verify="number" rows="2" v-model="orderRefund.refundMemo" name="proBrief"></textarea>
                 </div>
             </div>
 
@@ -227,7 +227,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">退款说明</div>
                 <div class="col-sm-10">
-                    <textarea class="form-control" style="margin-left: 15px" disabled lay-verify="number" rows="2" v-model="orderRefund.refundMemo" name="proBrief"></textarea>
+                    <textarea class="form-control" style="margin-left: 15px ; width: 798px;" disabled lay-verify="number" rows="2" v-model="orderRefund.refundMemo" name="proBrief"></textarea>
                 </div>
             </div>
 

@@ -87,60 +87,16 @@ var vm = new Vue({
 		},
 		add: function(){
             $('#img').removeAttr("src")
+            editor[1].html('');
+            editor[0].html('');
             vm.showList = false;
             vm.showSaveOrUpdate = true;
             vm.showDetail = false;
 			vm.title = "新增";
 			vm.courseZhibo = {courseStatus:0};
-            layui.use('layedit', function(){
-                var layedit = layui.layedit
-                    ,$ = layui.jquery;
+            vm.courseZhibo.publishTime=$("#datetimepicker").data("datetimepicker").getDate();
 
 
-                layedit.set({
-                    uploadImage: {
-                        url: baseURL + "common/uploadEdit/" //接口url
-                        ,type: 'post' //默认post
-                    }
-                });
-
-
-                //构建一个默认的编辑器
-                var index = layedit.build('LAY_demo1',{
-                    height: 520 ,//设置编辑器高度
-                });
-
-                var active = {
-                    content: function () {
-                        vm.courseZhibo.publishTime=$("#datetimepicker").data("datetimepicker").getDate();
-                        vm.courseZhibo.courseContent = layedit.getContent(index)
-                        var url = vm.courseZhibo.id == null ? "sys/coursezhibo/save" : "sys/coursezhibo/update";
-                        console.log(url)
-                        $.ajax({
-                            type: "POST",
-                            url: baseURL + url,
-                            contentType: "application/json",
-                            data: JSON.stringify(vm.courseZhibo),
-                            success: function(r){
-                                if(r.code === 0){
-                                    alert('操作成功', function(index){
-                                        location.reload()
-                                    });
-                                }else{
-                                    alert(r.msg);
-                                }
-                            }
-                        });
-
-                    }
-                }
-                $('.site-demo-layedit').on('click', function(){
-                    var type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
-
-
-            });
 		},
 		update: function (id) {
 			if(id == null){
@@ -166,6 +122,7 @@ var vm = new Vue({
         },
 		saveOrUpdate: function (event) {
 			var url = vm.courseZhibo.id == null ? "sys/coursezhibo/save" : "sys/coursezhibo/update";
+            vm.courseZhibo.courseContent = editor[0].html();
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -174,7 +131,7 @@ var vm = new Vue({
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(index){
-							vm.reload();
+                            location.reload();
 						});
 					}else{
 						alert(r.msg);
@@ -209,24 +166,8 @@ var vm = new Vue({
 		getInfo: function(id){
 			$.get(baseURL + "sys/coursezhibo/info/"+id, function(r){
                 $('#imgd').attr('src', r.courseZhibo.coursePic);
-                layui.use('layedit', function(){
-                    var layedit = layui.layedit
-                        ,$ = layui.jquery;
+                editor[1].html(r.courseZhibo.courseContent);
 
-
-                    layedit.set({
-                        uploadImage: {
-                            url: baseURL + "common/uploadEdit/" //接口url
-                            ,type: 'post' //默认post
-                        }
-                    });
-
-                    //构建一个默认的编辑器
-                    var index = layedit.build('LAY_demo1d',{
-                        height: 520 ,//设置编辑器高度
-                    });
-                    layedit.setContent(index,r.courseZhibo.courseContent,false)
-                });
                 vm.courseZhibo = r.courseZhibo;
                 $("#datetimepickerd").val(new Date(vm.courseZhibo.publishTime).Format('yyyy-MM-dd HH:mm'))
 
@@ -237,53 +178,8 @@ var vm = new Vue({
                 vm.courseZhibo = r.courseZhibo;
                 $("#datetimepicker").val(new Date(vm.courseZhibo.publishTime).Format('yyyy-MM-dd HH:mm'))
                 $('#img').attr('src', r.courseZhibo.coursePic);
-                layui.use('layedit', function(){
-                    var layedit = layui.layedit
-                        ,$ = layui.jquery;
-
-
-                    layedit.set({
-                        uploadImage: {
-                            url: baseURL + "common/uploadEdit/" //接口url
-                            ,type: 'post' //默认post
-                        }
-                    });
-
-                    //构建一个默认的编辑器
-                    var index = layedit.build('LAY_demo1',{
-                        height: 520 ,//设置编辑器高度
-                    });
-                    layedit.setContent(index,r.courseZhibo.courseContent,false)
-                    var active = {
-                        content: function () {
-                            vm.courseZhibo.publishTime=$("#datetimepicker").data("datetimepicker").getDate();
-                            vm.courseZhibo.courseContent = layedit.getContent(index)
-                            var url = vm.courseZhibo.id == null ? "sys/coursezhibo/save" : "sys/coursezhibo/update";
-                            console.log(url)
-                            $.ajax({
-                                type: "POST",
-                                url: baseURL + url,
-                                contentType: "application/json",
-                                data: JSON.stringify(vm.courseZhibo),
-                                success: function(r){
-                                    if(r.code === 0){
-                                        alert('操作成功', function(index){
-                                            location.reload()
-                                        });
-                                    }else{
-                                        alert(r.msg);
-                                    }
-                                }
-                            });
-
-                        }
-                    }
-                    $('.site-demo-layedit').on('click', function(){
-                        var type = $(this).data('type');
-                        active[type] ? active[type].call(this) : '';
-                    });
-
-                });
+                editor[0].html(r.courseZhibo.courseContent);
+                r.courseZhibo.courseContent
 
             });
 
@@ -362,4 +258,39 @@ Date.prototype.Format = function (fmt) { //author: meizz
 
 $('#dateBegin').datetimepicker({
     format: 'yyyy-mm-dd hh:ii'
+});
+
+
+var editor = new Array();
+KindEditor.ready(function(K) {
+    editor[0] = K.create('#editor_id',{
+        uploadJson : baseURL + "common/uploadImg/",
+        filePostName: 'file',
+        items: [
+            'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+            'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image',
+            'flash', 'table', 'hr', 'emoticons', 'pagebreak',
+            'anchor', 'link', 'unlink', '|', 'about'
+        ],
+        height: '700px'
+    });
+    editor[1] = K.create('#editor_idd',{
+        uploadJson : baseURL + "common/uploadImg/",
+        filePostName: 'file',
+        items: [
+            'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+            'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image',
+            'flash', 'table', 'hr', 'emoticons', 'pagebreak',
+            'anchor', 'link', 'unlink', '|', 'about'
+        ],
+        height: '700px'
+    });
 });

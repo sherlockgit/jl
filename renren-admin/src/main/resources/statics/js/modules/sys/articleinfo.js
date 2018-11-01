@@ -90,60 +90,14 @@ var vm = new Vue({
             vm.getByType();
             $('#img').removeAttr("src")
             $('#imgd').removeAttr("src")
-
+            editor[1].html('');
+            editor[0].html('');
 			vm.showList = false;
             vm.showSaveOrUpdate = true;
 			vm.title = "新增";
 			vm.articleInfo = {articleTag: 0,articleStatus:2 ,articleSort: 1};
 
-            layui.use('layedit', function(){
-                var layedit = layui.layedit
-                    ,$ = layui.jquery;
 
-
-                layedit.set({
-                    uploadImage: {
-                        url: baseURL + "common/uploadEdit/" //接口url
-                        ,type: 'post' //默认post
-                    }
-                });
-
-
-                //构建一个默认的编辑器
-                var index = layedit.build('LAY_demo1',{
-                    height: 520 ,//设置编辑器高度
-                });
-
-                var active = {
-                    content: function () {
-                        vm.articleInfo.articleContent = layedit.getContent(index)
-                        var url = vm.articleInfo.id == null ? "sys/articleinfo/save" : "sys/articleinfo/update";
-                        console.log(url)
-                        $.ajax({
-                            type: "POST",
-                            url: baseURL + url,
-                            contentType: "application/json",
-                            data: JSON.stringify(vm.articleInfo),
-                            success: function(r){
-                                if(r.code === 0){
-                                    alert('操作成功', function(index){
-                                        location.reload();
-                                    });
-                                }else{
-                                    alert(r.msg);
-                                }
-                            }
-                        });
-
-                    }
-                }
-                $('.site-demo-layedit').on('click', function(){
-                    var type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
-
-
-            });
 		},
         detail: function (id) {
             vm.getByType();
@@ -173,6 +127,7 @@ var vm = new Vue({
         },
 		saveOrUpdate: function (event) {
 			var url = vm.articleInfo.id == null ? "sys/articleinfo/save" : "sys/articleinfo/update";
+            vm.articleInfo.articleContent=editor[0].html();
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -181,7 +136,7 @@ var vm = new Vue({
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(index){
-							vm.reload();
+                            location.reload();
 						});
 					}else{
 						alert(r.msg);
@@ -221,25 +176,7 @@ var vm = new Vue({
 		getInfo: function(id){
 			$.get(baseURL + "sys/articleinfo/info/"+id, function(r){
                 $('#imgd').attr('src', r.articleInfo.articlePic);
-                layui.use('layedit', function(){
-                    var layedit = layui.layedit
-                        ,$ = layui.jquery;
-
-
-                    layedit.set({
-                        uploadImage: {
-                            url: baseURL + "common/uploadEdit/" //接口url
-                            ,type: 'post' //默认post
-                        }
-                    });
-
-                    //构建一个默认的编辑器
-                    var index = layedit.build('LAY_demo1d',{
-                        height: 520 ,//设置编辑器高度
-                    });
-                    layedit.setContent(index,r.articleInfo.articleContent,false)
-
-                });
+                editor[1].html(r.articleInfo.articleContent);
                 vm.articleInfo = r.articleInfo;
             });
 
@@ -247,54 +184,7 @@ var vm = new Vue({
         getInfoUpdate: function(id){
             $.get(baseURL + "sys/articleinfo/info/"+id, function(r){
                 $('#img').attr('src', r.articleInfo.articlePic);
-                layui.use('layedit', function(){
-                    var layedit = layui.layedit
-                        ,$ = layui.jquery;
-
-
-                    layedit.set({
-                        uploadImage: {
-                            url: baseURL + "common/uploadEdit/" //接口url
-                            ,type: 'post' //默认post
-                        }
-                    });
-
-
-                    //构建一个默认的编辑器
-                    var index = layedit.build('LAY_demo1',{
-                        height: 520 ,//设置编辑器高度
-                    });
-
-                    var active = {
-                        content: function () {
-                            vm.articleInfo.articleContent = layedit.getContent(index)
-                            var url = vm.articleInfo.id == null ? "sys/articleinfo/save" : "sys/articleinfo/update";
-                            console.log(url)
-                            $.ajax({
-                                type: "POST",
-                                url: baseURL + url,
-                                contentType: "application/json",
-                                data: JSON.stringify(vm.articleInfo),
-                                success: function(r){
-                                    if(r.code === 0){
-                                        alert('操作成功', function(index){
-                                            location.reload();
-                                        });
-                                    }else{
-                                        alert(r.msg);
-                                    }
-                                }
-                            });
-
-                        }
-                    }
-                    $('.site-demo-layedit').on('click', function(){
-                        var type = $(this).data('type');
-                        active[type] ? active[type].call(this) : '';
-                    });
-
-
-                });
+                editor[0].html(r.articleInfo.articleContent);
                 vm.articleInfo = r.articleInfo;
             });
 
@@ -314,7 +204,7 @@ var vm = new Vue({
                 },
                 page:page
             }).trigger("reloadGrid");
-		}
+		},
 	}
 });
 
@@ -349,5 +239,38 @@ layui.use('upload', function(){
                 uploadInst.upload();
             });
         }
+    });
+});
+var editor = new Array();
+KindEditor.ready(function(K) {
+    editor[0] = K.create('#editor_id',{
+        uploadJson : baseURL + "common/uploadImg/",
+        filePostName: 'file',
+        items: [
+            'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+            'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image',
+            'flash', 'table', 'hr', 'emoticons', 'pagebreak',
+            'anchor', 'link', 'unlink', '|', 'about'
+        ],
+        height: '700px'
+    });
+    editor[1] = K.create('#editor_idd',{
+        uploadJson : baseURL + "common/uploadImg/",
+        filePostName: 'file',
+        items: [
+            'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+            'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image',
+            'flash', 'table', 'hr', 'emoticons', 'pagebreak',
+            'anchor', 'link', 'unlink', '|', 'about'
+        ],
+        height: '700px'
     });
 });
