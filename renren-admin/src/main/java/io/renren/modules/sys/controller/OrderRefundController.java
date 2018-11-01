@@ -8,7 +8,6 @@ import io.renren.common.utils.UUIDUtils;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.common.validator.group.AddGroup;
 import io.renren.common.validator.group.UpdateGroup;
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -112,5 +111,19 @@ public class OrderRefundController {
         }
         return R.ok().put("data",orderRefundEntity);
 
+    }
+
+    /**
+     * 退款
+     * @param orderRefund
+     * @return
+     */
+    @RequestMapping("/returnPay")
+    @RequiresPermissions("sys:orderrefund:update")
+    public R returnPay(@RequestBody OrderRefundEntity orderRefund) {
+        if (orderRefund.getOrderNo() == null) {
+            return R.error("订单编号不能为空");
+        }
+        return orderRefundService.returnPay(orderRefund.getOrderNo());
     }
 }

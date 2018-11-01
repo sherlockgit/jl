@@ -44,7 +44,7 @@ public class OrderInfoController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:orderinfo:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) throws ParseException {
         PageUtils page = orderInfoService.queryPage(params);
 
         return R.ok().put("page", page);

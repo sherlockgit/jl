@@ -13,5 +13,7 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface OrderRefundDao extends BaseMapper<OrderRefundEntity> {
     OrderRefundEntity getByOrder(@Param("orderNo") String orderNo);
+
+    OrderRefundEntity getByOrderFund(@Param("orderNo") String orderNo);
 	
 }

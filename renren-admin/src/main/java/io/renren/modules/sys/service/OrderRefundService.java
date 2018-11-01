@@ -2,6 +2,7 @@ package io.renren.modules.sys.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
+import io.renren.common.utils.R;
 import io.renren.modules.sys.entity.OrderRefundEntity;
 
 import java.util.Map;
@@ -18,5 +19,7 @@ public interface OrderRefundService extends IService<OrderRefundEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     OrderRefundEntity getByOrder(String orderNo);
+
+    R returnPay (String orderNo);
 }
 

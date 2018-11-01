@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public interface OrderInfoService extends IService<OrderInfoEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Map<String, Object> params) throws ParseException;
 
     PageUtils getCount (Map<String,Object> map) throws ParseException;
 

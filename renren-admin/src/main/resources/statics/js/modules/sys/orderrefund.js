@@ -107,6 +107,7 @@ var vm = new Vue({
 	},
 	methods: {
 		query: function () {
+
 			vm.reload();
 		},
 		add: function(){
@@ -208,6 +209,25 @@ var vm = new Vue({
 
             });
         },
+        returnPay: function () {
+            confirm('确定要对其订单进行退款？', function(){
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + "sys/orderrefund/returnPay",
+                    contentType: "application/json",
+                    data: JSON.stringify(vm.orderRefund),
+                    success: function(r){
+                        if(r.code == 0){
+                            alert('退款成功', function(index){
+                                vm.getInfo(vm.orderRefund.id)
+                            });
+                        }else{
+                            alert(r.msg);
+                        }
+                    }
+                });
+            });
+        },
 		reload: function (event) {
             vm.showList = true;
             vm.showSaveOrUpdate = false;
@@ -220,6 +240,7 @@ var vm = new Vue({
                     'userName': vm.q.userName,
                     'applyType': vm.q.applyType,
                     'refundStatus': vm.q.refundStatus
+
                 },
                 page:page
             }).trigger("reloadGrid");

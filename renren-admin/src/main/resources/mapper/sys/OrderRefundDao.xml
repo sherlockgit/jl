@@ -28,5 +28,9 @@
         FROM order_info o LEFT JOIN user_info u ON o.user_id = u.USER_ID WHERE o.order_no = #{orderNo,jdbcType=VARCHAR}
     </select>
 
+    <select id="getByOrderFund" parameterType="java.lang.String" resultMap="orderRefundMap">
+        SELECT * FROM  order_refund WHERE order_no = #{orderNo,jdbcType=VARCHAR} AND refund_status =  "0"
+    </select>
+
 
 </mapper>

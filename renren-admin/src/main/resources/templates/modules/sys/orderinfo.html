@@ -3,6 +3,8 @@
 <head>
     <title></title>
 		<#include "/header.html">
+            <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-datetimepicker.min.css" >
+            <script src="${request.contextPath}/statics/libs/bootstrap-datetimepicker.min.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -41,7 +43,8 @@
                             <option value="1" >已付款</option>
                         </select>
                     </div>
-                </label>
+                </label><label> <input type='text' class='form-control ' id='dateBegin' name='date_begin' placeholder="开始时间" value='' ng-model="dateBegin"> </label>---
+                <label> <input type='text' class='form-control ' id='dateEnd' name='date_begin' placeholder="结束时间" value='' ng-model="dateEnd"> </label>
                 <a class="btn btn-default" @click="query">查询</a>
             </div>
         </div>

@@ -1,5 +1,9 @@
 package io.renren.modules.sys.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import io.renren.common.utils.HttpRequest;
+import io.renren.common.utils.R;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +49,31 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundDao, OrderRef
     public OrderRefundEntity getByOrder(String orderNo) {
 
         return orderRefundDao.getByOrder(orderNo);
+    }
+
+    @Override
+    public R returnPay(String orderNo) {
+        OrderRefundEntity orderRefundEntity = orderRefundDao.getByOrderFund(orderNo);
+        if (orderRefundEntity == null) {
+            return R.error("订单状态错误");
+        }
+        String orderRefundId = orderRefundEntity.getRefundNo();
+        Integer orderPrice = (orderRefundEntity.getOrderPrice().intValue())*100;
+        Integer refunPrice = (orderRefundEntity.getRefundPrice().intValue())*100;
+        String sign = DigestUtils.md5Hex(orderRefundId+orderNo+orderPrice+refunPrice+"lkjm35489ksfga6ifg");
+
+        String param = "id="+orderRefundId+"&orderNo="+orderNo+"&orderPrice="+orderPrice+"&refundPrice="+refunPrice+"&sign="+sign;
+        System.out.println(param);
+        String json = HttpRequest.sendGet("http://m.jingjinh.cn/smxy/payRefund/refund",param);
+        JSONObject jsonObject = JSONObject.parseObject(json);
+        if ("0000".equals(jsonObject.get("resultCode"))) {
+            OrderRefundEntity orderRefundEntity1 = new OrderRefundEntity();
+            orderRefundEntity1.setId(orderRefundEntity.getId());
+            orderRefundEntity1.setRefundStatus("1");
+            orderRefundDao.updateById(orderRefundEntity1);
+            return R.ok("退款成功");
+        }
+        return R.error("退款失败");
     }
 
 }
