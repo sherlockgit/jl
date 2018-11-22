@@ -16,5 +16,7 @@ import java.util.Map;
 public interface CourseChapterService extends IService<CourseChapterEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void deletrByCourseInfoId(Integer id);
 }
 

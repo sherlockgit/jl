@@ -11,5 +11,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @date 2018-10-04 14:56:19
  */
 public interface CourseChapterDao extends BaseMapper<CourseChapterEntity> {
+
+    void deletrByCourseInfoId(Integer courseId);
 	
 }

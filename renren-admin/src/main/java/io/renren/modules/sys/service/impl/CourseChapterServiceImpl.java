@@ -1,6 +1,7 @@
 package io.renren.modules.sys.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -16,6 +17,9 @@ import io.renren.modules.sys.service.CourseChapterService;
 
 @Service("courseChapterService")
 public class CourseChapterServiceImpl extends ServiceImpl<CourseChapterDao, CourseChapterEntity> implements CourseChapterService {
+
+    @Autowired
+    CourseChapterDao courseChapterDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -36,6 +40,11 @@ public class CourseChapterServiceImpl extends ServiceImpl<CourseChapterDao, Cour
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void deletrByCourseInfoId(Integer id) {
+        courseChapterDao.deletrByCourseInfoId(id);
     }
 
 }

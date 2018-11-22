@@ -7,6 +7,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -58,13 +60,15 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundDao, OrderRef
             return R.error("订单状态错误");
         }
         String orderRefundId = orderRefundEntity.getRefundNo();
-        Integer orderPrice = (orderRefundEntity.getOrderPrice().intValue())*100;
-        Integer refunPrice = (orderRefundEntity.getRefundPrice().intValue())*100;
+        BigDecimal bd = new BigDecimal(100);
+        Integer orderPrice = (orderRefundEntity.getOrderPrice().multiply(bd).intValue());
+        Integer refunPrice = (orderRefundEntity.getRefundPrice().multiply(bd).intValue());
         String sign = DigestUtils.md5Hex(orderRefundId+orderNo+orderPrice+refunPrice+"lkjm35489ksfga6ifg");
 
         String param = "id="+orderRefundId+"&orderNo="+orderNo+"&orderPrice="+orderPrice+"&refundPrice="+refunPrice+"&sign="+sign;
         System.out.println(param);
         String json = HttpRequest.sendGet("http://m.jingjinh.cn/smxy/payRefund/refund",param);
+        System.out.println(json);
         JSONObject jsonObject = JSONObject.parseObject(json);
         if ("0000".equals(jsonObject.get("resultCode"))) {
             OrderRefundEntity orderRefundEntity1 = new OrderRefundEntity();
@@ -73,7 +77,7 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundDao, OrderRef
             orderRefundDao.updateById(orderRefundEntity1);
             return R.ok("退款成功");
         }
-        return R.error("退款失败");
+        return R.error(jsonObject.get("message").toString());
     }
 
 }

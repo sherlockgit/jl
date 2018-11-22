@@ -25,5 +25,9 @@
         <result property="chapterMemo" column="chapter_memo"/>
     </resultMap>
 
+    <delete id="deletrByCourseInfoId" parameterType="java.lang.Integer">
+        DELETE FROM course_chapter WHERE course_id = #{I,jdbcType=INTEGER}
+    </delete>
+
 
 </mapper>

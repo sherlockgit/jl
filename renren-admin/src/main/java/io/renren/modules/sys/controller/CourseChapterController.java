@@ -53,6 +53,7 @@ public class CourseChapterController {
         PageUtils page = courseChapterService.queryPage(params);
         if (page.getList().size()>0) {
             page.getList().forEach(o->{
+                System.out.println(o);
                 CourseChapterEntity courseChapterEntity = (CourseChapterEntity)o;
                 courseChapterEntity.setCourseName(courseInfoService.selectById(courseChapterEntity.getCourseId()).getCourseName());
             });

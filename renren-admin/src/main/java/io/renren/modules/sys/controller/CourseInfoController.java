@@ -7,6 +7,7 @@ import io.renren.common.validator.ValidatorUtils;
 import io.renren.common.validator.group.AddGroup;
 import io.renren.common.validator.group.UpdateGroup;
 import io.renren.modules.sys.entity.CourseChapterEntity;
+import io.renren.modules.sys.service.CourseChapterService;
 import io.renren.modules.sys.vo.CourseInfoEntityVo;
 import io.renren.modules.sys.vo.CourseNameList;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -37,6 +38,9 @@ import io.renren.common.utils.R;
 public class CourseInfoController {
     @Autowired
     private CourseInfoService courseInfoService;
+
+    @Autowired
+    private CourseChapterService courseChapterService;
 
     /**
      * 列表
@@ -122,7 +126,9 @@ public class CourseInfoController {
     @RequiresPermissions("sys:courseinfo:delete")
     public R delete(@RequestBody Integer[] ids){
         courseInfoService.deleteBatchIds(Arrays.asList(ids));
-
+        for (int i = 0;i<ids.length;i++) {
+            courseChapterService.deletrByCourseInfoId(ids[i]);
+        }
         return R.ok();
     }
 

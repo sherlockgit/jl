@@ -11,19 +11,21 @@ $(function () {
                     return '<span>精品课程</span>';
                 } else if (value == '2') {
                     return '<span>免费专区</span>';
+                }else if (value == '0') {
+                    return '<span>直播课程</span>';
                 } else {
                     return '<span>线下课程</span>';
                 }
             }},
-            { label: '课程标签', name: 'courseTag', width: 80, formatter: function(value, options, row){
-                if (value == '0') {
-                    return '<span>私募</span>';
-                } else if (value == '1') {
-                    return '<span>财经</span>';
-                } else {
-                    return '<span>保险</span>';
-                }
-            }},
+            // { label: '课程标签', name: 'courseTag', width: 80, formatter: function(value, options, row){
+            //     if (value == '0') {
+            //         return '<span>私募基金</span>';
+            //     } else if (value == '1') {
+            //         return '<span>财经</span>';
+            //     } else {
+            //         return '<span>法务</span>';
+            //     }
+            // }},
             { label: '课程总价格', name: 'coursePrice', index: 'course_price', width: 80 },
             { label: '课程状态', name: 'courseStatus', width: 80, formatter: function(value, options, row){
                 if (value == '0') {
