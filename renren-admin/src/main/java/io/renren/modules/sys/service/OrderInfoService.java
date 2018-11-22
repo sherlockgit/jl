@@ -23,5 +23,7 @@ public interface OrderInfoService extends IService<OrderInfoEntity> {
     PageUtils getCount (Map<String,Object> map) throws ParseException;
 
     List<OrderCountVo> getExcle (Map<String,Object> map) throws ParseException;
+
+    List<OrderInfoEntity> getExcleByOrder (Map<String,Object> map) throws ParseException;
 }
 

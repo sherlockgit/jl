@@ -72,9 +72,9 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
         q:{
-            userName: null,
-            phone: null,
-            wxUname: null,
+            userName: "",
+            phone: "",
+            wxUname: "",
             userType: ""
         },
 		showList: true,
@@ -114,6 +114,22 @@ var vm = new Vue({
             vm.title = "详情";
 
             vm.getInfo(userId)
+        },
+        excle: function (event) {
+            layer.confirm('确定要导出数据？', function(index){
+                window.location =baseURL + "sys/userinfo/getExcle?userName="+vm.q.userName+"&phone="+vm.q.phone+"&wxUname="+vm.q.wxUname+"&userType="+vm.q.userType;
+                layer.close(index);
+                vm.reload();
+            });
+            var url =  "sys/userinfo/getExcle"
+            $.ajax({
+                type: "POST",
+                url: baseURL + url,
+                contentType: "application/json",
+                data: JSON.stringify(vm.q),
+                success: function(r){
+                }
+            });
         },
 		saveOrUpdate: function (event) {
 			var url = vm.userInfo.userId == null ? "sys/userinfo/save" : "sys/userinfo/update";

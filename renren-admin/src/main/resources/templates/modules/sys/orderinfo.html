@@ -46,6 +46,7 @@
                 </label><label> <input type='text' class='form-control ' id='dateBegin' name='date_begin' placeholder="开始时间" value='' ng-model="dateBegin"> </label>---
                 <label> <input type='text' class='form-control ' id='dateEnd' name='date_begin' placeholder="结束时间" value='' ng-model="dateEnd"> </label>
                 <a class="btn btn-default" @click="query">查询</a>
+                <a class="btn btn-primary" @click="excle"><i class="fa fa-cloud-download"></i>&nbsp;导出</a>
             </div>
         </div>
         <table id="jqGrid"></table>

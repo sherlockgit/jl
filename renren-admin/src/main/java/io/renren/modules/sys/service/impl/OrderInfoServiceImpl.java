@@ -260,4 +260,35 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoDao, OrderInfoEnt
         return list1;
     }
 
+    @Override
+    public List<OrderInfoEntity> getExcleByOrder(Map<String, Object> params) throws ParseException {
+        String orderNo = (String)params.get("orderNo");
+        String userPhone = (String)params.get("userPhone");
+        String contentType = (String)params.get("contentType");
+        String payType = (String)params.get("payType");
+        String payStatus = (String)params.get("payStatus");
+        String startTime = (String)params.get("startTime");
+        String endTime = (String)params.get("endTime");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+        Date startTimeDate = null;
+        Date endTimeDate = null;
+        if (StringUtils.isNotBlank(startTime)) {
+            startTimeDate = sdf.parse(startTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
+        if (StringUtils.isNotBlank(endTime)) {
+            endTimeDate = sdf.parse(endTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
+        List<OrderInfoEntity> list = orderInfoDao.selectList(new EntityWrapper<OrderInfoEntity>()
+                .like(StringUtils.isNotBlank(orderNo),"order_no", orderNo)
+                .like(StringUtils.isNotBlank(userPhone),"user_phone", userPhone)
+                .like(StringUtils.isNotBlank(contentType),"content_type", contentType)
+                .like(StringUtils.isNotBlank(payType),"pay_type", payType)
+                .like(StringUtils.isNotBlank(payStatus),"pay_status", payStatus)
+                .gt(StringUtils.isNotBlank(startTime),"create_time",startTimeDate)
+                .lt(StringUtils.isNotBlank(endTime),"create_time", endTimeDate)
+                .orderBy("create_time",false)
+        );
+        return list;
+    }
+
 }

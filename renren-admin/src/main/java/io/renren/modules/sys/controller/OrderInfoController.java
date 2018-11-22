@@ -88,7 +88,54 @@ public class OrderInfoController {
 
         });
         data.setRows(rows);
-        ExportExcelUtils.exportExcel(response,"发货订单"+dataName+".xlsx",data);
+        ExportExcelUtils.exportExcel(response,"财务报表"+dataName+".xlsx",data);
+    }
+
+
+    /**
+     * 列表
+     */
+    @RequestMapping("/getExcleByOrder")
+    public void getExcleByOrder(@RequestParam Map<String, Object> params,HttpServletResponse response) throws Exception {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
+        String dataName = simpleDateFormat.format(date);
+
+        ExcelDataVO data = new ExcelDataVO();
+        data.setName("订单列表"+dataName);
+        List<String> titles = new ArrayList<>();
+        titles.add("付款时间");
+        titles.add("付款方式");
+        titles.add("报名城市");
+        titles.add("支付项目");
+        data.setTitles(titles);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<OrderInfoEntity> list = orderInfoService.getExcleByOrder(params);
+        List<List<Object>> rows = new ArrayList();
+        list.forEach(o->{
+            List<Object> row = new ArrayList();
+            if (!(o.getPayTime() == null)) {
+                row.add(sdf.format(o.getPayTime()));
+            }
+            if ("0".equals(o.getPayType())) {
+                row.add("微信支付");
+            }
+            if ("1".equals(o.getPayType())) {
+                row.add("支付宝");
+            }
+            if ("2".equals(o.getPayType())) {
+                row.add("银联支付");
+            }
+            if ("3".equals(o.getPayType())) {
+                row.add("线下转账");
+            }
+            row.add("");
+            row.add(o.getCourseName());
+            rows.add(row);
+
+        });
+        data.setRows(rows);
+        ExportExcelUtils.exportExcel(response,"订单列表"+dataName+".xlsx",data);
     }
 
     @RequestMapping("/getCount")

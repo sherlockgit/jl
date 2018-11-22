@@ -5,6 +5,7 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.modules.sys.entity.UserInfoEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,5 +24,7 @@ public interface UserInfoService extends IService<UserInfoEntity> {
     R updateUserInfo(UserInfoEntity userInfoEntity);
 
     R appLogin(UserInfoEntity userInfoEntity);
+
+    List<UserInfoEntity> getExcel(Map<String, Object> params);
 }
 

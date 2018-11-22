@@ -91,11 +91,13 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
         q:{
-            orderNo: null,
-            userPhone: null,
+            orderNo: "",
+            userPhone: "",
             contentType: "",
             payType: "",
-            payStatus: ""
+            payStatus: "",
+
+
         },
         showList: true,
         showSaveOrUpdate: false,
@@ -193,6 +195,32 @@ var vm = new Vue({
                 vm.orderInfo = r.orderInfo;
             });
 		},
+        excle: function (event) {
+            if ($("#dateBegin").val().length <= 0) {
+                vm.q.startTime = '';
+            }else {
+                vm.q.startTime=$("#dateBegin").data("datetimepicker").getDate();
+            }
+            if ($("#dateEnd").val().length <= 0) {
+                vm.q.endTime='';
+            }else {
+                vm.q.endTime=$("#dateEnd").data("datetimepicker").getDate();
+            }
+            layer.confirm('确定要导出数据？', function(index){
+                window.location =baseURL + "sys/orderinfo/getExcleByOrder?orderNo="+vm.q.orderNo+"&userPhone="+vm.q.userPhone+"&contentType="+vm.q.contentType+"&startTime="+vm.q.payType+"&payStatus="+vm.q.payStatus+"&startTime="+vm.q.startTime+"&endTime="+vm.q.endTime;
+                layer.close(index);
+                vm.reload();
+            });
+            var url =  "sys/orderinfo/getExcleByOrder"
+            $.ajax({
+                type: "POST",
+                url: baseURL + url,
+                contentType: "application/json",
+                data: JSON.stringify(vm.q),
+                success: function(r){
+                }
+            });
+        },
 		reload: function (event) {
             vm.showList = true;
             vm.showSaveOrUpdate = false;

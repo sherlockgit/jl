@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -138,5 +139,21 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfoEntity
         }
         wxOpenid.setBalance(accountDao.getBalanceByUserId(wxOpenid.getUserId()).getBalance());
         return R.ok().put("data",wxOpenid);
+    }
+
+    @Override
+    public List<UserInfoEntity> getExcel(Map<String, Object> params) {
+        String userName = (String)params.get("userName");
+        String phone = (String)params.get("phone");
+        String wxUname = (String)params.get("wxUname");
+        String userType = (String)params.get("userType");
+        List<UserInfoEntity> list = userInfoDao.selectList(new EntityWrapper<UserInfoEntity>()
+                .like(StringUtils.isNotBlank(userName),"USER_NAME", userName)
+                .like(StringUtils.isNotBlank(phone),"PHONE", phone)
+                .like(StringUtils.isNotBlank(wxUname),"WX_UNAME", wxUname)
+                .like(StringUtils.isNotBlank(userType),"USER_TYPE", userType)
+                .orderBy("REGIST_TIME",false)
+        );
+        return list;
     }
 }
