@@ -1,13 +1,14 @@
 package io.renren.modules.sys.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-import io.renren.common.utils.NoUtils;
-import io.renren.common.utils.UUIDUtils;
+import io.renren.common.utils.*;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.common.validator.group.AddGroup;
 import io.renren.common.validator.group.UpdateGroup;
+import io.renren.modules.sys.entity.InvoiceInfoEntity;
+import io.renren.modules.sys.vo.ExcelDataVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.renren.modules.sys.entity.OrderRefundEntity;
 import io.renren.modules.sys.service.OrderRefundService;
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.R;
 
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -125,5 +125,75 @@ public class OrderRefundController {
             return R.error("订单编号不能为空");
         }
         return orderRefundService.returnPay(orderRefund.getOrderNo());
+    }
+
+    @RequestMapping("/getExcle")
+    public void getExcle(@RequestParam Map<String, Object> params,HttpServletResponse response) throws Exception {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
+        String dataName = simpleDateFormat.format(date);
+
+        ExcelDataVO data = new ExcelDataVO();
+        data.setName("退款记录"+dataName);
+        List<String> titles = new ArrayList<>();
+        titles.add("订单编号");
+        titles.add("订单名称");
+        titles.add("订单金额");
+        titles.add("退款金额");
+        titles.add("退款状态");
+        titles.add("退款方式");
+        titles.add("会员姓名");
+        titles.add("手机号码");
+        titles.add("申请时间");
+        titles.add("退款到账时间");
+        data.setTitles(titles);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<OrderRefundEntity> list = orderRefundService.getExcleByOrder(params);
+        List<List<Object>> rows = new ArrayList();
+        list.forEach(o->{
+            List<Object> row = new ArrayList();
+            row.add(o.getOrderNo());
+            row.add(o.getCourseName());
+            row.add(o.getOrderPrice());
+            row.add(o.getRefundPrice());
+            if ("0".equals(o.getRefundStatus())){
+                row.add("待退款");
+            }
+            if ("1".equals(o.getRefundStatus())){
+                row.add("已退款");
+            }
+            if ("2".equals(o.getRefundStatus())){
+                row.add("拒退款");
+            }
+            if ("0".equals(o.getApplyType())){
+                row.add("微信支付");
+            }
+            if ("1".equals(o.getApplyType())){
+                row.add("支付宝");
+            }
+            if ("2".equals(o.getApplyType())){
+                row.add("银联支付");
+            }
+            if ("3".equals(o.getApplyType())){
+                row.add("线下转账");
+            }
+
+            row.add(o.getUserName());
+            row.add(o.getPhone());
+            if (!(o.getApplyTime() == null)) {
+                row.add(sdf.format(o.getApplyTime()));
+            }else {
+                row.add("");
+            }
+            if (!(o.getRefundTime() == null)) {
+                row.add(sdf.format(o.getRefundTime()));
+            }else {
+                row.add("");
+            }
+            rows.add(row);
+
+        });
+        data.setRows(rows);
+        ExportExcelUtils.exportExcel(response,"发票记录"+dataName+".xlsx",data);
     }
 }

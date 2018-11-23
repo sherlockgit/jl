@@ -104,6 +104,14 @@ public class OrderInfoController {
         ExcelDataVO data = new ExcelDataVO();
         data.setName("订单列表"+dataName);
         List<String> titles = new ArrayList<>();
+        titles.add("订单名称");
+        titles.add("订单编号");
+        titles.add("姓名");
+        titles.add("电话");
+        titles.add("邮箱");
+        titles.add("单位名称");
+        titles.add("付款状态");
+        titles.add("付款金额");
         titles.add("付款时间");
         titles.add("付款方式");
         titles.add("报名城市");
@@ -114,8 +122,23 @@ public class OrderInfoController {
         List<List<Object>> rows = new ArrayList();
         list.forEach(o->{
             List<Object> row = new ArrayList();
+            row.add("");
+            row.add(o.getOrderNo());
+            row.add(o.getUserName());
+            row.add(o.getUserPhone());
+            row.add("");
+            row.add(o.getOrgName());
+            if ("0".equals(o.getPayStatus())) {
+                row.add("待付款");
+            }
+            if ("1".equals(o.getPayStatus())) {
+                row.add("已付款");
+            }
+            row.add(o.getOrderPrice());
             if (!(o.getPayTime() == null)) {
                 row.add(sdf.format(o.getPayTime()));
+            }else {
+                row.add("");
             }
             if ("0".equals(o.getPayType())) {
                 row.add("微信支付");

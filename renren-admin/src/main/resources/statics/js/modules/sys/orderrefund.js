@@ -93,9 +93,9 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
         q:{
-            orderNo: null,
-            phone: null,
-            userName: null,
+            orderNo: "",
+            phone: "",
+            userName: "",
             applyType: "",
             refundStatus: ""
         },
@@ -195,6 +195,22 @@ var vm = new Vue({
 		},
         getOrder: function(){
             vm.getByOrderNo()
+        },
+        excle: function (event) {
+            layer.confirm('确定要导出数据？', function (index) {
+                window.location = baseURL + "sys/orderrefund/getExcle?orderNo=" + vm.q.orderNo + "&phone=" + vm.q.phone + "&userName=" + vm.q.userName + "&applyType=" + vm.q.applyType + "&refundStatus=" + vm.q.refundStatus;
+                layer.close(index);
+                vm.reload();
+            });
+            var url = "sys/orderrefund/getExcle"
+            $.ajax({
+                type: "POST",
+                url: baseURL + url,
+                contentType: "application/json",
+                data: JSON.stringify(vm.q),
+                success: function (r) {
+                }
+            });
         },
         getByOrderNo: function(event){
             orderNo = vm.orderRefund.orderNo;

@@ -93,9 +93,9 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
         q:{
-            invoiceNo: null,
-            expressNo: null,
-            cneeName: null,
+            invoiceNo: "",
+            expressNo: "",
+            cneeName: "",
             invoiceStauts: "",
             invoiceType: "",
             invoiceCategory: ""
@@ -190,6 +190,22 @@ var vm = new Vue({
                 vm.invoiceInfo = r.invoiceInfo;
             });
 		},
+        excle: function (event) {
+            layer.confirm('确定要导出数据？', function(index){
+                window.location =baseURL + "sys/invoiceinfo/getExcle?invoiceNo="+vm.q.invoiceNo+"&expressNo="+vm.q.expressNo+"&cneeName="+vm.q.cneeName+"&invoiceStauts="+vm.q.invoiceStauts+"&invoiceType="+vm.q.invoiceType+"&invoiceCategory="+vm.q.invoiceCategory;
+                layer.close(index);
+                vm.reload();
+            });
+            var url =  "sys/invoiceinfo/getExcle"
+            $.ajax({
+                type: "POST",
+                url: baseURL + url,
+                contentType: "application/json",
+                data: JSON.stringify(vm.q),
+                success: function(r){
+                }
+            });
+        },
 		reload: function (event) {
             vm.showList = true;
             vm.showSaveOrUpdate = false;

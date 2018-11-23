@@ -1,11 +1,13 @@
 package io.renren.modules.sys.controller;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+import io.renren.common.utils.ExportExcelUtils;
 import io.renren.common.utils.NoUtils;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.vo.ExcelDataVO;
+import io.renren.modules.sys.vo.OrderCountVo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ import io.renren.modules.sys.service.InvoiceInfoService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -94,4 +97,66 @@ public class InvoiceInfoController {
         return R.ok();
     }
 
+
+    /**
+     * 列表
+     */
+    @RequestMapping("/getExcle")
+    public void getExcle(@RequestParam Map<String, Object> params,HttpServletResponse response) throws Exception {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
+        String dataName = simpleDateFormat.format(date);
+
+        ExcelDataVO data = new ExcelDataVO();
+        data.setName("发票记录"+dataName);
+        List<String> titles = new ArrayList<>();
+        titles.add("订单编号");
+        titles.add("订单名称");
+        titles.add("订单金额");
+        titles.add("是否需要发票");
+        titles.add("发票类型");
+        titles.add("发票抬头");
+        titles.add("发票名目");
+        titles.add("税号");
+        titles.add("开户行");
+        titles.add("开户银行账号");
+        titles.add("企业注册地址");
+        titles.add("邮寄地址");
+        data.setTitles(titles);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<InvoiceInfoEntity> list = invoiceInfoService.getExcle(params);
+        List<List<Object>> rows = new ArrayList();
+        list.forEach(o->{
+            List<Object> row = new ArrayList();
+            row.add(o.getOrderNos());
+            row.add("");
+            row.add(o.getInvoiceAmt());
+            row.add("");
+            if ("0".equals(o.getInvoiceType())) {
+                row.add("普票");
+            }
+            if ("1".equals(o.getInvoiceType())) {
+                row.add("专票");
+            }
+            row.add(o.getInvoiceName());
+            if ("0".equals(o.getInvoiceCategory())) {
+                row.add("培训费，");
+            }
+            if ("1".equals(o.getInvoiceCategory())) {
+                row.add("会务费");
+            }
+            if ("2".equals(o.getInvoiceCategory())) {
+                row.add("咨询费");
+            }
+            row.add(o.getTaxNo());
+            row.add(o.getBankName());
+            row.add(o.getBankCard());
+            row.add("");
+            row.add(o.getCneeAddr());
+            rows.add(row);
+
+        });
+        data.setRows(rows);
+        ExportExcelUtils.exportExcel(response,"发票记录"+dataName+".xlsx",data);
+    }
 }

@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,26 @@ public class InvoiceInfoServiceImpl extends ServiceImpl<InvoiceInfoDao, InvoiceI
         list.add(unOpen);
         list.add(isOpen);
         return new PageUtils(page,list);
+    }
+
+    @Override
+    public List<InvoiceInfoEntity> getExcle(Map<String, Object> params) throws ParseException {
+        String invoiceNo = (String)params.get("invoiceNo");
+        String expressNo = (String)params.get("expressNo");
+        String cneeName = (String)params.get("cneeName");
+        String invoiceStauts = (String)params.get("invoiceStauts");
+        String invoiceType = (String)params.get("invoiceType");
+        String invoiceCategory = (String)params.get("invoiceCategory");
+        List<InvoiceInfoEntity> list = invoiceInfoDao.selectList(new EntityWrapper<InvoiceInfoEntity>()
+                .like(StringUtils.isNotBlank(invoiceNo),"invoice_no", invoiceNo)
+                .like(StringUtils.isNotBlank(expressNo),"express_no", expressNo)
+                .like(StringUtils.isNotBlank(cneeName),"cnee_name", cneeName)
+                .like(StringUtils.isNotBlank(invoiceStauts),"invoice_stauts", invoiceStauts)
+                .like(StringUtils.isNotBlank(invoiceType),"invoice_type", invoiceType)
+                .like(StringUtils.isNotBlank(invoiceCategory),"invoice_category", invoiceCategory)
+                .orderBy("apply_time",false)
+        );
+        return list;
     }
 
 }

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -78,6 +80,23 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundDao, OrderRef
             return R.ok("退款成功");
         }
         return R.error(jsonObject.get("message").toString());
+    }
+
+    @Override
+    public List<OrderRefundEntity> getExcleByOrder(Map<String, Object> params) throws ParseException {
+        String orderNo = (String)params.get("orderNo");
+        String phone = (String)params.get("phone");
+        String userName = (String)params.get("userName");
+        String applyType = (String)params.get("applyType");
+        String refundStatus = (String)params.get("refundStatus");
+        List<OrderRefundEntity> list = orderRefundDao.selectList(new EntityWrapper<OrderRefundEntity>()
+                .like(StringUtils.isNotBlank(orderNo),"order_no", orderNo)
+                .like(StringUtils.isNotBlank(phone),"phone", phone)
+                .like(StringUtils.isNotBlank(userName),"user_name", userName)
+                .like(StringUtils.isNotBlank(applyType),"apply_type", applyType)
+                .like(StringUtils.isNotBlank(refundStatus),"refund_status", refundStatus)
+                .orderBy("apply_time",false));
+        return list;
     }
 
 }

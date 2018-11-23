@@ -1,6 +1,7 @@
 package io.renren.modules.sys.vo;
 
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
@@ -51,6 +52,7 @@ public class UserCneeVo {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;
     /**
      * 修改时间
@@ -72,6 +74,7 @@ public class UserCneeVo {
     /**
      * 修改时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updateTime;
 
     /**

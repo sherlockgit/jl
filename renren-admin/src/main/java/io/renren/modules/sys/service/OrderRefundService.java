@@ -3,8 +3,11 @@ package io.renren.modules.sys.service;
 import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
+import io.renren.modules.sys.entity.OrderInfoEntity;
 import io.renren.modules.sys.entity.OrderRefundEntity;
 
+import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,5 +24,7 @@ public interface OrderRefundService extends IService<OrderRefundEntity> {
     OrderRefundEntity getByOrder(String orderNo);
 
     R returnPay (String orderNo);
+
+    List<OrderRefundEntity> getExcleByOrder (Map<String,Object> params) throws ParseException;
 }
 
