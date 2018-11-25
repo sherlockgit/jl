@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -30,12 +33,23 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundDao, OrderRef
     OrderRefundDao orderRefundDao;
 
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
+    public PageUtils queryPage(Map<String, Object> params) throws ParseException {
         String orderNo = (String)params.get("orderNo");
         String phone = (String)params.get("phone");
         String userName = (String)params.get("userName");
         String applyType = (String)params.get("applyType");
         String refundStatus = (String)params.get("refundStatus");
+        String startTime = (String)params.get("startTime");
+        String endTime = (String)params.get("endTime");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+        Date startTimeDate = null;
+        Date endTimeDate = null;
+        if (StringUtils.isNotBlank(startTime)) {
+            startTimeDate = sdf.parse(startTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
+        if (StringUtils.isNotBlank(endTime)) {
+            endTimeDate = sdf.parse(endTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
         Page<OrderRefundEntity> page = this.selectPage(
                 new Query<OrderRefundEntity>(params).getPage(),
                 new EntityWrapper<OrderRefundEntity>()
@@ -44,6 +58,8 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundDao, OrderRef
                         .like(StringUtils.isNotBlank(userName),"user_name", userName)
                         .like(StringUtils.isNotBlank(applyType),"apply_type", applyType)
                         .like(StringUtils.isNotBlank(refundStatus),"refund_status", refundStatus)
+                        .gt(StringUtils.isNotBlank(startTime),"apply_time",startTimeDate)
+                        .lt(StringUtils.isNotBlank(endTime),"apply_time", endTimeDate)
                         .orderBy("apply_time",false)
         );
         return new PageUtils(page);
@@ -89,12 +105,25 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundDao, OrderRef
         String userName = (String)params.get("userName");
         String applyType = (String)params.get("applyType");
         String refundStatus = (String)params.get("refundStatus");
+        String startTime = (String)params.get("startTime");
+        String endTime = (String)params.get("endTime");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+        Date startTimeDate = null;
+        Date endTimeDate = null;
+        if (StringUtils.isNotBlank(startTime)) {
+            startTimeDate = sdf.parse(startTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
+        if (StringUtils.isNotBlank(endTime)) {
+            endTimeDate = sdf.parse(endTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
         List<OrderRefundEntity> list = orderRefundDao.selectList(new EntityWrapper<OrderRefundEntity>()
                 .like(StringUtils.isNotBlank(orderNo),"order_no", orderNo)
                 .like(StringUtils.isNotBlank(phone),"phone", phone)
                 .like(StringUtils.isNotBlank(userName),"user_name", userName)
                 .like(StringUtils.isNotBlank(applyType),"apply_type", applyType)
                 .like(StringUtils.isNotBlank(refundStatus),"refund_status", refundStatus)
+                .gt(StringUtils.isNotBlank(startTime),"apply_time",startTimeDate)
+                .lt(StringUtils.isNotBlank(endTime),"apply_time", endTimeDate)
                 .orderBy("apply_time",false));
         return list;
     }

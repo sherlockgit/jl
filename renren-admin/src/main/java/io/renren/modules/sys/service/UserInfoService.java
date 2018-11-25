@@ -5,6 +5,7 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.modules.sys.entity.UserInfoEntity;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public interface UserInfoService extends IService<UserInfoEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Map<String, Object> params) throws ParseException;
 
     R insertUserInfo(UserInfoEntity userInfoEntity);
 
@@ -25,6 +26,6 @@ public interface UserInfoService extends IService<UserInfoEntity> {
 
     R appLogin(UserInfoEntity userInfoEntity);
 
-    List<UserInfoEntity> getExcel(Map<String, Object> params);
+    List<UserInfoEntity> getExcel(Map<String, Object> params) throws ParseException;
 }
 

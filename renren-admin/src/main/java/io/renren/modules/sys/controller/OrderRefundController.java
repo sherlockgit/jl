@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -41,7 +42,7 @@ public class OrderRefundController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:orderrefund:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) throws ParseException {
         PageUtils page = orderRefundService.queryPage(params);
 
         return R.ok().put("page", page);

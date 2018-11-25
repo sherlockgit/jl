@@ -83,6 +83,16 @@ var vm = new Vue({
 	},
 	methods: {
 		query: function () {
+            if ($("#dateBegin").val().length <= 0) {
+                vm.q.startTime = '';
+            }else {
+                vm.q.startTime=$("#dateBegin").data("datetimepicker").getDate();
+            }
+            if ($("#dateEnd").val().length <= 0) {
+                vm.q.endTime='';
+            }else {
+                vm.q.endTime=$("#dateEnd").data("datetimepicker").getDate();
+            }
             vm.getByType();
 			vm.reload();
 		},
@@ -200,7 +210,9 @@ var vm = new Vue({
                     'articleName': vm.q.articleName,
                     'articleAuthor': vm.q.articleAuthor,
                     'articleTag': vm.q.articleTag,
-                    'articleStatus': vm.q.articleStatus
+                    'articleStatus': vm.q.articleStatus,
+                    'startTime': vm.q.startTime,
+                    'endTime': vm.q.endTime
                 },
                 page:page
             }).trigger("reloadGrid");
@@ -274,3 +286,40 @@ KindEditor.ready(function(K) {
         height: '700px'
     });
 });
+function DatePicker(beginSelector,endSelector){
+    $(beginSelector).datetimepicker(
+        {
+            language: 'zh-CN', // 语言选择中文
+            autoclose: true,
+            startView: 'month', // 进来是月
+            minView: 'hour',// 可以看到小时
+            minuteStep:1, //分钟间隔为1分
+            format: 'yyyy-mm-dd hh:ii:ss',// 年月日时分秒
+            clearBtn:false,
+            todayBtn:true,
+            endDate:new Date() }).on('changeDate', function(ev){
+        if(ev.date){
+            $(endSelector).datetimepicker('setStartDate', new Date(ev.date.valueOf()))
+        }else{
+            $(endSelector).datetimepicker('setStartDate',null);
+        }
+    })
+    $(endSelector).datetimepicker(
+        {
+            language: "zh-CN",
+            autoclose: true,
+            minView: "hour",
+            minuteStep:1,
+            startView:'month',
+            format: "yyyy-mm-dd hh:ii:ss",
+            clearBtn:true,
+            todayBtn:false,
+            endDate:new Date() }).on('changeDate', function(ev){
+        if(ev.date){
+            $(beginSelector).datetimepicker('setEndDate', new Date(ev.date.valueOf()))
+        }else{
+            $(beginSelector).datetimepicker('setEndDate',new Date());
+        }
+    })
+}
+DatePicker("#dateBegin","#dateEnd");

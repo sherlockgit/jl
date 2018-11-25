@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -26,7 +26,7 @@ public class InvoiceInfoServiceImpl extends ServiceImpl<InvoiceInfoDao, InvoiceI
     InvoiceInfoDao invoiceInfoDao;
 
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
+    public PageUtils queryPage(Map<String, Object> params) throws ParseException {
 
         String invoiceNo = (String)params.get("invoiceNo");
         String expressNo = (String)params.get("expressNo");
@@ -34,6 +34,17 @@ public class InvoiceInfoServiceImpl extends ServiceImpl<InvoiceInfoDao, InvoiceI
         String invoiceStauts = (String)params.get("invoiceStauts");
         String invoiceType = (String)params.get("invoiceType");
         String invoiceCategory = (String)params.get("invoiceCategory");
+        String startTime = (String)params.get("startTime");
+        String endTime = (String)params.get("endTime");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+        Date startTimeDate = null;
+        Date endTimeDate = null;
+        if (StringUtils.isNotBlank(startTime)) {
+            startTimeDate = sdf.parse(startTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
+        if (StringUtils.isNotBlank(endTime)) {
+            endTimeDate = sdf.parse(endTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
         Page<InvoiceInfoEntity> page = this.selectPage(
                 new Query<InvoiceInfoEntity>(params).getPage(),
                 new EntityWrapper<InvoiceInfoEntity>()
@@ -43,6 +54,8 @@ public class InvoiceInfoServiceImpl extends ServiceImpl<InvoiceInfoDao, InvoiceI
                         .like(StringUtils.isNotBlank(invoiceStauts),"invoice_stauts", invoiceStauts)
                         .like(StringUtils.isNotBlank(invoiceType),"invoice_type", invoiceType)
                         .like(StringUtils.isNotBlank(invoiceCategory),"invoice_category", invoiceCategory)
+                        .gt(StringUtils.isNotBlank(startTime),"apply_time",startTimeDate)
+                        .lt(StringUtils.isNotBlank(endTime),"apply_time", endTimeDate)
                         .orderBy("apply_time",false)
         );
 
@@ -81,6 +94,17 @@ public class InvoiceInfoServiceImpl extends ServiceImpl<InvoiceInfoDao, InvoiceI
         String invoiceStauts = (String)params.get("invoiceStauts");
         String invoiceType = (String)params.get("invoiceType");
         String invoiceCategory = (String)params.get("invoiceCategory");
+        String startTime = (String)params.get("startTime");
+        String endTime = (String)params.get("endTime");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+        Date startTimeDate = null;
+        Date endTimeDate = null;
+        if (StringUtils.isNotBlank(startTime)) {
+            startTimeDate = sdf.parse(startTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
+        if (StringUtils.isNotBlank(endTime)) {
+            endTimeDate = sdf.parse(endTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
         List<InvoiceInfoEntity> list = invoiceInfoDao.selectList(new EntityWrapper<InvoiceInfoEntity>()
                 .like(StringUtils.isNotBlank(invoiceNo),"invoice_no", invoiceNo)
                 .like(StringUtils.isNotBlank(expressNo),"express_no", expressNo)
@@ -88,6 +112,8 @@ public class InvoiceInfoServiceImpl extends ServiceImpl<InvoiceInfoDao, InvoiceI
                 .like(StringUtils.isNotBlank(invoiceStauts),"invoice_stauts", invoiceStauts)
                 .like(StringUtils.isNotBlank(invoiceType),"invoice_type", invoiceType)
                 .like(StringUtils.isNotBlank(invoiceCategory),"invoice_category", invoiceCategory)
+                .gt(StringUtils.isNotBlank(startTime),"apply_time",startTimeDate)
+                .lt(StringUtils.isNotBlank(endTime),"apply_time", endTimeDate)
                 .orderBy("apply_time",false)
         );
         return list;

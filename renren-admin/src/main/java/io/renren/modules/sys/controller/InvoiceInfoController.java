@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -42,7 +43,7 @@ public class InvoiceInfoController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:invoiceinfo:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) throws ParseException {
         PageUtils page = invoiceInfoService.queryPage(params);
 
         return R.ok().put("page", page);

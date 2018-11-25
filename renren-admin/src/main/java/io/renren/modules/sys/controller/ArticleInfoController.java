@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class ArticleInfoController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:articleinfo:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) throws ParseException {
         PageUtils page = articleInfoService.queryPage(params);
 
         return R.ok().put("page", page);

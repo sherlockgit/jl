@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import java.text.ParseException;
 import java.util.*;
 
 import io.renren.common.utils.NoUtils;
@@ -47,7 +48,7 @@ public class CourseInfoController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:courseinfo:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) throws ParseException {
         PageUtils page = courseInfoService.queryPage(params);
 
         return R.ok().put("page", page);

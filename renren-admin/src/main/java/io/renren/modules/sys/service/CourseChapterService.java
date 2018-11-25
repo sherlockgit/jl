@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.CourseChapterEntity;
 
+import java.text.ParseException;
 import java.util.Map;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Map;
  */
 public interface CourseChapterService extends IService<CourseChapterEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Map<String, Object> params) throws ParseException;
 
     void deletrByCourseInfoId(Integer id);
 }

@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class UserCneeController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:usercnee:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) throws ParseException {
         PageUtils page = userCneeService.queryPage(params);
 
         return R.ok().put("page", page);

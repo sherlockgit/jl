@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.ArticleInfoEntity;
 
+import java.text.ParseException;
 import java.util.Map;
 
 /**
@@ -15,6 +16,6 @@ import java.util.Map;
  */
 public interface ArticleInfoService extends IService<ArticleInfoEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Map<String, Object> params) throws ParseException;
 }
 

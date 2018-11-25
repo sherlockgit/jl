@@ -35,6 +35,8 @@
                         </select>
                     </div>
                 </label>
+                </label><label> <input type='text' class='form-control ' id='dateBegin' name='date_begin' placeholder="开始时间" value='' ng-model="dateBegin"> </label>---
+                <label> <input type='text' class='form-control ' id='dateEnd' name='date_begin' placeholder="结束时间" value='' ng-model="dateEnd"> </label>
                 <a class="btn btn-default" @click="query">查询</a>
                 <#if shiro.hasPermission("sys:articleinfo:save")>
                     <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>

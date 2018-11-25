@@ -42,8 +42,11 @@
             <if test="phone != null and phone != ''">
                 AND c.cnee_phone LIKE concat('%',#{phone,jdbcType=VARCHAR},'%')
             </if>
-            <if test="cneeAddr != null and cneeAddr != ''">
-                AND c.cnee_addr LIKE concat('%',#{cneeAddr,jdbcType=VARCHAR},'%')
+            <if test="startTimeDate != null">
+                AND c.create_time &gt; #{startTimeDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTimeDate != null">
+                AND c.create_time &lt; #{endTimeDate,jdbcType=TIMESTAMP}
             </if>
         </where>
     </select>

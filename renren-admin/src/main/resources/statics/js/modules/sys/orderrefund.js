@@ -107,7 +107,16 @@ var vm = new Vue({
 	},
 	methods: {
 		query: function () {
-
+            if ($("#dateBegin").val().length <= 0) {
+                vm.q.startTime = '';
+            }else {
+                vm.q.startTime=$("#dateBegin").data("datetimepicker").getDate();
+            }
+            if ($("#dateEnd").val().length <= 0) {
+                vm.q.endTime='';
+            }else {
+                vm.q.endTime=$("#dateEnd").data("datetimepicker").getDate();
+            }
 			vm.reload();
 		},
 		add: function(){
@@ -197,8 +206,18 @@ var vm = new Vue({
             vm.getByOrderNo()
         },
         excle: function (event) {
+            if ($("#dateBegin").val().length <= 0) {
+                vm.q.startTime = '';
+            }else {
+                vm.q.startTime=$("#dateBegin").data("datetimepicker").getDate();
+            }
+            if ($("#dateEnd").val().length <= 0) {
+                vm.q.endTime='';
+            }else {
+                vm.q.endTime=$("#dateEnd").data("datetimepicker").getDate();
+            }
             layer.confirm('确定要导出数据？', function (index) {
-                window.location = baseURL + "sys/orderrefund/getExcle?orderNo=" + vm.q.orderNo + "&phone=" + vm.q.phone + "&userName=" + vm.q.userName + "&applyType=" + vm.q.applyType + "&refundStatus=" + vm.q.refundStatus;
+                window.location = baseURL + "sys/orderrefund/getExcle?orderNo=" + vm.q.orderNo + "&phone=" + vm.q.phone + "&userName=" + vm.q.userName + "&applyType=" + vm.q.applyType + "&refundStatus=" + vm.q.refundStatus+"&startTime="+vm.q.startTime+"&endTime="+vm.q.endTime;
                 layer.close(index);
                 vm.reload();
             });
@@ -255,7 +274,9 @@ var vm = new Vue({
                     'phone': vm.q.phone,
                     'userName': vm.q.userName,
                     'applyType': vm.q.applyType,
-                    'refundStatus': vm.q.refundStatus
+                    'refundStatus': vm.q.refundStatus,
+                    'startTime': vm.q.startTime,
+                    'endTime': vm.q.endTime
 
                 },
                 page:page
@@ -272,3 +293,41 @@ $('#datetimepicker').datetimepicker({
 $('#datetimepickerd').datetimepicker({
     format: 'yyyy-mm-dd hh:ii'
 });
+
+function DatePicker(beginSelector,endSelector){
+    $(beginSelector).datetimepicker(
+        {
+            language: 'zh-CN', // 语言选择中文
+            autoclose: true,
+            startView: 'month', // 进来是月
+            minView: 'hour',// 可以看到小时
+            minuteStep:1, //分钟间隔为1分
+            format: 'yyyy-mm-dd hh:ii:ss',// 年月日时分秒
+            clearBtn:false,
+            todayBtn:true,
+            endDate:new Date() }).on('changeDate', function(ev){
+        if(ev.date){
+            $(endSelector).datetimepicker('setStartDate', new Date(ev.date.valueOf()))
+        }else{
+            $(endSelector).datetimepicker('setStartDate',null);
+        }
+    })
+    $(endSelector).datetimepicker(
+        {
+            language: "zh-CN",
+            autoclose: true,
+            minView: "hour",
+            minuteStep:1,
+            startView:'month',
+            format: "yyyy-mm-dd hh:ii:ss",
+            clearBtn:true,
+            todayBtn:false,
+            endDate:new Date() }).on('changeDate', function(ev){
+        if(ev.date){
+            $(beginSelector).datetimepicker('setEndDate', new Date(ev.date.valueOf()))
+        }else{
+            $(beginSelector).datetimepicker('setEndDate',new Date());
+        }
+    })
+}
+DatePicker("#dateBegin","#dateEnd");

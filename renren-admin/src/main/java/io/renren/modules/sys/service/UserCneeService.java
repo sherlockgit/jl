@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.UserCneeEntity;
 
+import java.text.ParseException;
 import java.util.Map;
 
 /**
@@ -15,6 +16,6 @@ import java.util.Map;
  */
 public interface UserCneeService extends IService<UserCneeEntity> {
 
-    PageUtils queryPage(Map<String, Object> map);
+    PageUtils queryPage(Map<String, Object> map) throws ParseException;
 }
 

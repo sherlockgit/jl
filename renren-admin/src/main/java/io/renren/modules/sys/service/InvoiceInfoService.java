@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public interface InvoiceInfoService extends IService<InvoiceInfoEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Map<String, Object> params) throws ParseException;
 
     List<InvoiceInfoEntity> getExcle (Map<String,Object> map) throws ParseException;
 }

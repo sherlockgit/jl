@@ -5,7 +5,11 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -25,7 +29,20 @@ public class UserCneeServiceImpl extends ServiceImpl<UserCneeDao, UserCneeEntity
     UserCneeDao userCneeDao;
 
     @Override
-    public PageUtils queryPage(Map<String, Object> map) {
+    public PageUtils queryPage(Map<String, Object> map) throws ParseException {
+        String startTime = (String)map.get("startTime");
+        String endTime = (String)map.get("endTime");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+        Date startTimeDate = null;
+        Date endTimeDate = null;
+        if (StringUtils.isNotBlank(startTime)) {
+            startTimeDate = sdf.parse(startTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
+        if (StringUtils.isNotBlank(endTime)) {
+            endTimeDate = sdf.parse(endTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
+        map.put("startTimeDate",startTimeDate);
+        map.put("endTimeDate",endTimeDate);
         List<UserCneeVo> list = userCneeDao.selectAll(map);
         String limit = (String)map.get("limit");
         String page = (String)map.get("page");

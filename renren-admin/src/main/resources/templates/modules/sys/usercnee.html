@@ -3,6 +3,8 @@
 <head>
     <title>会员收货人表</title>
 		<#include "/header.html">
+            <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-datetimepicker.min.css" >
+            <script src="${request.contextPath}/statics/libs/bootstrap-datetimepicker.min.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -13,7 +15,8 @@
                 <label class="form-inline">收件人：<input type="text" v-model="q.cneeName" @keyup.enter="query" class="form-control" placeholder="收件人"></label>
                 <label class="form-inline">手机号码：<input type="text" v-model="q.phone" @keyup.enter="query" class="form-control" placeholder="手机号码"></label>
                 <label class="form-inline">收货地址：<input type="text" v-model="q.cneeAddr" @keyup.enter="query" class="form-control" placeholder="收货地址"></label>
-
+                </label><label> <input type='text' class='form-control ' id='dateBegin' name='date_begin' placeholder="开始时间" value='' ng-model="dateBegin"> </label>---
+                <label> <input type='text' class='form-control ' id='dateEnd' name='date_begin' placeholder="结束时间" value='' ng-model="dateEnd"> </label>
                 <a class="btn btn-default" @click="query">查询</a>
             </div>
         </div>

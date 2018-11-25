@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class CourseChapterController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:coursechapter:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) throws ParseException {
         PageUtils page = courseChapterService.queryPage(params);
         if (page.getList().size()>0) {
             page.getList().forEach(o->{

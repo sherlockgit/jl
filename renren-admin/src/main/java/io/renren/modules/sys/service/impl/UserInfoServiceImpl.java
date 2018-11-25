@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -38,12 +37,22 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfoEntity
     AccountDao accountDao;
 
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
+    public PageUtils queryPage(Map<String, Object> params) throws ParseException {
         String userName = (String)params.get("userName");
         String phone = (String)params.get("phone");
         String wxUname = (String)params.get("wxUname");
         String userType = (String)params.get("userType");
-
+        String startTime = (String)params.get("startTime");
+        String endTime = (String)params.get("endTime");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+        Date startTimeDate = null;
+        Date endTimeDate = null;
+        if (StringUtils.isNotBlank(startTime)) {
+            startTimeDate = sdf.parse(startTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
+        if (StringUtils.isNotBlank(endTime)) {
+            endTimeDate = sdf.parse(endTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
         Page<UserInfoEntity> page = this.selectPage(
                 new Query<UserInfoEntity>(params).getPage(),
                 new EntityWrapper<UserInfoEntity>()
@@ -51,6 +60,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfoEntity
                         .like(StringUtils.isNotBlank(phone),"PHONE", phone)
                         .like(StringUtils.isNotBlank(wxUname),"WX_UNAME", wxUname)
                         .like(StringUtils.isNotBlank(userType),"USER_TYPE", userType)
+                        .gt(StringUtils.isNotBlank(startTime),"REGIST_TIME",startTimeDate)
+                        .lt(StringUtils.isNotBlank(endTime),"REGIST_TIME", endTimeDate)
                         .orderBy("REGIST_TIME",false)
         );
 
@@ -142,16 +153,29 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfoEntity
     }
 
     @Override
-    public List<UserInfoEntity> getExcel(Map<String, Object> params) {
+    public List<UserInfoEntity> getExcel(Map<String, Object> params) throws ParseException {
         String userName = (String)params.get("userName");
         String phone = (String)params.get("phone");
         String wxUname = (String)params.get("wxUname");
         String userType = (String)params.get("userType");
+        String startTime = (String)params.get("startTime");
+        String endTime = (String)params.get("endTime");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+        Date startTimeDate = null;
+        Date endTimeDate = null;
+        if (StringUtils.isNotBlank(startTime)) {
+            startTimeDate = sdf.parse(startTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
+        if (StringUtils.isNotBlank(endTime)) {
+            endTimeDate = sdf.parse(endTime.replace("GMT", "").replaceAll("\\(.*\\)", ""));
+        }
         List<UserInfoEntity> list = userInfoDao.selectList(new EntityWrapper<UserInfoEntity>()
                 .like(StringUtils.isNotBlank(userName),"USER_NAME", userName)
                 .like(StringUtils.isNotBlank(phone),"PHONE", phone)
                 .like(StringUtils.isNotBlank(wxUname),"WX_UNAME", wxUname)
                 .like(StringUtils.isNotBlank(userType),"USER_TYPE", userType)
+                .gt(StringUtils.isNotBlank(startTime),"REGIST_TIME",startTimeDate)
+                .lt(StringUtils.isNotBlank(endTime),"REGIST_TIME", endTimeDate)
                 .orderBy("REGIST_TIME",false)
         );
         return list;

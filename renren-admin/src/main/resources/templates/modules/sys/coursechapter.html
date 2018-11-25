@@ -6,6 +6,8 @@
             <link rel="stylesheet" href="${request.contextPath}/statics/plugins/layui2_3_0/css/layui.css" media="all">
             <script src="${request.contextPath}/statics/plugins/layui2_3_0/layui.js"></script>
             <script src="${request.contextPath}/statics/plugins/layer/layer.js"></script>
+            <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-datetimepicker.min.css" >
+            <script src="${request.contextPath}/statics/libs/bootstrap-datetimepicker.min.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -34,6 +36,8 @@
                         </select>
                     </div>
                 </label>
+                </label><label> <input type='text' class='form-control ' id='dateBegin' name='date_begin' placeholder="开始时间" value='' ng-model="dateBegin"> </label>---
+                <label> <input type='text' class='form-control ' id='dateEnd' name='date_begin' placeholder="结束时间" value='' ng-model="dateEnd"> </label>
                 <a class="btn btn-default" @click="query">查询</a>
                 <#if shiro.hasPermission("sys:articleinfo:save")>
                     <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
