@@ -286,11 +286,13 @@ var vm = new Vue({
 });
 
 $('#datetimepicker').datetimepicker({
+    language: 'zh-CN',
     format: 'yyyy-mm-dd hh:ii'
 });
 
 
 $('#datetimepickerd').datetimepicker({
+    language: 'zh-CN',
     format: 'yyyy-mm-dd hh:ii'
 });
 

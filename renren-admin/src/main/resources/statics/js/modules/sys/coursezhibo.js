@@ -237,6 +237,7 @@ layui.use('upload', function(){
 });
 
 $('#datetimepicker').datetimepicker({
+    language: 'zh-CN',
     format: 'yyyy-mm-dd hh:ii'
 });
 
@@ -257,6 +258,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 $('#dateBegin').datetimepicker({
+    language: 'zh-CN',
     format: 'yyyy-mm-dd hh:ii'
 });
 
